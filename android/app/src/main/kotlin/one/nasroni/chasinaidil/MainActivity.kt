@@ -1,4 +1,4 @@
-package com.example.chasinaidil
+package one.nasroni.chasinaidil
 
 import io.flutter.embedding.android.FlutterActivity
 
