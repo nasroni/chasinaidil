@@ -4,7 +4,7 @@ class HomeController extends GetxController {
   //TODO: Implement HomeController
 
   final count = 0.obs;
-  final searchActive = false.obs;
+  final isSearchActive = false.obs;
   @override
   void onInit() {
     super.onInit();
@@ -22,6 +22,6 @@ class HomeController extends GetxController {
 
   void increment() => count.value++;
 
-  void openSearch() => searchActive.value = true;
-  void closeSearch() => searchActive.value = false;
+  void openSearch() => isSearchActive.value = true;
+  void closeSearch() => isSearchActive.value = false;
 }

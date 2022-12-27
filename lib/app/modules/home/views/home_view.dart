@@ -11,7 +11,7 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Obx(() => Scaffold(
-          appBar: !controller.searchActive.value
+          appBar: !controller.isSearchActive.value
               ? SearchAppBar()
               : PreferredSize(
                   preferredSize: const Size.fromHeight(0),

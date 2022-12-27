@@ -20,8 +20,8 @@ class SearchBar extends StatelessWidget {
         Container(
           padding: EdgeInsets.symmetric(
               vertical: Platform.isAndroid ? 15 : 10,
-              horizontal: controller.searchActive.value ? 10 : 15),
-          width: controller.searchActive.value ? Get.width - 70 : Get.width,
+              horizontal: controller.isSearchActive.value ? 10 : 15),
+          width: controller.isSearchActive.value ? Get.width - 70 : Get.width,
           child: CupertinoSearchTextField(
             autocorrect: false,
             placeholder: 'Ҷустуҷӯ',
@@ -34,7 +34,7 @@ class SearchBar extends StatelessWidget {
             },
           ),
         ),
-        controller.searchActive.value
+        controller.isSearchActive.value
             ? TextButton(
                 onPressed: () {
                   controller.closeSearch();
