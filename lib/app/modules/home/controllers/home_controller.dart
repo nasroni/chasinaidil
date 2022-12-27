@@ -1,10 +1,10 @@
 import 'package:get/get.dart';
 
 class HomeController extends GetxController {
-  //TODO: Implement HomeController
-
   final count = 0.obs;
   final isSearchActive = false.obs;
+  final isDBfilled = false.obs;
+
   @override
   void onInit() {
     super.onInit();

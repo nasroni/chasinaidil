@@ -22,6 +22,13 @@ class HomeView extends GetView<HomeController> {
             child: Column(
               children: [
                 SearchBar(),
+                Expanded(
+                  child: Center(
+                    child: controller.isDBfilled.value
+                        ? Text("DB filled")
+                        : CircularProgressIndicator(),
+                  ),
+                )
               ],
             ),
           ),
