@@ -6,26 +6,31 @@ part 'song.g.dart';
 class Song {
   final Id id;
   final String title;
-  final String albumId;
-  final bool psalm;
+  final int? albumId;
+  String book;
+  final String? psalm;
   final int? duration;
-  final String text;
+  String text;
 
   Song(
       {required this.id,
       required this.title,
-      required this.albumId,
+      this.albumId,
+      this.book = "Гуногун",
       required this.psalm,
       required this.duration,
       this.text = ""});
 
   factory Song.fromJson(Map<String, dynamic> parsedJson) {
     return Song(
-      id: parsedJson['id'],
+      id: int.parse(parsedJson['id']),
       title: parsedJson['title'],
-      albumId: parsedJson['album'].toString(),
-      psalm: (parsedJson['psalm'] == "true" ? true : false),
-      duration: (double.parse(parsedJson['duration']) * 1000).round(),
+      albumId:
+          parsedJson['album'] == "-" ? null : int.parse(parsedJson['album']),
+      psalm: parsedJson['psalm'] == "false" ? null : parsedJson['psalm'],
+      duration: parsedJson['duration'] is String
+          ? null
+          : (parsedJson['duration'] * 1000).round(),
     );
   }
 }

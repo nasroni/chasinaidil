@@ -4,12 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-class SearchAppBar extends PreferredSize {
-  SearchAppBar({super.key})
-      : super(
-          preferredSize: Size.fromHeight(Platform.isAndroid ? 80 : 110),
-          child: Container(),
-        );
+class SearchAppBar extends StatelessWidget {
+  final int size;
+  const SearchAppBar({super.key, this.size = 100});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +16,8 @@ class SearchAppBar extends PreferredSize {
         child: const Text('Хазинаи Дил'),
       ),
       centerTitle: false,
-      toolbarHeight: Platform.isAndroid ? 80 : 110,
+      toolbarHeight:
+          Platform.isAndroid ? (80 * size) / 100 : (110 * size) / 100,
       backgroundColor: Get.theme.backgroundColor,
       titleTextStyle: Get.textTheme.titleLarge,
       elevation: 0,

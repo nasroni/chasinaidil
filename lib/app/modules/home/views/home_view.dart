@@ -10,23 +10,26 @@ class HomeView extends GetView<HomeController> {
   const HomeView({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    controller.import();
     return Obx(() => Scaffold(
-          appBar: !controller.isSearchActive.value
-              ? SearchAppBar()
-              : PreferredSize(
-                  preferredSize: const Size.fromHeight(0),
-                  child: Container(),
-                ),
           body: Container(
             color: Get.theme.backgroundColor,
             child: Column(
               children: [
+                AnimatedSize(
+                  duration: const Duration(
+                    milliseconds: 200,
+                  ),
+                  child: SearchAppBar(
+                    size: controller.isSearchActive.value ? 0 : 100,
+                  ),
+                ),
                 SearchBar(),
                 Expanded(
                   child: Center(
                     child: controller.isDBfilled.value
-                        ? Text("DB filled")
-                        : CircularProgressIndicator(),
+                        ? const Text("DB ready")
+                        : const CircularProgressIndicator(),
                   ),
                 )
               ],
