@@ -13,11 +13,12 @@ void main() {
     GetMaterialApp(
       title: "Application",
       theme: AppTheme.lightTheme,
+      debugShowCheckedModeBanner: false,
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
-      locale: Locale('tj'),
-      supportedLocales: [Locale('tj')],
-      localizationsDelegates: [
+      locale: const Locale('tj'),
+      supportedLocales: const [Locale('tj')],
+      localizationsDelegates: const [
         TjLocalizationsDelegate(),
         TjLocalizationsDelegateC(),
         GlobalWidgetsLocalizations.delegate,
