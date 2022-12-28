@@ -29,3 +29,15 @@ flutter:
   assets:
    - assets/chasinaidil/songs.json
    - assets/chasinaidil/text/
+
+  fonts:
+    - family: UbuntuMono
+      fonts:
+        - asset: fonts/UbuntuMono-Regular.ttf
+        - asset: fonts/UbuntuMono-Italic.ttf
+          style: italic
+        - asset: fonts/UbuntuMono-Bold.ttf
+          weight: 700
+        - asset: fonts/UbuntuMono-BoldItalic.ttf
+          style: italic
+          weight: 700

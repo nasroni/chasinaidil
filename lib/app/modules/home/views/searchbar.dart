@@ -11,7 +11,7 @@ class SearchBar extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
-  final HomeController controller = Get.find();
+  final HomeController _homeController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -20,24 +20,26 @@ class SearchBar extends StatelessWidget {
         Container(
           padding: EdgeInsets.symmetric(
               vertical: Platform.isAndroid ? 15 : 10,
-              horizontal: controller.isSearchActive.value ? 10 : 15),
-          width: controller.isSearchActive.value ? Get.width - 70 : Get.width,
+              horizontal: _homeController.isSearchActive.value ? 10 : 15),
+          width:
+              _homeController.isSearchActive.value ? Get.width - 70 : Get.width,
           child: CupertinoSearchTextField(
             autocorrect: false,
             placeholder: 'Ҷустуҷӯ',
             onTap: () {
-              controller.openSearch();
+              _homeController.openSearch();
             },
-            onSubmitted: (value) {
-              controller.closeSearch();
+            onChanged: (value) => _homeController.searchValue.value = value,
+            /*onSubmitted: (value) {
+              _homeController.closeSearch();
               FocusScope.of(context).requestFocus();
-            },
+            },*/
           ),
         ),
-        controller.isSearchActive.value
+        _homeController.isSearchActive.value
             ? TextButton(
                 onPressed: () {
-                  controller.closeSearch();
+                  _homeController.closeSearch();
                   FocusScope.of(context).unfocus();
                 },
                 child: const Text("Қатъ"),

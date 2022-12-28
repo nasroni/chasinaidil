@@ -12,6 +12,10 @@ class AppTheme {
         fontWeight: FontWeight.w700,
         fontSize: 30,
       ),
+      bodyMedium: TextStyle(
+        //fontFamily: 'UbuntuMono',
+        fontSize: 22,
+      ),
     ),
   );
 }

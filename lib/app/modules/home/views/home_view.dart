@@ -1,3 +1,4 @@
+import 'package:chasinaidil/app/modules/home/views/searchresults.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -18,19 +19,22 @@ class HomeView extends GetView<HomeController> {
               children: [
                 AnimatedSize(
                   duration: const Duration(
-                    milliseconds: 200,
+                    milliseconds: 230,
                   ),
+                  curve: Curves.linear,
                   child: SearchAppBar(
                     size: controller.isSearchActive.value ? 0 : 100,
                   ),
                 ),
                 SearchBar(),
                 Expanded(
-                  child: Center(
-                    child: controller.isDBfilled.value
-                        ? const Text("DB ready")
-                        : const CircularProgressIndicator(),
-                  ),
+                  child: controller.isSearchActive.value
+                      ? SearchResultView()
+                      : Center(
+                          child: controller.isDBfilled.value
+                              ? const Text("DB ready")
+                              : const CircularProgressIndicator(),
+                        ),
                 )
               ],
             ),

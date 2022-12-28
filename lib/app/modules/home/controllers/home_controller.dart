@@ -1,19 +1,25 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:chasinaidil/app/data/services/import_service.dart';
 import 'package:chasinaidil/app/data/services/isar_service.dart';
-import 'package:chasinaidil/app/data/types/song.dart' show rootBundle;
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../../../data/types/song.dart';
+
 class HomeController extends GetxController {
-  final count = 0.obs;
-  final isSearchActive = false.obs;
-  final isDBfilled = false.obs;
+  final RxInt count = 0.obs;
+  final RxBool isSearchActive = false.obs;
+  final RxBool isDBfilled = false.obs;
+
+  final RxString searchValue = "".obs;
 
   final IsarService isar = Get.find();
   final ImportService importService = ImportService();
+
+  final RxList<Song> searchResults = RxList<Song>([]);
+
+  late final Worker searchWorker;
 
   @override
   void onInit() {
@@ -23,11 +29,13 @@ class HomeController extends GetxController {
   @override
   void onReady() {
     super.onReady();
+    searchWorker = ever(searchValue, (_) => doSearch());
   }
 
   @override
   void onClose() {
     super.onClose();
+    searchWorker.dispose();
   }
 
   void increment() => count.value++;
@@ -35,7 +43,12 @@ class HomeController extends GetxController {
   void openSearch() => isSearchActive.value = true;
   void closeSearch() => isSearchActive.value = false;
 
+  void doSearch() async {
+    searchResults.value = await isar.getSearchResults(searchValue.value);
+  }
+
   void import() async {
+    //final stopwa = Stopwatch()..start();
     // chasinaidil import
     final songList = await importService.list("Хазинаи Дил");
     final songListWithText = (await Future.wait(
@@ -51,5 +64,7 @@ class HomeController extends GetxController {
         .toList();
     isar.saveSongList(songListWithText);
     isDBfilled.value = true;
+
+    //log("duration ${stopwa.elapsed}");
   }
 }

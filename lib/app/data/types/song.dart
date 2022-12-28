@@ -12,6 +12,8 @@ class Song {
   final int? duration;
   String text;
 
+  String get songNumber => id.toString();
+
   Song(
       {required this.id,
       required this.title,

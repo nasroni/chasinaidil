@@ -34,6 +34,15 @@ class IsarService {
     return await isar.songs.where().findAll();
   }
 
+  Future<List<Song>> getSearchResults(String searchQuery) async {
+    final isar = await db;
+    log("hallo");
+    return await isar.songs
+        .filter()
+        .songNumberStartsWith(searchQuery)
+        .findAll();
+  }
+
   // TODO: löschen wenn fertig programmiert
   Future<void> cleanDb() async {
     final isar = await db;
