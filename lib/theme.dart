@@ -14,7 +14,7 @@ class AppTheme {
       ),
       bodyMedium: TextStyle(
         //fontFamily: 'UbuntuMono',
-        fontSize: 22,
+        fontSize: 18,
       ),
     ),
   );

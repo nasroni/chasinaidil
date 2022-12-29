@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:chasinaidil/app/data/services/import_service.dart';
 import 'package:chasinaidil/app/data/services/isar_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
@@ -20,6 +21,8 @@ class HomeController extends GetxController {
   final RxList<Song> searchResults = RxList<Song>([]);
 
   late final Worker searchWorker;
+
+  final TextEditingController searchEditingController = TextEditingController();
 
   @override
   void onInit() {
@@ -41,10 +44,18 @@ class HomeController extends GetxController {
   void increment() => count.value++;
 
   void openSearch() => isSearchActive.value = true;
-  void closeSearch() => isSearchActive.value = false;
+  void closeSearch() {
+    isSearchActive.value = false;
+    searchEditingController.clear();
+    searchResults.clear();
+  }
 
   void doSearch() async {
-    searchResults.value = await isar.getSearchResults(searchValue.value);
+    if (searchValue.value.isEmpty) {
+      searchResults.clear();
+    } else {
+      searchResults.value = await isar.getSearchResults(searchValue.value);
+    }
   }
 
   void import() async {

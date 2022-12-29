@@ -30,6 +30,7 @@ class SearchBar extends StatelessWidget {
               _homeController.openSearch();
             },
             onChanged: (value) => _homeController.searchValue.value = value,
+            controller: _homeController.searchEditingController,
             /*onSubmitted: (value) {
               _homeController.closeSearch();
               FocusScope.of(context).requestFocus();
