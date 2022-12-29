@@ -10,9 +10,19 @@ class Song {
   String book;
   final String? psalm;
   final int? duration;
-  String text;
+  String textWChords;
 
   String get songNumber => id.toString();
+  int get songNumberInt => id;
+
+  String get lyrics =>
+      textWChords.replaceAll(RegExp(r'\[([A-Za-z]){1,2}\]'), '');
+
+  @Index(type: IndexType.value, caseSensitive: false)
+  List<String> get titleWords => Isar.splitWords(title);
+
+  @Index(type: IndexType.value, caseSensitive: false)
+  List<String> get lyricsWords => Isar.splitWords(lyrics);
 
   Song(
       {required this.id,
@@ -21,7 +31,7 @@ class Song {
       this.book = "Гуногун",
       required this.psalm,
       required this.duration,
-      this.text = ""});
+      this.textWChords = ""});
 
   factory Song.fromJson(Map<String, dynamic> parsedJson) {
     return Song(

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:isar/isar.dart';
 
@@ -34,19 +32,28 @@ class IsarService {
     return await isar.songs.where().findAll();
   }
 
-  Future<List<Song>> getSearchResults(String searchQuery) async {
+  Future<List<Song>> getTitleSearchResults(String searchQuery) async {
     final isar = await db;
-    log("hallo");
-    return await isar.songs
-        .filter()
-        .songNumberStartsWith(searchQuery)
-        .findAll();
-  }
+    if (int.tryParse(searchQuery) != null) {
+      return await isar.songs
+          .filter()
+          .songNumberStartsWith(searchQuery)
+          .findAll();
+    } else {
+      final searchWords = Isar.splitWords(searchQuery);
 
-  // TODO: löschen wenn fertig programmiert
-  Future<void> cleanDb() async {
-    final isar = await db;
-    await isar.writeTxn(() => isar.clear());
+      return await isar.songs
+          .where()
+          .titleWordsElementStartsWith(searchWords[0])
+          .filter()
+          .optional(
+              searchWords.length > 1,
+              (q) => q.allOf(
+                  searchWords.sublist(1),
+                  (q, String word) => q.titleWordsElementStartsWith(word,
+                      caseSensitive: false)))
+          .findAll();
+    }
   }
 
   Future<Isar> openDB() async {

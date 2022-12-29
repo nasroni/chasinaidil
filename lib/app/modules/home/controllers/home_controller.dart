@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:chasinaidil/app/data/services/import_service.dart';
 import 'package:chasinaidil/app/data/services/isar_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,7 +16,8 @@ class HomeController extends GetxController {
   final IsarService isar = Get.find();
   final ImportService importService = ImportService();
 
-  final RxList<Song> searchResults = RxList<Song>([]);
+  final RxList<Song> titelSearchResults = RxList<Song>([]);
+  final RxList<Song> lyricsSearchResults = RxList<Song>([]);
 
   late final Worker searchWorker;
 
@@ -47,19 +46,20 @@ class HomeController extends GetxController {
   void closeSearch() {
     isSearchActive.value = false;
     searchEditingController.clear();
-    searchResults.clear();
+    titelSearchResults.clear();
   }
 
   void doSearch() async {
     if (searchValue.value.isEmpty) {
-      searchResults.clear();
+      titelSearchResults.clear();
     } else {
-      searchResults.value = await isar.getSearchResults(searchValue.value);
+      titelSearchResults.value =
+          await isar.getTitleSearchResults(searchValue.value);
     }
   }
 
   void import() async {
-    //final stopwa = Stopwatch()..start();
+    //final stowa = Stopwatch()..start();
     // chasinaidil import
     final songList = await importService.list("Хазинаи Дил");
     final songListWithText = (await Future.wait(
@@ -67,7 +67,7 @@ class HomeController extends GetxController {
         (e) async {
           final text = await rootBundle
               .loadString('assets/chasinaidil/text/${e.id}.txt');
-          e.text = text;
+          e.textWChords = text;
           return e;
         },
       ),
@@ -76,6 +76,6 @@ class HomeController extends GetxController {
     isar.saveSongList(songListWithText);
     isDBfilled.value = true;
 
-    //log("duration ${stopwa.elapsed}");
+    //log("duration ${stowa.elapsed}");
   }
 }

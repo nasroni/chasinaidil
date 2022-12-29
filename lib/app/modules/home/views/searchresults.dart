@@ -19,12 +19,11 @@ class SearchResultView extends StatelessWidget {
           endIndent: 6,
         ),
         padding: const EdgeInsets.all(0),
-        itemCount: _homeController.searchResults.length,
+        itemCount: _homeController.titelSearchResults.length,
         itemBuilder: ((context, index) {
-          final currentResult = _homeController.searchResults[index];
+          final currentResult = _homeController.titelSearchResults[index];
           final albumCoverString =
               "assets/chasinaidil/covers/cd_${currentResult.albumId.toString().padLeft(2, "0")}.jpg";
-          log(albumCoverString);
           return Row(
             children: [
               Container(
@@ -44,25 +43,25 @@ class SearchResultView extends StatelessWidget {
                       children: [
                         Text(
                           "${currentResult.songNumber}・",
-                          //style: TextStyle(fontFamily: 'UbuntuMono'),
                         ),
                         Flexible(
-                          child: Text(
-                            currentResult.title,
-                            overflow: TextOverflow.ellipsis,
+                          child: Container(
+                            padding: const EdgeInsets.only(right: 15),
+                            child: Text(
+                              currentResult.title,
+                              overflow: TextOverflow.fade,
+                              softWrap: false,
+                            ),
                           ),
                         )
                       ],
                     ),
                     Row(
                       children: [
-                        /*const Text(
-                          "     ",
-                          style: TextStyle(fontFamily: 'UbuntuMono'),
-                        ),*/
                         Text(
                           currentResult.book,
-                          style: TextStyle(fontSize: 16, color: Colors.black54),
+                          style: const TextStyle(
+                              fontSize: 16, color: Colors.black54),
                         )
                       ],
                     )
