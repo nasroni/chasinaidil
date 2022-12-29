@@ -16,8 +16,8 @@ class HomeController extends GetxController {
   final IsarService isar = Get.find();
   final ImportService importService = ImportService();
 
-  final RxList<Song> titelSearchResults = RxList<Song>([]);
-  final RxList<Song> lyricsSearchResults = RxList<Song>([]);
+  final RxList<Song> searchResults = RxList<Song>([]);
+  final RxInt searchResultLyricsBeginPosition = 0.obs;
 
   late final Worker searchWorker;
 
@@ -46,15 +46,37 @@ class HomeController extends GetxController {
   void closeSearch() {
     isSearchActive.value = false;
     searchEditingController.clear();
-    titelSearchResults.clear();
+    searchResults.clear();
   }
 
   void doSearch() async {
     if (searchValue.value.isEmpty) {
-      titelSearchResults.clear();
+      searchResults.clear();
     } else {
-      titelSearchResults.value =
+      // Search song number and title
+      final titleSearchResults =
           await isar.getTitleSearchResults(searchValue.value);
+
+      if (int.tryParse(searchValue.value) == null) {
+        // Search lyrics and remove duplicates
+        final lyricsSearchResults = (await isar
+            .getLyricsSearchResults(searchValue.value))
+          ..removeWhere((lyricsElement) => titleSearchResults.any(
+              (titleElement) =>
+                  lyricsElement.songNumberInt == titleElement.songNumberInt));
+
+        // Create info that now lyrics results start
+        searchResultLyricsBeginPosition.value = titleSearchResults.length;
+        final combinedSearchResults = titleSearchResults;
+
+        // combine the two lists
+        combinedSearchResults.insertAll(
+            combinedSearchResults.length, lyricsSearchResults);
+        searchResults.value = combinedSearchResults;
+      } else {
+        searchResultLyricsBeginPosition.value = 99999;
+        searchResults.value = titleSearchResults;
+      }
     }
   }
 
@@ -66,14 +88,15 @@ class HomeController extends GetxController {
       songList.map(
         (e) async {
           final text = await rootBundle
-              .loadString('assets/chasinaidil/text/${e.id}.txt');
+              .loadString('assets/chasinaidil/text/${e.songNumber}.txt');
           e.textWChords = text;
           return e;
         },
       ),
     ))
         .toList();
-    isar.saveSongList(songListWithText);
+    await isar.cleanDb();
+    await isar.saveSongList(songListWithText);
     isDBfilled.value = true;
 
     //log("duration ${stowa.elapsed}");

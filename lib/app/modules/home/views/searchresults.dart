@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:chasinaidil/app/modules/home/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 
 class SearchResultView extends StatelessWidget {
@@ -13,17 +14,39 @@ class SearchResultView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () => ListView.separated(
-        separatorBuilder: (context, index) => const Divider(
-          thickness: 0.5,
-          indent: 6,
-          endIndent: 6,
-        ),
+        separatorBuilder: (context, index) {
+          if (index != _homeController.searchResultLyricsBeginPosition.value) {
+            return const Divider(
+              thickness: 0.5,
+              indent: 6,
+              endIndent: 6,
+            );
+          } else {
+            return Column(
+              children: [
+                Divider(
+                  indent: Get.width / 4.5,
+                  endIndent: Get.width / 4.5,
+                  thickness: 2,
+                ),
+                Container(
+                  //color: Colors.black12,
+                  padding: const EdgeInsets.fromLTRB(0, 3, 0, 8),
+                  child: const Text(
+                    "Дар матн",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.black45),
+                  ),
+                ),
+              ],
+            );
+          }
+        },
         padding: const EdgeInsets.all(0),
-        itemCount: _homeController.titelSearchResults.length,
+        itemCount: _homeController.searchResults.length,
         itemBuilder: ((context, index) {
-          final currentResult = _homeController.titelSearchResults[index];
-          final albumCoverString =
-              "assets/chasinaidil/covers/cd_${currentResult.albumId.toString().padLeft(2, "0")}.jpg";
+          final currentResult = _homeController.searchResults[index];
+
           return Row(
             children: [
               Container(
@@ -32,7 +55,7 @@ class SearchResultView extends StatelessWidget {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: Image.asset(
-                    albumCoverString,
+                    currentResult.coverAsset,
                   ),
                 ),
               ),

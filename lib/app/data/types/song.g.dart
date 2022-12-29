@@ -177,8 +177,8 @@ Song _songDeserialize(
     albumId: reader.readLongOrNull(offsets[0]),
     book: reader.readStringOrNull(offsets[1]) ?? "Гуногун",
     duration: reader.readLongOrNull(offsets[2]),
-    id: id,
     psalm: reader.readStringOrNull(offsets[5]),
+    songNumberInt: reader.readLong(offsets[7]),
     textWChords: reader.readStringOrNull(offsets[8]) ?? "",
     title: reader.readString(offsets[9]),
   );

@@ -56,6 +56,26 @@ class IsarService {
     }
   }
 
+  Future<List<Song>> getLyricsSearchResults(String searchQuery) async {
+    final isar = await db;
+    final searchWords = Isar.splitWords(searchQuery);
+
+    return await isar.songs
+        .where()
+        .lyricsWordsElementStartsWith(searchWords[0])
+        .filter()
+        .optional(
+            searchWords.length > 1,
+            (q) => q.allOf(searchWords.sublist(1),
+                (q, String word) => q.lyricsWordsElementStartsWith(word)))
+        .findAll();
+  }
+
+  Future<void> cleanDb() async {
+    final isar = await db;
+    await isar.writeTxn(() => isar.clear());
+  }
+
   Future<Isar> openDB() async {
     if (Isar.instanceNames.isEmpty) {
       return await Isar.open(
