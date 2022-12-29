@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:chasinaidil/app/modules/home/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 
 class SearchResultView extends StatelessWidget {
@@ -20,6 +19,7 @@ class SearchResultView extends StatelessWidget {
               thickness: 0.5,
               indent: 6,
               endIndent: 6,
+              height: 0.5,
             );
           } else {
             return Column(
@@ -47,51 +47,67 @@ class SearchResultView extends StatelessWidget {
         itemBuilder: ((context, index) {
           final currentResult = _homeController.searchResults[index];
 
-          return Row(
-            children: [
-              Container(
-                height: 55,
-                padding: const EdgeInsets.fromLTRB(6, 4, 12, 4),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
-                    currentResult.coverAsset,
-                  ),
-                ),
-              ),
-              Flexible(
-                child: Column(
+          return Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                log(currentResult.songNumber);
+                Get.toNamed('/lyrics');
+              },
+              onLongPress: () {
+                Get.snackbar(currentResult.title, "Will be implemented later");
+              },
+              enableFeedback: true,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 7.5),
+                child: Row(
                   children: [
-                    Row(
-                      children: [
-                        Text(
-                          "${currentResult.songNumber}・",
+                    Container(
+                      height: 55,
+                      padding: const EdgeInsets.fromLTRB(6, 4, 12, 4),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.asset(
+                          currentResult.coverAsset,
                         ),
-                        Flexible(
-                          child: Container(
-                            padding: const EdgeInsets.only(right: 15),
-                            child: Text(
-                              currentResult.title,
-                              overflow: TextOverflow.fade,
-                              softWrap: false,
-                            ),
-                          ),
-                        )
-                      ],
+                      ),
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          currentResult.book,
-                          style: const TextStyle(
-                              fontSize: 16, color: Colors.black54),
-                        )
-                      ],
-                    )
+                    Flexible(
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "${currentResult.songNumber}・",
+                              ),
+                              Flexible(
+                                child: Container(
+                                  padding: const EdgeInsets.only(right: 15),
+                                  child: Text(
+                                    currentResult.title,
+                                    overflow: TextOverflow.fade,
+                                    softWrap: false,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              Text(
+                                currentResult.book,
+                                style: const TextStyle(
+                                    fontSize: 16, color: Colors.black54),
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ],
+            ),
           );
         }),
       ),

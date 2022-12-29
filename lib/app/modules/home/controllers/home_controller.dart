@@ -50,6 +50,7 @@ class HomeController extends GetxController {
   }
 
   void doSearch() async {
+    // only numeric search
     if (searchValue.value.isEmpty) {
       searchResults.clear();
     } else {
@@ -74,7 +75,8 @@ class HomeController extends GetxController {
             combinedSearchResults.length, lyricsSearchResults);
         searchResults.value = combinedSearchResults;
       } else {
-        searchResultLyricsBeginPosition.value = 99999;
+        // if only numeric results, lyric search and divider not in use
+        searchResultLyricsBeginPosition.value = 999999;
         searchResults.value = titleSearchResults;
       }
     }
