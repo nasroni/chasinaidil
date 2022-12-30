@@ -25,8 +25,8 @@ class SearchResultView extends StatelessWidget {
             return Column(
               children: [
                 Divider(
-                  indent: Get.width / 4.5,
-                  endIndent: Get.width / 4.5,
+                  indent: context.width / 4.5,
+                  endIndent: context.width / 4.5,
                   thickness: 2,
                 ),
                 Container(
@@ -52,7 +52,7 @@ class SearchResultView extends StatelessWidget {
             child: InkWell(
               onTap: () {
                 log(currentResult.songNumber);
-                Get.toNamed('/lyrics');
+                Get.toNamed('/lyrics', arguments: currentResult);
               },
               onLongPress: () {
                 Get.snackbar(currentResult.title, "Will be implemented later");

@@ -21,8 +21,9 @@ class SearchBar extends StatelessWidget {
           padding: EdgeInsets.symmetric(
               vertical: Platform.isAndroid ? 15 : 10,
               horizontal: _homeController.isSearchActive.value ? 10 : 15),
-          width:
-              _homeController.isSearchActive.value ? Get.width - 70 : Get.width,
+          width: _homeController.isSearchActive.value
+              ? context.width - 70
+              : context.width,
           child: CupertinoSearchTextField(
             autocorrect: false,
             placeholder: 'Ҷустуҷӯ',

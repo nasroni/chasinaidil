@@ -17,4 +17,23 @@ class AppTheme {
       ),
     ),
   );
+
+  static const chordText = TextStyle(
+    fontFamily: 'NotoSansMono',
+    fontWeight: FontWeight.w700,
+    fontSize: 16,
+    color: Colors.indigo,
+  );
+
+  static const chordLyricsText = TextStyle(
+    fontFamily: 'NotoSansMono',
+    fontSize: 16,
+    color: Colors.black,
+  );
+
+  static const lyricsTitleText = TextStyle(
+    fontSize: 19,
+    color: Colors.black54,
+    fontStyle: FontStyle.italic,
+  );
 }

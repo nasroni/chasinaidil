@@ -17,7 +17,7 @@ class Song {
   final int songNumberInt;
 
   String get lyrics =>
-      textWChords.replaceAll(RegExp(r'\[([A-Za-z]){1,2}\]'), '');
+      textWChords.replaceAll(RegExp(r'\[([A-Za-z#0-9]){1,4}\]'), '');
 
   @ignore
   String get coverAsset =>

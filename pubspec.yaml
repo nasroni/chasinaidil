@@ -15,6 +15,7 @@ dependencies:
   flutter_localization: ^0.1.9
   flutter_localizations:
     sdk: flutter
+  gesture_x_detector: ^1.1.1
 
 dev_dependencies: 
   build_runner: ^2.3.3
@@ -41,4 +42,9 @@ flutter:
           weight: 700
         - asset: fonts/UbuntuMono-BoldItalic.ttf
           style: italic
+          weight: 700
+    - family: NotoSansMono
+      fonts:
+        - asset: fonts/NotoSansMono-Regular.ttf
+        - asset: fonts/NotoSansMono-Bold.ttf
           weight: 700

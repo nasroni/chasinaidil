@@ -1,9 +1,13 @@
+import 'dart:developer';
+
 import 'package:get/get.dart';
 
-class LyricsController extends GetxController {
-  //TODO: Implement LyricsController
+import '../../../../theme.dart';
+import '../../../data/types/song.dart';
 
-  final count = 0.obs;
+class LyricsController extends GetxController {
+  final Song song = Get.arguments;
+
   @override
   void onInit() {
     super.onInit();
@@ -18,6 +22,4 @@ class LyricsController extends GetxController {
   void onClose() {
     super.onClose();
   }
-
-  void increment() => count.value++;
 }
