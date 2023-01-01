@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,6 +13,7 @@ class SearchBar extends StatelessWidget {
   }) : super(key: key);
 
   final HomeController _homeController = Get.find();
+  final AppController appc = Get.find();
 
   @override
   Widget build(BuildContext context) {

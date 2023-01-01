@@ -1,5 +1,5 @@
 import 'package:chasinaidil/app/modules/lyrics/controllers/lyrics_controller.dart';
-import 'package:chasinaidil/app/modules/lyrics/views/chords_view.dart';
+import 'package:chasinaidil/app/modules/lyrics/views/chords.dart';
 import 'package:chasinaidil/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:gesture_x_detector/gesture_x_detector.dart';

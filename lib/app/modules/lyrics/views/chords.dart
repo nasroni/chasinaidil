@@ -28,7 +28,9 @@ class ChordsView extends StatelessWidget {
     rendered = text.map((line) {
       if (line.startsWith('#')) {
         return Container(
-          padding: const EdgeInsets.fromLTRB(10, 8, 8, 4),
+          padding: context.isLandscape
+              ? const EdgeInsets.fromLTRB(50, 8, 48, 4)
+              : const EdgeInsets.fromLTRB(10, 8, 8, 4),
           child: Text(
             line.substring(1),
             style: titleStyle,
@@ -39,7 +41,9 @@ class ChordsView extends StatelessWidget {
       toggleBW = !toggleBW;
 
       return Container(
-        padding: const EdgeInsets.all(10),
+        padding: context.isLandscape
+            ? const EdgeInsets.symmetric(vertical: 10, horizontal: 50)
+            : const EdgeInsets.all(10),
         color: toggleBW ? const Color(0xfff3f3f3) : Colors.white,
         width: double.maxFinite,
         child: Wrap(
