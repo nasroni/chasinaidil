@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:chasinaidil/app/modules/home/views/searchresults.dart';
 import 'package:flutter/material.dart';

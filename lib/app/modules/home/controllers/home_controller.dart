@@ -24,11 +24,6 @@ class HomeController extends GetxController {
   final TextEditingController searchEditingController = TextEditingController();
 
   @override
-  void onInit() {
-    super.onInit();
-  }
-
-  @override
   void onReady() {
     super.onReady();
     searchWorker = ever(searchValue, (_) => doSearch());
