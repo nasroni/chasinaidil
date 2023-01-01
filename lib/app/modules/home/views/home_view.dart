@@ -1,5 +1,6 @@
 import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:chasinaidil/app/modules/home/views/searchresults.dart';
+import 'package:chasinaidil/release_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -23,7 +24,7 @@ class HomeView extends GetView<HomeController> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.top, SystemUiOverlay.top]);
 
-    controller.import();
+    controller.import(ReleaseConfig.dbversion);
     return Obx(() => Scaffold(
           body: Container(
             color: Get.theme.backgroundColor,

@@ -1,8 +1,11 @@
 import 'package:chasinaidil/app/data/services/import_service.dart';
 import 'package:chasinaidil/app/data/services/isar_service.dart';
+import 'package:chasinaidil/prefs.dart';
+import 'package:chasinaidil/release_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 import '../../../data/types/song.dart';
 
@@ -77,25 +80,29 @@ class HomeController extends GetxController {
     }
   }
 
-  void import() async {
-    //final stowa = Stopwatch()..start();
-    // chasinaidil import
-    final songList = await importService.list("Хазинаи Дил");
-    final songListWithText = (await Future.wait(
-      songList.map(
-        (e) async {
-          final text = await rootBundle
-              .loadString('assets/chasinaidil/text/${e.songNumber}.txt');
-          e.textWChords = text;
-          return e;
-        },
-      ),
-    ))
-        .toList();
-    await isar.cleanDb();
-    await isar.saveSongList(songListWithText);
-    isDBfilled.value = true;
-
+  void import(version) async {
+    if (GetStorage().read(Prefs.numDBversion) != ReleaseConfig.dbversion) {
+      //final stowa = Stopwatch()..start();
+      // chasinaidil import
+      final songList = await importService.list("Хазинаи Дил");
+      final songListWithText = (await Future.wait(
+        songList.map(
+          (e) async {
+            final text = await rootBundle
+                .loadString('assets/chasinaidil/text/${e.songNumber}.txt');
+            e.textWChords = text;
+            return e;
+          },
+        ),
+      ))
+          .toList();
+      await isar.cleanDb();
+      await isar.saveSongList(songListWithText);
+      isDBfilled.value = true;
+      GetStorage().write(Prefs.numDBversion, version);
+    } else {
+      isDBfilled.value = true;
+    }
     //log("duration ${stowa.elapsed}");
   }
 }
