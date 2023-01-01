@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="one.nasroni.chasinaidilnew">
+    package="one.nasroni.chasinaidilNew">
    <application
-        android:label="chasinaidilnew"
+        android:label="chasinaiDilNew"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
