@@ -57,10 +57,13 @@ class _ZoomTextViewState extends State<ZoomTextView> {
         height: context.height,
         width: context.width,
         child: SingleChildScrollView(
-          child: ChordsView(
-            titleStyle: titleStyle,
-            lyricsStyle: lyricsStyle,
-            chordsStyle: chordsStyle,
+          child: GetBuilder<LyricsController>(
+            id: 'chordview',
+            builder: (_) => ChordsView(
+              titleStyle: titleStyle,
+              lyricsStyle: lyricsStyle,
+              chordsStyle: chordsStyle,
+            ),
           ),
         ),
       ),

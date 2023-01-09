@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chasinaidil/app/modules/lyrics/controllers/lyrics_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -96,30 +98,40 @@ class ChordsView extends StatelessWidget {
             if (word.contains('[')) {
               bool chordToggle = false;
               int chordAhead = 0;
+              String currentChord = "";
               word.split('').forEach((letter) {
                 // start of chord
                 if (letter == '[') {
                   chordToggle = true;
+                  log("$currentChord - $chordAhead");
+
+                  if (chordAhead > 0) {
+                    chord += ' ';
+                    text += '-' * chordAhead;
+                  }
                   chordAhead = 0;
+                  currentChord = "";
                 }
                 // end of chord
                 else if (letter == ']') {
                   chordToggle = false;
+                  String transposedChord = controller.transpose(currentChord);
+                  chordAhead = transposedChord.length + 1;
+                  chord += transposedChord;
                 }
                 // chord displaying
                 else if (chordToggle) {
+                  currentChord += letter;
                   // nice rendering of flat
-                  if (letter == 'b') {
+                  /*if (letter == 'b') {
                     letter = '♭';
-                  }
-                  chord += letter;
-                  chordAhead++;
+                  }*/
                 }
                 // text rendering
                 else {
                   text += letter;
-                  if (chordAhead <= 0) {
-                    chord = '$chord ';
+                  if (chordAhead <= 1) {
+                    chord += ' ';
                   }
                   chordAhead--;
                 }

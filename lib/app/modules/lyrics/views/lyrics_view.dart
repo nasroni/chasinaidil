@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:chasinaidil/app/modules/lyrics/views/chordactions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -28,7 +29,12 @@ class LyricsView extends GetView<LyricsController> {
         title: Text(song.title),
         centerTitle: true,
       ),
-      body: const ZoomTextView(),
+      body: Column(
+        children: [
+          controller.isChordMode ? ChordActions() : Container(),
+          const Expanded(child: ZoomTextView()),
+        ],
+      ),
     );
   }
 }
