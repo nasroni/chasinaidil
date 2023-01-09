@@ -4,7 +4,7 @@ part 'song.g.dart';
 
 @collection
 class Song {
-  final Id id = Isar.autoIncrement;
+  Id get id => (bookId * 1000) + songNumberInt;
 
   final String title;
   final int? albumId;
@@ -15,6 +15,17 @@ class Song {
 
   String get songNumber => songNumberInt.toString();
   final int songNumberInt;
+
+  int get bookId {
+    switch (book) {
+      case "Хазинаи Дил":
+        return 1;
+      case "Чашма":
+        return 2;
+      default:
+        return 9;
+    }
+  }
 
   String get lyrics =>
       textWChords.replaceAll(RegExp(r'\[([A-Za-z#0-9]){1,4}\]'), '');

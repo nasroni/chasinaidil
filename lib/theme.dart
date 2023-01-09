@@ -33,7 +33,7 @@ class AppTheme {
 
   static const lyricsTitleText = TextStyle(
     fontSize: 19,
-    color: Colors.black54,
+    color: Colors.black87,
     fontStyle: FontStyle.italic,
   );
 }

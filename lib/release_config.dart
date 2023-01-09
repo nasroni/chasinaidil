@@ -1,3 +1,3 @@
 class ReleaseConfig {
-  static const dbversion = 1;
+  static const dbversion = 3;
 }

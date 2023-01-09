@@ -27,48 +27,53 @@ const SongSchema = CollectionSchema(
       name: r'book',
       type: IsarType.string,
     ),
-    r'duration': PropertySchema(
+    r'bookId': PropertySchema(
       id: 2,
+      name: r'bookId',
+      type: IsarType.long,
+    ),
+    r'duration': PropertySchema(
+      id: 3,
       name: r'duration',
       type: IsarType.long,
     ),
     r'lyrics': PropertySchema(
-      id: 3,
+      id: 4,
       name: r'lyrics',
       type: IsarType.string,
     ),
     r'lyricsWords': PropertySchema(
-      id: 4,
+      id: 5,
       name: r'lyricsWords',
       type: IsarType.stringList,
     ),
     r'psalm': PropertySchema(
-      id: 5,
+      id: 6,
       name: r'psalm',
       type: IsarType.string,
     ),
     r'songNumber': PropertySchema(
-      id: 6,
+      id: 7,
       name: r'songNumber',
       type: IsarType.string,
     ),
     r'songNumberInt': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'songNumberInt',
       type: IsarType.long,
     ),
     r'textWChords': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'textWChords',
       type: IsarType.string,
     ),
     r'title': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'title',
       type: IsarType.string,
     ),
     r'titleWords': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'titleWords',
       type: IsarType.stringList,
     )
@@ -156,15 +161,16 @@ void _songSerialize(
 ) {
   writer.writeLong(offsets[0], object.albumId);
   writer.writeString(offsets[1], object.book);
-  writer.writeLong(offsets[2], object.duration);
-  writer.writeString(offsets[3], object.lyrics);
-  writer.writeStringList(offsets[4], object.lyricsWords);
-  writer.writeString(offsets[5], object.psalm);
-  writer.writeString(offsets[6], object.songNumber);
-  writer.writeLong(offsets[7], object.songNumberInt);
-  writer.writeString(offsets[8], object.textWChords);
-  writer.writeString(offsets[9], object.title);
-  writer.writeStringList(offsets[10], object.titleWords);
+  writer.writeLong(offsets[2], object.bookId);
+  writer.writeLong(offsets[3], object.duration);
+  writer.writeString(offsets[4], object.lyrics);
+  writer.writeStringList(offsets[5], object.lyricsWords);
+  writer.writeString(offsets[6], object.psalm);
+  writer.writeString(offsets[7], object.songNumber);
+  writer.writeLong(offsets[8], object.songNumberInt);
+  writer.writeString(offsets[9], object.textWChords);
+  writer.writeString(offsets[10], object.title);
+  writer.writeStringList(offsets[11], object.titleWords);
 }
 
 Song _songDeserialize(
@@ -176,11 +182,11 @@ Song _songDeserialize(
   final object = Song(
     albumId: reader.readLongOrNull(offsets[0]),
     book: reader.readStringOrNull(offsets[1]) ?? "Гуногун",
-    duration: reader.readLongOrNull(offsets[2]),
-    psalm: reader.readStringOrNull(offsets[5]),
-    songNumberInt: reader.readLong(offsets[7]),
-    textWChords: reader.readStringOrNull(offsets[8]) ?? "",
-    title: reader.readString(offsets[9]),
+    duration: reader.readLongOrNull(offsets[3]),
+    psalm: reader.readStringOrNull(offsets[6]),
+    songNumberInt: reader.readLong(offsets[8]),
+    textWChords: reader.readStringOrNull(offsets[9]) ?? "",
+    title: reader.readString(offsets[10]),
   );
   return object;
 }
@@ -197,22 +203,24 @@ P _songDeserializeProp<P>(
     case 1:
       return (reader.readStringOrNull(offset) ?? "Гуногун") as P;
     case 2:
-      return (reader.readLongOrNull(offset)) as P;
-    case 3:
-      return (reader.readString(offset)) as P;
-    case 4:
-      return (reader.readStringList(offset) ?? []) as P;
-    case 5:
-      return (reader.readStringOrNull(offset)) as P;
-    case 6:
-      return (reader.readString(offset)) as P;
-    case 7:
       return (reader.readLong(offset)) as P;
-    case 8:
-      return (reader.readStringOrNull(offset) ?? "") as P;
-    case 9:
+    case 3:
+      return (reader.readLongOrNull(offset)) as P;
+    case 4:
       return (reader.readString(offset)) as P;
+    case 5:
+      return (reader.readStringList(offset) ?? []) as P;
+    case 6:
+      return (reader.readStringOrNull(offset)) as P;
+    case 7:
+      return (reader.readString(offset)) as P;
+    case 8:
+      return (reader.readLong(offset)) as P;
+    case 9:
+      return (reader.readStringOrNull(offset) ?? "") as P;
     case 10:
+      return (reader.readString(offset)) as P;
+    case 11:
       return (reader.readStringList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -785,6 +793,58 @@ extension SongQueryFilter on QueryBuilder<Song, Song, QFilterCondition> {
       return query.addFilterCondition(FilterCondition.greaterThan(
         property: r'book',
         value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookIdEqualTo(int value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'bookId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookIdGreaterThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'bookId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookIdLessThan(
+    int value, {
+    bool include = false,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'bookId',
+        value: value,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookIdBetween(
+    int lower,
+    int upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'bookId',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
       ));
     });
   }
@@ -2082,6 +2142,18 @@ extension SongQuerySortBy on QueryBuilder<Song, Song, QSortBy> {
     });
   }
 
+  QueryBuilder<Song, Song, QAfterSortBy> sortByBookId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bookId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterSortBy> sortByBookIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bookId', Sort.desc);
+    });
+  }
+
   QueryBuilder<Song, Song, QAfterSortBy> sortByDuration() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'duration', Sort.asc);
@@ -2189,6 +2261,18 @@ extension SongQuerySortThenBy on QueryBuilder<Song, Song, QSortThenBy> {
   QueryBuilder<Song, Song, QAfterSortBy> thenByBookDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'book', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterSortBy> thenByBookId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bookId', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterSortBy> thenByBookIdDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bookId', Sort.desc);
     });
   }
 
@@ -2303,6 +2387,12 @@ extension SongQueryWhereDistinct on QueryBuilder<Song, Song, QDistinct> {
     });
   }
 
+  QueryBuilder<Song, Song, QDistinct> distinctByBookId() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'bookId');
+    });
+  }
+
   QueryBuilder<Song, Song, QDistinct> distinctByDuration() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'duration');
@@ -2379,6 +2469,12 @@ extension SongQueryProperty on QueryBuilder<Song, Song, QQueryProperty> {
   QueryBuilder<Song, String, QQueryOperations> bookProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'book');
+    });
+  }
+
+  QueryBuilder<Song, int, QQueryOperations> bookIdProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'bookId');
     });
   }
 

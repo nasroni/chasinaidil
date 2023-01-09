@@ -21,15 +21,22 @@ class HomeController extends GetxController {
 
   final RxList<Song> searchResults = RxList<Song>([]);
   final RxInt searchResultLyricsBeginPosition = 0.obs;
+  final RxBool isShowingLastSearched = true.obs;
 
   late final Worker searchWorker;
 
   final TextEditingController searchEditingController = TextEditingController();
 
   @override
+  void onInit() {
+    showLastSearchedSongs();
+    super.onInit();
+  }
+
+  @override
   void onReady() {
-    super.onReady();
     searchWorker = ever(searchValue, (_) => doSearch());
+    super.onReady();
   }
 
   @override
@@ -40,26 +47,48 @@ class HomeController extends GetxController {
 
   void increment() => count.value++;
 
-  void openSearch() => isSearchActive.value = true;
+  Future<void> openSearch() async {
+    isSearchActive.value = true;
+    showLastSearchedSongs();
+  }
+
   void closeSearch() {
     isSearchActive.value = false;
     searchEditingController.clear();
     searchResults.clear();
   }
 
-  void doSearch() async {
-    // only numeric search
-    if (searchValue.value.isEmpty) {
-      searchResults.clear();
-    } else {
-      // Search song number and title
-      final titleSearchResults =
-          await isar.getTitleSearchResults(searchValue.value);
+  void showLastSearchedSongs() async {
+    final List<dynamic> lastSearchedSongIds =
+        GetStorage().read(Prefs.listLastSearches) ?? [];
 
-      if (int.tryParse(searchValue.value) == null) {
+    List<Song> lastSearchedSongs = [];
+
+    for (int songId in lastSearchedSongIds) {
+      var song = await isar.getSongById(songId);
+      if (song != null) lastSearchedSongs.add(song);
+    }
+
+    isShowingLastSearched.value = true;
+    searchResultLyricsBeginPosition.value = 100;
+    searchResults.value = lastSearchedSongs;
+  }
+
+  void doSearch() async {
+    final searchVal = searchValue.value.trim();
+    // only numeric search
+    if (searchVal.isEmpty) {
+      searchResults.clear();
+      showLastSearchedSongs();
+    } else {
+      isShowingLastSearched.value = false;
+      // Search song number and title
+      final titleSearchResults = await isar.getTitleSearchResults(searchVal);
+
+      if (int.tryParse(searchVal) == null) {
         // Search lyrics and remove duplicates
         final lyricsSearchResults = (await isar
-            .getLyricsSearchResults(searchValue.value))
+            .getLyricsSearchResults(searchVal))
           ..removeWhere((lyricsElement) => titleSearchResults.any(
               (titleElement) =>
                   lyricsElement.songNumberInt == titleElement.songNumberInt));
