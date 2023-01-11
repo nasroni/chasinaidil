@@ -103,11 +103,10 @@ class ChordsView extends StatelessWidget {
                 // start of chord
                 if (letter == '[') {
                   chordToggle = true;
-                  log("$currentChord - $chordAhead");
 
                   if (chordAhead > 0) {
                     chord += ' ';
-                    text += '-' * chordAhead;
+                    text += '_' * chordAhead;
                   }
                   chordAhead = 0;
                   currentChord = "";
@@ -144,6 +143,7 @@ class ChordsView extends StatelessWidget {
             // add removed word separation if not last word or after repeat sign
             if (lastWord != word && text != "|:") {
               text = '$text ';
+              chord = '$chord ';
             }
 
             // display chords and lyrics

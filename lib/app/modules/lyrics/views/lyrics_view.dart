@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:chasinaidil/app/modules/lyrics/views/chordactions.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -23,12 +24,36 @@ class LyricsView extends GetView<LyricsController> {
     GetPlatform.isAndroid
         ? SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [])
         : null;
-    final Song song = Get.arguments;
+    final Song song = controller.song;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(song.title),
-        centerTitle: true,
+      appBar: CupertinoNavigationBar(
+        /*leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios_new),
+          onPressed: () => Get.back(),
+        ),*/
+        trailing: Icon(Icons.play_circle_outline_sharp),
+        middle: Container(
+          width: context.width / 2,
+          child: CupertinoButton(
+            onPressed: () {},
+            minSize: 0,
+            padding: const EdgeInsets.all(2),
+            color: Get.theme.scaffoldBackgroundColor,
+            child: Text(
+              "${song.songNumber}. ${song.title}",
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.black,
+                overflow: TextOverflow.ellipsis,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ),
       ),
+      /*appBar: AppBar(
+        title: Text('asdf'),
+      ),*/
       body: Column(
         children: [
           controller.isChordMode ? ChordActions() : Container(),

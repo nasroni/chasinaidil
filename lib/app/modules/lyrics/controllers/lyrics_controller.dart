@@ -25,6 +25,11 @@ class LyricsController extends GetxController {
     update(['chordview']);
   }
 
+  void resetTranspose() {
+    transposeCount.value = 0;
+    update(['chordview']);
+  }
+
   transpose(String currentChord) {
     if (transposeCount.value == 0) return currentChord;
     int transposeDistance = transposeCount.value;

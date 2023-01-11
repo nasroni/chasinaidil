@@ -18,6 +18,22 @@ class AppTheme {
     ),
   );
 
+  static final darkTheme = ThemeData(
+    backgroundColor: Colors.black87,
+    textTheme: const TextTheme(
+      titleLarge: TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.w700,
+        fontSize: 30,
+      ),
+      bodyMedium: TextStyle(
+        //fontFamily: 'UbuntuMono',
+
+        fontSize: 18,
+      ),
+    ),
+  );
+
   static const chordText = TextStyle(
     fontFamily: 'NotoSansMono',
     fontWeight: FontWeight.w700,

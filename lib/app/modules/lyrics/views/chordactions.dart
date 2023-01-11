@@ -28,6 +28,13 @@ class ChordActions extends StatelessWidget {
           CupertinoButton(
             color: Colors.black26,
             padding: const EdgeInsets.all(0),
+            borderRadius: null,
+            onPressed: () => controller.resetTranspose(),
+            child: const Icon(Icons.adjust_rounded),
+          ),
+          CupertinoButton(
+            color: Colors.black26,
+            padding: const EdgeInsets.all(0),
             borderRadius: const BorderRadius.only(
               topRight: Radius.circular(8),
               bottomRight: Radius.circular(8),
