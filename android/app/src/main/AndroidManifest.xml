@@ -3,7 +3,8 @@
    <application
         android:label="Хазинаи Дил"
         android:name="${applicationName}"
-        android:icon="@mipmap/launcher_icon">
+        android:icon="@mipmap/launcher_icon"
+        android:roundIcon="@mipmap/ic_launcher_round">
         <activity
             android:name=".MainActivity"
             android:exported="true"
