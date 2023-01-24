@@ -86,7 +86,8 @@ class ChordsView extends StatelessWidget {
             ? const EdgeInsets.symmetric(vertical: 10, horizontal: 50)
             : const EdgeInsets.all(10),
         // backgroundcolor
-        color: toggleBW ? const Color(0xfff8f8f8) : Colors.white,
+        //color: toggleBW ? const Color(0xfff0f0f0) : Colors.white,
+        color: Colors.white,
         width: double.maxFinite,
         // linebreak wordwise
         child: Wrap(
@@ -143,7 +144,7 @@ class ChordsView extends StatelessWidget {
             // add removed word separation if not last word or after repeat sign
             if (lastWord != word && text != "|:") {
               text = '$text ';
-              chord = '$chord ';
+              chord = '$chord '.replaceAll('b', '♭');
             }
 
             // display chords and lyrics
