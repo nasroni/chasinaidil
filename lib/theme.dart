@@ -35,21 +35,24 @@ class AppTheme {
   );
 
   static const chordText = TextStyle(
-    fontFamily: 'NotoSansMono',
+    fontFamily: 'OverpassMono',
     fontWeight: FontWeight.w700,
     fontSize: 16,
-    color: Colors.indigo,
+    color: Color.fromARGB(255, 40, 56, 145),
   );
 
   static const chordLyricsText = TextStyle(
-    fontFamily: 'NotoSansMono',
+    fontFamily: 'OverpassMono',
     fontSize: 16,
     color: Colors.black,
   );
 
   static const lyricsTitleText = TextStyle(
-    fontSize: 19,
-    color: Colors.black87,
-    fontStyle: FontStyle.italic,
-  );
+      fontFamily: 'OverpassMono',
+      fontWeight: FontWeight.w500,
+      fontSize: 19,
+      //color: Colors.black87,
+      color: Color.fromARGB(255, 40, 56, 145)
+      //fontStyle: FontStyle.italic,
+      );
 }

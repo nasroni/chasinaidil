@@ -59,8 +59,8 @@ class ChordsView extends StatelessWidget {
 
         return Container(
           padding: context.isLandscape
-              ? const EdgeInsets.fromLTRB(50, 8, 48, 4)
-              : const EdgeInsets.fromLTRB(10, 8, 8, 4),
+              ? const EdgeInsets.fromLTRB(50, 15, 48, 2)
+              : const EdgeInsets.fromLTRB(30, 15, 8, 2),
           child: Text(
             lineText,
             style: titleStyle,
@@ -84,88 +84,26 @@ class ChordsView extends StatelessWidget {
         // notch and design
         padding: context.isLandscape
             ? const EdgeInsets.symmetric(vertical: 10, horizontal: 50)
-            : const EdgeInsets.all(10),
+            : const EdgeInsets.fromLTRB(20, 5, 10, 5),
         // backgroundcolor
         //color: toggleBW ? const Color(0xfff0f0f0) : Colors.white,
         color: Colors.white,
         width: double.maxFinite,
         // linebreak wordwise
-        child: Wrap(
-          crossAxisAlignment: WrapCrossAlignment.end,
-          // word render
-          children: words.map((word) {
-            var text = '', chord = '';
-            // chord logic
-            if (word.contains('[')) {
-              bool chordToggle = false;
-              int chordAhead = 0;
-              String currentChord = "";
-              word.split('').forEach((letter) {
-                // start of chord
-                if (letter == '[') {
-                  chordToggle = true;
-
-                  if (chordAhead > 0) {
-                    chord += ' ';
-                    text += '_' * chordAhead;
-                  }
-                  chordAhead = 0;
-                  currentChord = "";
-                }
-                // end of chord
-                else if (letter == ']') {
-                  chordToggle = false;
-                  String transposedChord = controller.transpose(currentChord);
-                  chordAhead = transposedChord.length + 1;
-                  chord += transposedChord;
-                }
-                // chord displaying
-                else if (chordToggle) {
-                  currentChord += letter;
-                  // nice rendering of flat
-                  /*if (letter == 'b') {
-                    letter = '♭';
-                  }*/
-                }
-                // text rendering
-                else {
-                  text += letter;
-                  if (chordAhead <= 1) {
-                    chord += ' ';
-                  }
-                  chordAhead--;
-                }
-              });
-            }
-            // plain text rendering
-            else {
-              text = word;
-            }
-            // add removed word separation if not last word or after repeat sign
-            if (lastWord != word && text != "|:") {
-              text = '$text ';
-              chord = '$chord '.replaceAll('b', '♭');
-            }
-
-            // display chords and lyrics
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                Text(
-                  chord,
-                  style: chordsStyle,
-                ),
-                Text(
-                  text,
-                  style: lyricsStyle,
-                )
-              ],
-            );
-          }).toList(),
+        child: WordWiseWithChords(
+          words: words,
+          controller: controller,
+          lastWord: lastWord,
+          chordsStyle: chordsStyle,
+          lyricsStyle: lyricsStyle,
         ),
       );
     }).toList();
+
+    rendered.add(Container(
+      height: 25,
+      width: context.width,
+    ));
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -176,6 +114,101 @@ class ChordsView extends StatelessWidget {
           children: rendered,
         )
       ],
+    );
+  }
+}
+
+class WordWiseWithChords extends StatelessWidget {
+  const WordWiseWithChords({
+    super.key,
+    required this.words,
+    required this.controller,
+    required this.lastWord,
+    required this.chordsStyle,
+    required this.lyricsStyle,
+  });
+
+  final List<String> words;
+  final LyricsController controller;
+  final String lastWord;
+  final TextStyle chordsStyle;
+  final TextStyle lyricsStyle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      crossAxisAlignment: WrapCrossAlignment.end,
+      // word render
+      children: words.map((word) {
+        var text = '', chord = '';
+        // chord logic
+        if (word.contains('[')) {
+          bool chordToggle = false;
+          int chordAhead = 0;
+          String currentChord = "";
+          word.split('').forEach((letter) {
+            // start of chord
+            if (letter == '[') {
+              chordToggle = true;
+
+              if (chordAhead > 0) {
+                chord += ' ';
+                text += '_' * chordAhead;
+              }
+              chordAhead = 0;
+              currentChord = "";
+            }
+            // end of chord
+            else if (letter == ']') {
+              chordToggle = false;
+              String transposedChord = controller.transpose(currentChord);
+              chordAhead = transposedChord.length + 1;
+              chord += transposedChord;
+            }
+            // chord displaying
+            else if (chordToggle) {
+              currentChord += letter;
+              // nice rendering of flat
+              /*if (letter == 'b') {
+                letter = '♭';
+              }*/
+            }
+            // text rendering
+            else {
+              text += letter;
+              if (chordAhead <= 1) {
+                chord += ' ';
+              }
+              chordAhead--;
+            }
+          });
+        }
+        // plain text rendering
+        else {
+          text = word;
+        }
+        // add removed word separation if not last word or after repeat sign
+        if (lastWord != word && text != "|:") {
+          text = '$text ';
+          chord = '$chord '.replaceAll('b', '♭');
+        }
+
+        // display chords and lyrics
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              chord,
+              style: chordsStyle,
+            ),
+            Text(
+              text,
+              style: lyricsStyle,
+            )
+          ],
+        );
+      }).toList(),
     );
   }
 }

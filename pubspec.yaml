@@ -52,6 +52,17 @@ flutter:
         - asset: fonts/NotoSansMono-Regular.ttf
         - asset: fonts/NotoSansMono-Bold.ttf
           weight: 700
+    - family: OverpassMono
+      fonts:
+        - asset: fonts/OverpassMono-Regular.ttf
+        - asset: fonts/OverpassMono-Bold.ttf
+          weight: 700
+        - asset: fonts/OverpassMono-Light.ttf
+          weight: 300
+        - asset: fonts/OverpassMono-Medium.ttf
+          weight: 500
+        - asset: fonts/OverpassMono-SemiBold.ttf
+          weight: 600
 
 # package_rename_config:
 #   android:

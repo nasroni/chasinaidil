@@ -4,14 +4,16 @@ import 'package:get/get.dart';
 
 import '../../../data/types/song.dart';
 
+enum ViewModes { Lyrics, Chords, Sheet }
+
 class LyricsController extends GetxController {
   final Song song = Get.arguments;
 
-  final RxInt viewModeInt = 2.obs;
+  final Rx<ViewModes> viewMode = ViewModes.Chords.obs;
 
-  bool get isLyricsMode => viewModeInt.value == 1;
-  bool get isChordMode => viewModeInt.value == 2;
-  bool get isSheetMode => viewModeInt.value == 3;
+  bool get isLyricsMode => viewMode.value == ViewModes.Lyrics;
+  bool get isChordMode => viewMode.value == ViewModes.Chords;
+  bool get isSheetMode => viewMode.value == ViewModes.Sheet;
 
   final RxInt transposeCount = 0.obs;
 
