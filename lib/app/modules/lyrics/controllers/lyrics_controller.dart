@@ -1,6 +1,8 @@
 import 'dart:developer';
 
+import 'package:chasinaidil/prefs.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 import '../../../data/types/song.dart';
 
@@ -9,8 +11,12 @@ enum ViewModes { Lyrics, Chords, Sheet }
 class LyricsController extends GetxController {
   final Song song = Get.arguments;
 
-  final Rx<ViewModes> viewMode = ViewModes.Chords.obs;
-
+  final Rx<ViewModes> viewMode = ViewModes.values
+      .firstWhere(
+        (element) => element.name == GetStorage().read(Prefs.mode),
+        orElse: () => ViewModes.Lyrics,
+      )
+      .obs;
   bool get isLyricsMode => viewMode.value == ViewModes.Lyrics;
   bool get isChordMode => viewMode.value == ViewModes.Chords;
   bool get isSheetMode => viewMode.value == ViewModes.Sheet;
@@ -19,17 +25,23 @@ class LyricsController extends GetxController {
 
   void decreaseTranspose() {
     transposeCount.value--;
-    update(['chordview']);
+    update(['textview']);
   }
 
   void increaseTranspose() {
     transposeCount.value++;
-    update(['chordview']);
+    update(['textview']);
   }
 
   void resetTranspose() {
     transposeCount.value = 0;
-    update(['chordview']);
+    update(['textview']);
+  }
+
+  void setViewMode(ViewModes newViewMode) {
+    viewMode.value = newViewMode;
+    GetStorage().write(Prefs.mode, newViewMode.name);
+    update(['zoomtextview']);
   }
 
   transpose(String currentChord) {

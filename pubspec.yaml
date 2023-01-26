@@ -63,6 +63,16 @@ flutter:
           weight: 500
         - asset: fonts/OverpassMono-SemiBold.ttf
           weight: 600
+    - family: FiraSansCondensed
+      fonts:
+        - asset: fonts/FiraSansCondensed-Regular.ttf
+        - asset: fonts/FiraSansCondensed-Medium.ttf
+          weight: 500
+    - family: FiraSans
+      fonts:
+        - asset: fonts/FiraSans-Regular.ttf
+        - asset: fonts/FiraSans-Medium.ttf
+          weight: 500
 
 # package_rename_config:
 #   android:

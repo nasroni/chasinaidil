@@ -2,6 +2,7 @@ import 'package:chasinaidil/app/modules/lyrics/controllers/lyrics_controller.dar
 import 'package:chasinaidil/app/modules/lyrics/views/chords.dart';
 import 'package:chasinaidil/prefs.dart';
 import 'package:chasinaidil/theme.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gesture_x_detector/gesture_x_detector.dart';
 import 'package:get/get.dart';
@@ -23,8 +24,11 @@ class _ZoomTextViewState extends State<ZoomTextView> {
   @override
   Widget build(BuildContext context) {
     TextStyle chordsStyle = AppTheme.chordText;
-    TextStyle lyricsStyle = AppTheme.chordLyricsText;
-    TextStyle titleStyle = AppTheme.lyricsTitleText;
+    TextStyle lyricsStyle =
+        controller.isChordMode ? AppTheme.chordLyricsText : AppTheme.lyricsText;
+    TextStyle titleStyle = controller.isChordMode
+        ? AppTheme.chordsTitleText
+        : AppTheme.lyricsTitleText;
 
     chordsStyle =
         chordsStyle.apply(fontSizeFactor: scaleFactor, fontSizeDelta: 1.5);
@@ -58,12 +62,30 @@ class _ZoomTextViewState extends State<ZoomTextView> {
         width: context.width,
         child: SingleChildScrollView(
           child: GetBuilder<LyricsController>(
-            id: 'chordview',
-            builder: (_) => ChordsView(
-              titleStyle: titleStyle,
-              lyricsStyle: lyricsStyle,
-              chordsStyle: chordsStyle,
-            ),
+            id: 'textview',
+            builder: (_) {
+              if (controller.isSheetMode) {
+                return Container(
+                  height: 200,
+                  width: context.width,
+                  alignment: Alignment.center,
+                  child: SelectableRegion(
+                    focusNode: FocusNode(),
+                    selectionControls: cupertinoTextSelectionControls,
+                    child: const Text(
+                      'This has not been implemented.\nLook regularly for App Updates',
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                );
+              }
+              return ChordsView(
+                titleStyle: titleStyle,
+                lyricsStyle: lyricsStyle,
+                chordsStyle: chordsStyle,
+                currentZoom: scaleFactor,
+              );
+            },
           ),
         ),
       ),

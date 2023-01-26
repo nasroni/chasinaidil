@@ -1,3 +1,4 @@
+import 'package:chasinaidil/app/modules/lyrics/views/chords.dart';
 import 'package:chasinaidil/app/modules/lyrics/views/songtitle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -47,8 +48,14 @@ class LyricsView extends GetView<LyricsController> {
         trailing: const Icon(Icons.play_circle_outline_sharp),
       ),
       body: Column(
-        children: const [
-          Expanded(child: ZoomTextView()),
+        children: [
+          Expanded(
+              child: GetBuilder<LyricsController>(
+                  id: 'zoomtextview',
+                  builder: (_) {
+                    // ignore: prefer_const_constructors
+                    return ZoomTextView();
+                  })),
         ],
       ),
     );

@@ -43,11 +43,26 @@ class TransposeButtons extends StatelessWidget {
               onPressed: () => controller.resetTranspose(),
               child: Container(
                 height: kMinInteractiveDimensionCupertino,
-                padding: EdgeInsets.only(left: 15, right: 15),
+                padding: const EdgeInsets.only(left: 15, right: 15),
                 alignment: Alignment.center,
-                child: const Text(
-                  'Транспозитcия',
-                  style: TextStyle(color: Colors.black),
+                child: RichText(
+                  text: const TextSpan(
+                      text: 'Idlomak\n',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 16,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: 'Транспозитcия',
+                          style: TextStyle(fontSize: 11),
+                        )
+                      ]),
+                  maxLines: 2,
+                  textScaleFactor: 0.92,
+                  /*style: TextStyle(
+                    color: Colors.black,
+                  ),*/
                 ),
               ),
             ),

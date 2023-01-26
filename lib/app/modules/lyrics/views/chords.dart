@@ -9,17 +9,25 @@ class ChordsView extends StatelessWidget {
   final TextStyle chordsStyle;
   final TextStyle titleStyle;
 
+  final double currentZoom;
+
   ChordsView(
       {super.key,
       required this.lyricsStyle,
       required this.chordsStyle,
-      required this.titleStyle});
+      required this.titleStyle,
+      required this.currentZoom});
 
   final LyricsController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    final List<String> text = controller.song.textWChords.split('\n');
+    var textRaw = controller.isChordMode
+        ? controller.song.textWChords
+        : controller.song.lyrics;
+
+    final List<String> text = textRaw.split('\n');
+
     List<Widget> rendered;
 
     bool toggleBW = false;
@@ -50,19 +58,24 @@ class ChordsView extends StatelessWidget {
             color: Colors.black26,
             endIndent: context.width / 3,
             indent: context.width / 3,
-            thickness: 1.5,
-            height: 30,
+            thickness: 1.5 * currentZoom,
+            height: 30 * currentZoom,
           );
         } else {
           lineText = line;
         }
 
+        double paddingRight = controller.isChordMode ? 8 : 30;
+
         return Container(
           padding: context.isLandscape
-              ? const EdgeInsets.fromLTRB(50, 15, 48, 2)
-              : const EdgeInsets.fromLTRB(30, 15, 8, 2),
+              ? EdgeInsets.fromLTRB(50, 25 * currentZoom, 50, 2 * currentZoom)
+              : EdgeInsets.fromLTRB(
+                  30, 25 * currentZoom, paddingRight, 2 * currentZoom),
+          width: context.width,
           child: Text(
             lineText,
+            textAlign: controller.isChordMode ? null : TextAlign.center,
             style: titleStyle,
           ),
         );
@@ -79,24 +92,29 @@ class ChordsView extends StatelessWidget {
       List<String> words = trimmedLine.split(' ');
       String lastWord = words[words.length - 1];
 
+      double paddingRight = controller.isChordMode ? 10 : 20;
+
       // double line render (one chord and one lyric)
       return Container(
         // notch and design
         padding: context.isLandscape
-            ? const EdgeInsets.symmetric(vertical: 10, horizontal: 50)
-            : const EdgeInsets.fromLTRB(20, 5, 10, 5),
+            ? EdgeInsets.symmetric(vertical: 10 * currentZoom, horizontal: 50)
+            : EdgeInsets.fromLTRB(
+                20, 5 * currentZoom, paddingRight, 5 * currentZoom),
         // backgroundcolor
         //color: toggleBW ? const Color(0xfff0f0f0) : Colors.white,
         color: Colors.white,
         width: double.maxFinite,
         // linebreak wordwise
-        child: WordWiseWithChords(
-          words: words,
-          controller: controller,
-          lastWord: lastWord,
-          chordsStyle: chordsStyle,
-          lyricsStyle: lyricsStyle,
-        ),
+        child: controller.isChordMode
+            ? WordWiseWithChords(
+                words: words,
+                controller: controller,
+                lastWord: lastWord,
+                chordsStyle: chordsStyle,
+                lyricsStyle: lyricsStyle,
+              )
+            : WordWiseLyrics(words: words, lyricsStyle: lyricsStyle),
       );
     }).toList();
 
@@ -114,6 +132,23 @@ class ChordsView extends StatelessWidget {
           children: rendered,
         )
       ],
+    );
+  }
+}
+
+class WordWiseLyrics extends StatelessWidget {
+  const WordWiseLyrics(
+      {super.key, required this.words, required this.lyricsStyle});
+
+  final List<String> words;
+  final TextStyle lyricsStyle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      words.join(' '),
+      textAlign: TextAlign.center,
+      style: lyricsStyle,
     );
   }
 }

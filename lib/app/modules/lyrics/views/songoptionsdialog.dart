@@ -44,6 +44,7 @@ class SongOptionsDialog extends StatelessWidget {
                     icon: CupertinoIcons.text_quote,
                     bold: controller.isLyricsMode,
                     position: 1,
+                    newViewMode: ViewModes.Lyrics,
                   ),
                   const Divider(
                     height: 0,
@@ -52,6 +53,7 @@ class SongOptionsDialog extends StatelessWidget {
                     text: 'Бо Аккорд',
                     icon: CupertinoIcons.guitars,
                     bold: controller.isChordMode,
+                    newViewMode: ViewModes.Chords,
                   ),
                   const Divider(
                     height: 0,
@@ -60,6 +62,7 @@ class SongOptionsDialog extends StatelessWidget {
                     text: 'Бо Нота',
                     icon: CupertinoIcons.music_note_list,
                     bold: controller.isSheetMode,
+                    newViewMode: ViewModes.Sheet,
                   ),
                   const Divider(thickness: 5, height: 5),
                   controller.isChordMode ? TransposeButtons() : Container(),

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chasinaidil/app/modules/lyrics/controllers/lyrics_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +11,7 @@ class PopupCustomMenuItem extends StatelessWidget {
   final bool width;
   final bool bold;
   final int position;
+  final ViewModes? newViewMode;
 
   const PopupCustomMenuItem(
       {super.key,
@@ -16,16 +19,23 @@ class PopupCustomMenuItem extends StatelessWidget {
       required this.icon,
       this.width = true,
       this.bold = false,
-      this.position = 0});
+      this.position = 0,
+      this.newViewMode});
 
   @override
   Widget build(BuildContext context) {
     LyricsController controller = Get.find();
+    var newViewMode = this.newViewMode;
 
     return SizedBox(
       height: kMinInteractiveDimensionCupertino,
       child: TextButton(
-        onPressed: () => controller.viewMode.value == ViewModes.Sheet,
+        onPressed: () {
+          if (newViewMode != null) {
+            controller.setViewMode(newViewMode);
+            Get.back();
+          }
+        },
         style: buttonMyCustomStyle(position),
         child: Container(
           width: width ? context.width / 1.33 : null,

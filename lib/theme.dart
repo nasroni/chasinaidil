@@ -47,8 +47,23 @@ class AppTheme {
     color: Colors.black,
   );
 
-  static const lyricsTitleText = TextStyle(
+  static const lyricsText = TextStyle(
+    fontFamily: 'FiraSans',
+    fontSize: 17,
+    color: Colors.black,
+  );
+
+  static const chordsTitleText = TextStyle(
       fontFamily: 'OverpassMono',
+      fontWeight: FontWeight.w500,
+      fontSize: 19,
+      //color: Colors.black87,
+      color: Color.fromARGB(255, 40, 56, 145)
+      //fontStyle: FontStyle.italic,
+      );
+
+  static const lyricsTitleText = TextStyle(
+      fontFamily: 'FiraSans',
       fontWeight: FontWeight.w500,
       fontSize: 19,
       //color: Colors.black87,
