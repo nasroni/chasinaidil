@@ -37,8 +37,9 @@ class PopupCustomMenuItem extends StatelessWidget {
             if (newViewMode != null) {
               controller.setViewMode(newViewMode);
               Get.back();
+            } else if (onTapFunction != null) {
+              onTapFunction!(context);
             }
-            onTapFunction!(context);
           },
           style: buttonMyCustomStyle(position),
           child: Container(

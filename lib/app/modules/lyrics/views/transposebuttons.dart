@@ -47,7 +47,7 @@ class TransposeButtons extends StatelessWidget {
                 alignment: Alignment.center,
                 child: RichText(
                   text: const TextSpan(
-                      text: 'Idlomak\n',
+                      text: 'Интиқол\n',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
@@ -60,6 +60,7 @@ class TransposeButtons extends StatelessWidget {
                       ]),
                   maxLines: 2,
                   textScaleFactor: 0.92,
+                  textAlign: TextAlign.center,
                   /*style: TextStyle(
                     color: Colors.black,
                   ),*/
