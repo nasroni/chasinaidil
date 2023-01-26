@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:share_plus/share_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -69,10 +72,49 @@ class SongOptionsDialog extends StatelessWidget {
                   controller.isChordMode
                       ? const Divider(thickness: 5, height: 5)
                       : Container(),
-                  const PopupCustomMenuItem(
+                  PopupCustomMenuItem(
                     text: 'Фиристодан ...',
                     icon: CupertinoIcons.share,
                     position: -1,
+                    onTapFunction: (var contextVar) async {
+                      final box = contextVar.findRenderObject() as RenderBox?;
+
+                      int verseCount = 0;
+
+                      var lyrics = controller.song.lyrics.splitMapJoin(
+                        RegExp(r'#\w+'),
+                        onMatch: (matches) {
+                          var match = matches[0];
+                          if (match == '#verse') {
+                            verseCount++;
+                            return "\nБанди $verseCount";
+                          } else if (match == '#chorus') {
+                            return "\nБандгардон";
+                          } else if (match == '#outro') {
+                            return "\nХотима";
+                          } else if (match == '#intro') {
+                            return "\nСаршавӣ";
+                          } else if (match == '#bridge') {
+                            return "\nКупрук";
+                          }
+                          return match ?? "";
+                        },
+                        onNonMatch: (nonMatch) => nonMatch,
+                      );
+
+                      var text =
+                          '${controller.song.songNumber}. ${controller.song.title}\n'
+                          '$lyrics\n\n'
+                          'Суруд аз ${controller.song.book}\n'
+                          'Android: https://play.google.com/store/apps/details?id=one.nasroni.chasinaidil\n'
+                          'iPhone: https://apps.apple.com/ch/app/хазинаи-дил/id1665980806';
+                      log(text);
+                      await Share.share(
+                        text,
+                        sharePositionOrigin:
+                            box!.localToGlobal(Offset.zero) & box.size,
+                      );
+                    },
                   ),
                 ],
               ),

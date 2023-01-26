@@ -12,6 +12,7 @@ class PopupCustomMenuItem extends StatelessWidget {
   final bool bold;
   final int position;
   final ViewModes? newViewMode;
+  final void Function(BuildContext context)? onTapFunction;
 
   const PopupCustomMenuItem(
       {super.key,
@@ -20,49 +21,53 @@ class PopupCustomMenuItem extends StatelessWidget {
       this.width = true,
       this.bold = false,
       this.position = 0,
-      this.newViewMode});
+      this.newViewMode,
+      this.onTapFunction});
 
   @override
   Widget build(BuildContext context) {
     LyricsController controller = Get.find();
     var newViewMode = this.newViewMode;
 
-    return SizedBox(
-      height: kMinInteractiveDimensionCupertino,
-      child: TextButton(
-        onPressed: () {
-          if (newViewMode != null) {
-            controller.setViewMode(newViewMode);
-            Get.back();
-          }
-        },
-        style: buttonMyCustomStyle(position),
-        child: Container(
-          width: width ? context.width / 1.33 : null,
-          height: kMinInteractiveDimensionCupertino,
-          padding: const EdgeInsets.symmetric(horizontal: 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                // name of item / action, that is current line and button
-                text,
-                style: TextStyle(
-                  color: Colors.black,
-                  // mark for example when currently selected mode is
-                  fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+    return Builder(builder: (context) {
+      return SizedBox(
+        height: kMinInteractiveDimensionCupertino,
+        child: TextButton(
+          onPressed: () {
+            if (newViewMode != null) {
+              controller.setViewMode(newViewMode);
+              Get.back();
+            }
+            onTapFunction!(context);
+          },
+          style: buttonMyCustomStyle(position),
+          child: Container(
+            width: width ? context.width / 1.33 : null,
+            height: kMinInteractiveDimensionCupertino,
+            padding: const EdgeInsets.symmetric(horizontal: 15),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  // name of item / action, that is current line and button
+                  text,
+                  style: TextStyle(
+                    color: Colors.black,
+                    // mark for example when currently selected mode is
+                    fontWeight: bold ? FontWeight.bold : FontWeight.normal,
+                  ),
                 ),
-              ),
-              // optical explanation of 'text'
-              Icon(
-                icon,
-                color: Colors.black,
-              ),
-            ],
+                // optical explanation of 'text'
+                Icon(
+                  icon,
+                  color: Colors.black,
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   ButtonStyle buttonMyCustomStyle(int position) {

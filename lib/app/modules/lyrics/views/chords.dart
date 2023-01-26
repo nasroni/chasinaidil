@@ -52,7 +52,7 @@ class ChordsView extends StatelessWidget {
         } else if (sanitizedLine == '#intro') {
           lineText = "Саршавӣ";
         } else if (sanitizedLine == '#bridge') {
-          lineText = "Bridge";
+          lineText = "Купрук";
         } else if (sanitizedLine == '#part') {
           return Divider(
             color: Colors.black26,
