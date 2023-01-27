@@ -69,9 +69,10 @@ class ChordsView extends StatelessWidget {
 
         return Container(
           padding: context.isLandscape
-              ? EdgeInsets.fromLTRB(50, 25 * currentZoom, 50, 2 * currentZoom)
-              : EdgeInsets.fromLTRB(
-                  30, 25 * currentZoom, paddingRight, 2 * currentZoom),
+              ? EdgeInsets.fromLTRB(
+                  50, 25 * currentZoom * 0.8, 50, 2 * currentZoom * 0.8)
+              : EdgeInsets.fromLTRB(30, 25 * currentZoom * 0.8, paddingRight,
+                  2 * currentZoom * 0.8),
           width: context.width,
           child: Text(
             lineText,
@@ -98,9 +99,10 @@ class ChordsView extends StatelessWidget {
       return Container(
         // notch and design
         padding: context.isLandscape
-            ? EdgeInsets.symmetric(vertical: 10 * currentZoom, horizontal: 50)
+            ? EdgeInsets.symmetric(
+                vertical: 10 * currentZoom * 0.8, horizontal: 50)
             : EdgeInsets.fromLTRB(
-                20, 5 * currentZoom, paddingRight, 5 * currentZoom),
+                20, 5 * currentZoom * 0.8, paddingRight, 5 * currentZoom * 0.8),
         // backgroundcolor
         //color: toggleBW ? const Color(0xfff0f0f0) : Colors.white,
         color: Colors.white,
@@ -118,8 +120,9 @@ class ChordsView extends StatelessWidget {
       );
     }).toList();
 
+    // add margin to bottom
     rendered.add(Container(
-      height: 25,
+      height: context.height / 3,
       width: context.width,
     ));
 

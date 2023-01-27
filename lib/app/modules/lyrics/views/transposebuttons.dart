@@ -54,8 +54,9 @@ class TransposeButtons extends StatelessWidget {
                       ),
                       children: [
                         TextSpan(
-                          text: 'Транспозитcия',
-                          style: TextStyle(fontSize: 11),
+                          text: '(Транспозиция)',
+                          style: TextStyle(
+                              fontSize: 11, fontStyle: FontStyle.italic),
                         )
                       ]),
                   maxLines: 2,

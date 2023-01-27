@@ -106,7 +106,7 @@ class SongOptionsDialog extends StatelessWidget {
                           '${controller.song.songNumber}. ${controller.song.title}\n'
                           '$lyrics\n\n'
                           'Суруд аз ${controller.song.book}\n\n'
-                          'Барои аккордҳо, нотаҳо ва сабтҳои mp3, ин барномаро зеркашӣ кунед:'
+                          'Барои аккордҳо, нотаҳо ва сабтҳои mp3, ин барномаро бозгирӣ кунед:\n'
                           'Android: https://play.google.com/store/apps/details?id=one.nasroni.chasinaidil\n'
                           'iPhone: https://apps.apple.com/ch/app/хазинаи-дил/id1665980806';
                       log(text);

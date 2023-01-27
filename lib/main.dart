@@ -13,7 +13,7 @@ Future<void> main() async {
   await GetStorage.init();
   runApp(
     GetMaterialApp(
-      title: "Application",
+      title: "Хазинаи Дил",
       theme: AppTheme.lightTheme,
       debugShowCheckedModeBanner: false,
       initialRoute: AppPages.INITIAL,
