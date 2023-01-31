@@ -18,6 +18,7 @@ dependencies:
   gesture_x_detector: ^1.1.1
   get_storage: ^2.0.3
   share_plus: 4.0.2
+  flutter_animate: ^3.1.0
 
 dev_dependencies: 
   build_runner: ^2.3.3

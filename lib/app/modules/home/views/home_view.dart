@@ -1,8 +1,11 @@
 import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:chasinaidil/app/modules/home/views/searchresults.dart';
 import 'package:chasinaidil/release_config.dart';
+import 'dart:math';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import 'package:get/get.dart';
 
@@ -42,7 +45,58 @@ class HomeView extends GetView<HomeController> {
                 Expanded(
                   child: controller.isSearchActive.value
                       ? SearchResultView()
-                      : const Center(child: Text("DB ready")),
+                      : Container(
+                          padding: const EdgeInsets.all(8),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                width: context.width,
+                                child: CupertinoButton(
+                                  child: Row(
+                                    children: [
+                                      Obx(
+                                        () => const Icon(
+                                          CupertinoIcons.chevron_right,
+                                          color: Colors.black,
+                                          size: 25,
+                                        )
+                                            .animate(
+                                              target: controller
+                                                      .isChasinaiDilOpen.value
+                                                  ? 0
+                                                  : 1,
+                                            )
+                                            .custom(
+                                              begin: 0,
+                                              end: pi / 2,
+                                              duration: const Duration(
+                                                  milliseconds: 200),
+                                              curve: Curves.ease,
+                                              builder: (context, value, child) {
+                                                return Transform.rotate(
+                                                  angle: value,
+                                                  child: child,
+                                                );
+                                              },
+                                            ),
+                                      ),
+                                      const Text(
+                                        ' Хазинаи Дил',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  onPressed: () => controller
+                                      .toggleOpenState(SongBook.chasinaidil),
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
                 )
               ],
             ),

@@ -1,13 +1,13 @@
 import 'package:chasinaidil/app/data/services/import_service.dart';
 import 'package:chasinaidil/app/data/services/isar_service.dart';
 import 'package:chasinaidil/prefs.dart';
-import 'package:chasinaidil/release_config.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 import '../../../data/types/song.dart';
+
+enum SongBook { chasinaidil, tshashma, others }
 
 class HomeController extends GetxController {
   final RxInt count = 0.obs;
@@ -23,6 +23,10 @@ class HomeController extends GetxController {
   final RxInt searchResultLyricsBeginPosition = 0.obs;
   final RxBool isShowingLastSearched = true.obs;
 
+  final RxBool isChasinaiDilOpen = true.obs;
+  final RxBool isTshashmaOpen = false.obs;
+  final RxBool isOthersOpen = false.obs;
+
   late final Worker searchWorker;
 
   final TextEditingController searchEditingController = TextEditingController();
@@ -30,6 +34,7 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     showLastSearchedSongs();
+    restoreOpenState();
     super.onInit();
   }
 
@@ -46,6 +51,32 @@ class HomeController extends GetxController {
   }
 
   void increment() => count.value++;
+
+  void restoreOpenState() {
+    isChasinaiDilOpen.value =
+        GetStorage().read(Prefs.isChasinaiDilOpen) ?? isChasinaiDilOpen.value;
+    isTshashmaOpen.value =
+        GetStorage().read(Prefs.isTshashmaOpen) ?? isTshashmaOpen.value;
+    isOthersOpen.value =
+        GetStorage().read(Prefs.isOthersOpen) ?? isOthersOpen.value;
+  }
+
+  void toggleOpenState(SongBook whichBook) {
+    switch (whichBook) {
+      case SongBook.chasinaidil:
+        isChasinaiDilOpen.value = !isChasinaiDilOpen.value;
+        GetStorage().write(Prefs.isChasinaiDilOpen, isChasinaiDilOpen.value);
+        break;
+      case SongBook.tshashma:
+        isTshashmaOpen.value = !isTshashmaOpen.value;
+        GetStorage().write(Prefs.isTshashmaOpen, isTshashmaOpen.value);
+        break;
+      case SongBook.others:
+        isOthersOpen.value = !isOthersOpen.value;
+        GetStorage().write(Prefs.isOthersOpen, isOthersOpen.value);
+        break;
+    }
+  }
 
   Future<void> openSearch() async {
     isSearchActive.value = true;
