@@ -1,4 +1,5 @@
 import 'package:chasinaidil/app/data/types/song.dart';
+import 'package:flutter/foundation.dart';
 import 'package:isar/isar.dart';
 
 class IsarService {
@@ -13,13 +14,17 @@ class IsarService {
     isar.writeTxnSync<int>(() => isar.songs.putSync(newSong));
   }
 
-  Future<void> saveSongList(List<Song> songList) async {
-    final isar = await db;
-    isar.writeTxnSync(() {
+  Future saveSongList(List<Song> songList) async {
+    /*final isar = await db;
+
+    //final isar = await Isar.open([SongSchema], name: 'default');
+
+    isar.writeTxnSync(() async {
       for (var song in songList) {
         isar.songs.putSync(song);
       }
-    });
+    });*/
+    await compute(externalSaveSongList, songList);
   }
 
   Future<Song?> getSongById(int id) async {
@@ -86,4 +91,14 @@ class IsarService {
 
     return Future.value(Isar.getInstance());
   }
+}
+
+Future externalSaveSongList(dynamic songList) async {
+  final isar = await Isar.open([SongSchema], name: 'default');
+
+  isar.writeTxnSync(() async {
+    for (var song in songList) {
+      isar.songs.putSync(song);
+    }
+  });
 }

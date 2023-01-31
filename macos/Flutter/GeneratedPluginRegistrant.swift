@@ -7,7 +7,7 @@ import Foundation
 
 import flutter_localization
 import isar_flutter_libs
-import path_provider_macos
+import path_provider_foundation
 import share_plus_macos
 import shared_preferences_foundation
 import url_launcher_macos

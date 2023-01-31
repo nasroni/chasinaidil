@@ -36,6 +36,8 @@ flutter:
    - assets/chasinaidil/songs.json
    - assets/chasinaidil/text/
    - assets/chasinaidil/covers/
+   - assets/icon/
+   - assets/graphics/
 
   fonts:
     - family: UbuntuMono

@@ -12,12 +12,12 @@ import '../../../data/types/song.dart';
 class HomeController extends GetxController {
   final RxInt count = 0.obs;
   final RxBool isSearchActive = false.obs;
-  final RxBool isDBfilled = false.obs;
+  //final RxBool isDBfilled = false.obs;
 
   final RxString searchValue = "".obs;
 
-  final IsarService isar = Get.find();
-  final ImportService importService = ImportService();
+  static final IsarService isar = Get.find();
+  static final ImportService importService = ImportService();
 
   final RxList<Song> searchResults = RxList<Song>([]);
   final RxInt searchResultLyricsBeginPosition = 0.obs;
@@ -107,31 +107,5 @@ class HomeController extends GetxController {
         searchResults.value = titleSearchResults;
       }
     }
-  }
-
-  void import(version) async {
-    if (GetStorage().read(Prefs.numDBversion) != ReleaseConfig.dbversion) {
-      //final stowa = Stopwatch()..start();
-      // chasinaidil import
-      final songList = await importService.list("Хазинаи Дил");
-      final songListWithText = (await Future.wait(
-        songList.map(
-          (e) async {
-            final text = await rootBundle
-                .loadString('assets/chasinaidil/text/${e.songNumber}.txt');
-            e.textWChords = text;
-            return e;
-          },
-        ),
-      ))
-          .toList();
-      await isar.cleanDb();
-      await isar.saveSongList(songListWithText);
-      isDBfilled.value = true;
-      GetStorage().write(Prefs.numDBversion, version);
-    } else {
-      isDBfilled.value = true;
-    }
-    //log("duration ${stowa.elapsed}");
   }
 }

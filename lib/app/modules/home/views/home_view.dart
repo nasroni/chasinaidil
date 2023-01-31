@@ -24,7 +24,6 @@ class HomeView extends GetView<HomeController> {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
         overlays: [SystemUiOverlay.top, SystemUiOverlay.top]);
 
-    controller.import(ReleaseConfig.dbversion);
     return Obx(() => Scaffold(
           body: Container(
             color: Get.theme.backgroundColor,
@@ -43,11 +42,7 @@ class HomeView extends GetView<HomeController> {
                 Expanded(
                   child: controller.isSearchActive.value
                       ? SearchResultView()
-                      : Center(
-                          child: controller.isDBfilled.value
-                              ? const Text("DB ready")
-                              : const CircularProgressIndicator(),
-                        ),
+                      : const Center(child: Text("DB ready")),
                 )
               ],
             ),
