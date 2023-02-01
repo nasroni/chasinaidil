@@ -37,6 +37,9 @@ flutter:
    - assets/chasinaidil/songs.json
    - assets/chasinaidil/text/
    - assets/chasinaidil/covers/
+   #- assets/tshashma/songs.json
+   - assets/tshashma/text/
+   - assets/tshashma/covers/
    - assets/icon/
    - assets/graphics/
 

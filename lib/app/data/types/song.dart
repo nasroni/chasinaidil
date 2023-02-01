@@ -35,7 +35,7 @@ class Song {
       "assets/chasinaidil/covers/cd_${albumId.toString().padLeft(2, "0")}.jpg";
   @ignore
   String get coverAssetHQ =>
-      "assets/chasinaidil/covers/cd_hq_${albumId.toString().padLeft(2, "0")}.jpg";
+      "assets/chasinaidil/covers/cd_${albumId.toString().padLeft(2, "0")}_hq.jpg";
 
   @Index(type: IndexType.value, caseSensitive: false)
   List<String> get titleWords => Isar.splitWords(title);

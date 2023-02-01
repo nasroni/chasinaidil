@@ -1,4 +1,3 @@
-import 'package:chasinaidil/app/modules/lyrics/views/chords.dart';
 import 'package:chasinaidil/app/modules/lyrics/views/songtitle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';

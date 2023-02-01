@@ -1,8 +1,10 @@
-import 'package:chasinaidil/prefs.dart';
-import 'package:chasinaidil/release_config.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
+import '../../prefs.dart';
+import '../../release_config.dart';
+import '../modules/album/bindings/album_binding.dart';
+import '../modules/album/views/album_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/loading/bindings/loading_binding.dart';
@@ -36,6 +38,11 @@ class AppPages {
       name: _Paths.LOADING,
       page: () => LoadingView(),
       binding: LoadingBinding(),
+    ),
+    GetPage(
+      name: _Paths.ALBUM,
+      page: () => const AlbumView(),
+      binding: AlbumBinding(),
     ),
   ];
 }

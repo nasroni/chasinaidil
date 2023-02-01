@@ -3,11 +3,12 @@ import 'package:chasinaidil/app/data/services/isar_service.dart';
 import 'package:chasinaidil/prefs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:get_storage/get_storage.dart';
 
 import '../../../data/types/song.dart';
 
-enum SongBook { chasinaidil, tshashma, others }
+enum SongBook { chasinaidil, tshashma, others, playlists }
 
 class HomeController extends GetxController {
   final RxInt count = 0.obs;
@@ -26,6 +27,7 @@ class HomeController extends GetxController {
   final RxBool isChasinaiDilOpen = true.obs;
   final RxBool isTshashmaOpen = false.obs;
   final RxBool isOthersOpen = false.obs;
+  final RxBool isPlaylistsOpen = false.obs;
 
   late final Worker searchWorker;
 
@@ -59,6 +61,8 @@ class HomeController extends GetxController {
         GetStorage().read(Prefs.isTshashmaOpen) ?? isTshashmaOpen.value;
     isOthersOpen.value =
         GetStorage().read(Prefs.isOthersOpen) ?? isOthersOpen.value;
+    isPlaylistsOpen.value =
+        GetStorage().read(Prefs.isPlaylistsOpen) ?? isPlaylistsOpen.value;
   }
 
   void toggleOpenState(SongBook whichBook) {
@@ -75,6 +79,22 @@ class HomeController extends GetxController {
         isOthersOpen.value = !isOthersOpen.value;
         GetStorage().write(Prefs.isOthersOpen, isOthersOpen.value);
         break;
+      case SongBook.playlists:
+        isPlaylistsOpen.value = !isPlaylistsOpen.value;
+        GetStorage().write(Prefs.isPlaylistsOpen, isPlaylistsOpen.value);
+    }
+  }
+
+  static String giveBookTitle(SongBook whichBook) {
+    switch (whichBook) {
+      case SongBook.chasinaidil:
+        return 'Хазинаи Дил';
+      case SongBook.tshashma:
+        return 'Чашма';
+      case SongBook.others:
+        return 'Дигар сурудҳо';
+      case SongBook.playlists:
+        return 'Playlists';
     }
   }
 
