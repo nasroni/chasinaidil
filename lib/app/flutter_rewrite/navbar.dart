@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 //import 'package:flutter/widgets.dart';
 
 /*import 'package:flutter/src/cupertino/button.dart';
@@ -138,7 +139,7 @@ Widget _wrapWithBackground({
   bool updateSystemUiOverlay = true,
 }) {
   Widget result = child;
-  if (updateSystemUiOverlay) {
+  if (updateSystemUiOverlay && !GetPlatform.isAndroid) {
     final bool isDark = backgroundColor.computeLuminance() < 0.179;
     final Brightness newBrightness =
         brightness ?? (isDark ? Brightness.dark : Brightness.light);
@@ -158,6 +159,7 @@ Widget _wrapWithBackground({
     // bottom of the screen.
     // For backward compatibility, create a `SystemUiOverlayStyle` without the
     // system navigation bar properties.
+
     result = AnnotatedRegion<SystemUiOverlayStyle>(
       value: SystemUiOverlayStyle(
         statusBarColor: overlayStyle.statusBarColor,
@@ -223,12 +225,12 @@ bool _isTransitionable(BuildContext context) {
 ///
 /// When [transitionBetweenRoutes] is true, this navigation bar will transition
 /// on top of the routes instead of inside them if the route being transitioned
-/// to also has a [CupertinoNavigationBar] or a [MyCupertinoSliverNavigationBar]
+/// to also has a [MyCupertinoNavigationBar] or a [MyCupertinoSliverNavigationBar]
 /// with [transitionBetweenRoutes] set to true. If [transitionBetweenRoutes] is
 /// true, none of the [Widget] parameters can contain a key in its subtree since
 /// that widget will exist in multiple places in the tree simultaneously.
 ///
-/// By default, only one [CupertinoNavigationBar] or [MyCupertinoSliverNavigationBar]
+/// By default, only one [MyCupertinoNavigationBar] or [MyCupertinoSliverNavigationBar]
 /// should be present in each [PageRoute] to support the default transitions.
 /// Use [transitionBetweenRoutes] or [heroTag] to customize the transition
 /// behavior for multiple navigation bars per route.
@@ -242,7 +244,7 @@ bool _isTransitionable(BuildContext context) {
 /// [MediaQuery.textScaleFactorOf] against [CupertinoApp]'s [BuildContext].
 ///
 /// {@tool dartpad}
-/// This example shows a [CupertinoNavigationBar] placed in a [CupertinoPageScaffold].
+/// This example shows a [MyCupertinoNavigationBar] placed in a [CupertinoPageScaffold].
 /// Since [backgroundColor]'s opacity is not 1.0, there is a blur effect and
 /// content slides underneath.
 ///
@@ -252,14 +254,14 @@ bool _isTransitionable(BuildContext context) {
 /// See also:
 ///
 ///  * [CupertinoPageScaffold], a page layout helper typically hosting the
-///    [CupertinoNavigationBar].
+///    [MyCupertinoNavigationBar].
 ///  * [MyCupertinoSliverNavigationBar] for a navigation bar to be placed in a
 ///    scrolling list and that supports iOS-11-style large titles.
 ///  * <https://developer.apple.com/design/human-interface-guidelines/ios/bars/navigation-bars/>
-class CupertinoNavigationBar extends StatefulWidget
+class MyCupertinoNavigationBar extends StatefulWidget
     implements ObstructingPreferredSizeWidget {
   /// Creates a navigation bar in the iOS style.
-  const CupertinoNavigationBar({
+  const MyCupertinoNavigationBar({
     super.key,
     this.leading,
     this.automaticallyImplyLeading = true,
@@ -394,7 +396,7 @@ class CupertinoNavigationBar extends StatefulWidget
   ///
   /// When [transitionBetweenRoutes] is true, this navigation bar will transition
   /// on top of the routes instead of inside it if the route being transitioned
-  /// to also has a [CupertinoNavigationBar] or a [MyCupertinoSliverNavigationBar]
+  /// to also has a [MyCupertinoNavigationBar] or a [MyCupertinoSliverNavigationBar]
   /// with [transitionBetweenRoutes] set to true.
   ///
   /// This transition will also occur on edge back swipe gestures like on iOS
@@ -411,7 +413,7 @@ class CupertinoNavigationBar extends StatefulWidget
   /// {@template flutter.cupertino.CupertinoNavigationBar.heroTag}
   /// Tag for the navigation bar's Hero widget if [transitionBetweenRoutes] is true.
   ///
-  /// Defaults to a common tag between all [CupertinoNavigationBar] and
+  /// Defaults to a common tag between all [MyCupertinoNavigationBar] and
   /// [MyCupertinoSliverNavigationBar] instances of the same [Navigator]. With the
   /// default tag, all navigation bars of the same navigator can transition
   /// between each other as long as there's only one navigation bar per route.
@@ -440,13 +442,14 @@ class CupertinoNavigationBar extends StatefulWidget
   }
 
   @override
-  State<CupertinoNavigationBar> createState() => _CupertinoNavigationBarState();
+  State<MyCupertinoNavigationBar> createState() =>
+      _MyCupertinoNavigationBarState();
 }
 
 // A state class exists for the nav bar so that the keys of its sub-components
 // don't change when rebuilding the nav bar, causing the sub-components to
 // lose their own states.
-class _CupertinoNavigationBarState extends State<CupertinoNavigationBar> {
+class _MyCupertinoNavigationBarState extends State<MyCupertinoNavigationBar> {
   late _NavigationBarStaticComponentsKeys keys;
 
   @override
@@ -542,7 +545,7 @@ class _CupertinoNavigationBarState extends State<CupertinoNavigationBar> {
 /// For advanced uses, an optional [middle] widget can be supplied to show a
 /// different widget in the middle of the navigation bar when the sliver is collapsed.
 ///
-/// Like [CupertinoNavigationBar], it also supports a [leading] and [trailing]
+/// Like [MyCupertinoNavigationBar], it also supports a [leading] and [trailing]
 /// widget on the static section on top that remains while scrolling.
 ///
 /// The [leading] widget will automatically be a back chevron icon button (or a
@@ -555,13 +558,13 @@ class _CupertinoNavigationBarState extends State<CupertinoNavigationBar> {
 ///
 /// When [transitionBetweenRoutes] is true, this navigation bar will transition
 /// on top of the routes instead of inside them if the route being transitioned
-/// to also has a [CupertinoNavigationBar] or a [MyCupertinoSliverNavigationBar]
+/// to also has a [MyCupertinoNavigationBar] or a [MyCupertinoSliverNavigationBar]
 /// with [transitionBetweenRoutes] set to true. If [transitionBetweenRoutes] is
 /// true, none of the [Widget] parameters can contain any [GlobalKey]s in their
 /// subtrees since those widgets will exist in multiple places in the tree
 /// simultaneously.
 ///
-/// By default, only one [CupertinoNavigationBar] or [MyCupertinoSliverNavigationBar]
+/// By default, only one [MyCupertinoNavigationBar] or [MyCupertinoSliverNavigationBar]
 /// should be present in each [PageRoute] to support the default transitions.
 /// Use [transitionBetweenRoutes] or [heroTag] to customize the transition
 /// behavior for multiple navigation bars per route.
@@ -587,7 +590,7 @@ class _CupertinoNavigationBarState extends State<CupertinoNavigationBar> {
 ///
 /// See also:
 ///
-///  * [CupertinoNavigationBar], an iOS navigation bar for use on non-scrolling
+///  * [MyCupertinoNavigationBar], an iOS navigation bar for use on non-scrolling
 ///    pages.
 ///  * [CustomScrollView], a ScrollView that creates custom scroll effects using slivers.
 ///  * <https://developer.apple.com/design/human-interface-guidelines/ios/bars/navigation-bars/>
@@ -1422,9 +1425,9 @@ class _NavigationBarStaticComponents {
   }
 }
 
-/// A nav bar back button typically used in [CupertinoNavigationBar].
+/// A nav bar back button typically used in [MyCupertinoNavigationBar].
 ///
-/// This is automatically inserted into [CupertinoNavigationBar] and
+/// This is automatically inserted into [MyCupertinoNavigationBar] and
 /// [MyCupertinoSliverNavigationBar]'s `leading` slot when
 /// `automaticallyImplyLeading` is true.
 ///

@@ -3,6 +3,7 @@ import 'package:chasinaidil/app/modules/home/controllers/home_controller.dart';
 import 'package:chasinaidil/app/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 
@@ -13,8 +14,23 @@ class AlbumView extends GetView<AlbumController> {
 
   @override
   Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      child: CustomScrollView(
+    /*if (GetPlatform.isAndroid) {
+      SystemChrome.setEnabledSystemUIMode(
+        SystemUiMode.manual,
+        overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
+      );
+    }*/
+    /*GetPlatform.isAndroid
+        ? SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+            SystemUiOverlay.top,
+            SystemUiOverlay.top,
+            SystemUiOverlay.bottom,
+          ])
+        : SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+            overlays: [SystemUiOverlay.top]);*/
+
+    return Scaffold(
+      body: CustomScrollView(
         slivers: [
           MyCupertinoSliverNavigationBar(
             padding: const EdgeInsetsDirectional.only(end: 20),

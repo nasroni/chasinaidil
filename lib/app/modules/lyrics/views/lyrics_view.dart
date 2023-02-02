@@ -1,3 +1,4 @@
+import 'package:chasinaidil/app/flutter_rewrite/navbar.dart';
 import 'package:chasinaidil/app/modules/lyrics/views/songtitle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,14 +22,19 @@ class LyricsView extends GetView<LyricsController> {
       DeviceOrientation.landscapeRight
     ]);
 
-    GetPlatform.isAndroid
-        ? SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [])
-        : null;
+    /*GetPlatform.isAndroid
+        ? SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+            SystemUiOverlay.top,
+            SystemUiOverlay.top,
+            SystemUiOverlay.bottom,
+          ])
+        : SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+            overlays: [SystemUiOverlay.top]);*/
 
     final Song song = controller.song;
 
     return Scaffold(
-      appBar: CupertinoNavigationBar(
+      appBar: MyCupertinoNavigationBar(
         middle: SizedBox(
           width: context.width / 2,
           child: CupertinoButton(

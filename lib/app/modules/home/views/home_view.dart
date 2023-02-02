@@ -25,8 +25,15 @@ class HomeView extends GetView<HomeController> {
       DeviceOrientation.portraitDown,
       DeviceOrientation.portraitUp,
     ]);
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: [SystemUiOverlay.top, SystemUiOverlay.top]);
+
+    /*GetPlatform.isAndroid
+        ? SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
+            SystemUiOverlay.top,
+            SystemUiOverlay.top,
+            SystemUiOverlay.bottom,
+          ])
+        : SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+            overlays: [SystemUiOverlay.top]);*/
 
     return Obx(() => Scaffold(
           body: Container(
@@ -164,7 +171,7 @@ class AlbumButton extends StatelessWidget {
             ),
             Text(
               album.title,
-              overflow: TextOverflow.clip,
+              overflow: TextOverflow.ellipsis,
               maxLines: 1,
               style: const TextStyle(fontSize: 14, color: Colors.black),
             )
