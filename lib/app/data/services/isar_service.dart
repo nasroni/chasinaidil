@@ -1,3 +1,4 @@
+import 'package:chasinaidil/app/data/types/album.dart';
 import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:flutter/foundation.dart';
 import 'package:isar/isar.dart';
@@ -35,6 +36,17 @@ class IsarService {
   Future<List<Song>> getAllSongs() async {
     final isar = await db;
     return await isar.songs.where().findAll();
+  }
+
+  Future<List<Song>> getSongsFromAlbum(Album album) async {
+    final isar = await db;
+
+    if (album.title == 'Забур') {
+      return await isar.songs.filter().psalmIsNotEmpty().findAll();
+    } else {
+      var albumId = album.albumId;
+      return await isar.songs.filter().albumIdEqualTo(albumId).findAll();
+    }
   }
 
   Future<List<Song>> getTitleSearchResults(String searchQuery) async {

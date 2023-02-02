@@ -1,7 +1,6 @@
 import 'package:chasinaidil/app/flutter_rewrite/navbar.dart';
 import 'package:chasinaidil/app/modules/home/controllers/home_controller.dart';
-import 'package:drop_shadow/drop_shadow.dart';
-import 'package:drop_shadow_image/drop_shadow_image.dart';
+import 'package:chasinaidil/app/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +17,7 @@ class AlbumView extends GetView<AlbumController> {
       child: CustomScrollView(
         slivers: [
           MyCupertinoSliverNavigationBar(
-            padding: EdgeInsetsDirectional.only(end: 20),
+            padding: const EdgeInsetsDirectional.only(end: 20),
             middle: Text(controller.album.title),
             alwaysShowMiddle: false,
             stretch: true,
@@ -45,21 +44,81 @@ class AlbumView extends GetView<AlbumController> {
                   ),
                   Text(
                     controller.album.title,
-                    style: TextStyle(fontSize: 25),
+                    style: const TextStyle(fontSize: 25),
                   ),
                   Text(
                     HomeController.giveBookTitle(controller.album.songBook),
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.w500),
                   ),
+                  const SizedBox(
+                    height: 10,
+                  )
                 ],
               ),
             ),
           ),
           SliverFillRemaining(
+            hasScrollBody: false,
             child: Material(
-                child: Column(
-              children: [],
-            )),
+              child: Obx(
+                () {
+                  List<Widget> list = [];
+                  int count = 0;
+                  for (var song in controller.songs) {
+                    list.add(InkWell(
+                      onTap: () => Get.toNamed(Routes.LYRICS, arguments: song),
+                      //color: Colors.white,
+
+                      //: kMinInteractiveDimensionCupertino,
+                      //width: context.width - 16,
+
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 16),
+                        height: kMinInteractiveDimensionCupertino,
+                        width: context.width,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 39,
+                              child: Text(
+                                song.songNumber,
+                                style: TextStyle(
+                                    color: Colors.black45, fontSize: 15),
+                              ),
+                            ),
+                            Expanded(
+                              child: Text(
+                                song.title,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ));
+                    if (count != controller.songs.length - 1) {
+                      list.add(const Divider(
+                        thickness: 0.5,
+                        indent: 26,
+                        endIndent: 6,
+                        height: 0.5,
+                      ));
+                    } else {
+                      list.add(SizedBox(
+                        height: context.height / 10,
+                      ));
+                    }
+                    count++;
+                  }
+                  return Column(
+                    children: list,
+                  );
+                },
+              ),
+            ),
           )
         ],
       ),

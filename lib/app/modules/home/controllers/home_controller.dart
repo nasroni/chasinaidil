@@ -3,7 +3,6 @@ import 'package:chasinaidil/app/data/services/isar_service.dart';
 import 'package:chasinaidil/prefs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:get_storage/get_storage.dart';
 
 import '../../../data/types/song.dart';

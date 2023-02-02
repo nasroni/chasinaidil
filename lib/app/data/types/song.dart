@@ -48,8 +48,8 @@ class Song {
       required this.title,
       this.albumId,
       this.book = "Гуногун",
-      required this.psalm,
-      required this.duration,
+      this.psalm,
+      this.duration,
       this.textWChords = ""});
 
   factory Song.fromJson(Map<String, dynamic> parsedJson) {
