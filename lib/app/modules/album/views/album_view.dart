@@ -18,8 +18,12 @@ class AlbumView extends GetView<AlbumController> {
       body: CustomScrollView(
         slivers: [
           MyCupertinoSliverNavigationBar(
+            backgroundColor: context.theme.shadowColor,
             padding: const EdgeInsetsDirectional.only(end: 20),
-            middle: Text(controller.album.title),
+            middle: Text(
+              controller.album.title,
+              style: context.theme.textTheme.displaySmall,
+            ),
             alwaysShowMiddle: false,
             stretch: true,
             largeTitle: Container(
@@ -34,9 +38,21 @@ class AlbumView extends GetView<AlbumController> {
                         borderRadius: BorderRadius.circular(10)),
                     child: ClipRRect(
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      child: Image.asset(
-                        controller.album.coverPath,
-                        height: context.width / 2,
+                      child: Stack(
+                        children: [
+                          Image.asset(
+                            controller.album.coverPath,
+                            height: context.width / 2,
+                          ),
+                          Positioned.fill(
+                            child: Opacity(
+                              opacity: Get.isDarkMode ? 0.2 : 0,
+                              child: Container(
+                                color: const Color(0xFF000000),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -45,11 +61,11 @@ class AlbumView extends GetView<AlbumController> {
                   ),
                   Text(
                     controller.album.title,
-                    style: context.theme.textTheme.displayMedium,
+                    style: context.theme.textTheme.displayLarge,
                   ),
                   Text(
                     HomeController.giveBookTitle(controller.album.songBook),
-                    style: context.theme.textTheme.displaySmall,
+                    style: context.theme.textTheme.displayMedium,
                   ),
                   const SizedBox(
                     height: 10,
@@ -61,6 +77,7 @@ class AlbumView extends GetView<AlbumController> {
           SliverFillRemaining(
             hasScrollBody: false,
             child: Material(
+              color: context.theme.scaffoldBackgroundColor,
               child: Obx(
                 () {
                   List<Widget> list = [];
@@ -85,8 +102,9 @@ class AlbumView extends GetView<AlbumController> {
                               width: 39,
                               child: Text(
                                 song.songNumber,
-                                style: TextStyle(
-                                    color: Colors.black45, fontSize: 15),
+                                //style: const TextStyle(
+                                //   color: Colors.black45, fontSize: 15),
+                                style: context.theme.textTheme.bodySmall,
                               ),
                             ),
                             Expanded(
@@ -102,7 +120,7 @@ class AlbumView extends GetView<AlbumController> {
                     if (count != controller.songs.length - 1) {
                       list.add(const Divider(
                         thickness: 0.5,
-                        indent: 26,
+                        indent: 55,
                         endIndent: 6,
                         height: 0.5,
                       ));

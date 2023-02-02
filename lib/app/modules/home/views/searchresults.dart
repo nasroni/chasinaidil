@@ -46,7 +46,7 @@ class SearchResultView extends StatelessWidget {
                         ? "Ҷустуҷӯи охирин"
                         : "Дар матн",
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.black45),
+                    style: TextStyle(color: context.theme.cardColor),
                   ),
                 ),
               ],
@@ -72,7 +72,9 @@ class SearchResultView extends StatelessWidget {
                   },
                   onLongPress: () {
                     Get.snackbar(
-                        currentResult.title, "Will be implemented later");
+                      currentResult.title,
+                      "Will be implemented later",
+                    );
                   },
                   enableFeedback: true,
                   child: Padding(
@@ -84,8 +86,20 @@ class SearchResultView extends StatelessWidget {
                           padding: const EdgeInsets.fromLTRB(6, 4, 12, 4),
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
-                            child: Image.asset(
-                              currentResult.coverAsset,
+                            child: Stack(
+                              children: [
+                                Image.asset(
+                                  currentResult.coverAsset,
+                                ),
+                                Positioned.fill(
+                                  child: Opacity(
+                                    opacity: Get.isDarkMode ? 0.1 : 0,
+                                    child: Container(
+                                      color: const Color(0xFF000000),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -113,8 +127,9 @@ class SearchResultView extends StatelessWidget {
                                 children: [
                                   Text(
                                     currentResult.book,
-                                    style: const TextStyle(
-                                        fontSize: 16, color: Colors.black54),
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        color: context.theme.cardColor),
                                   )
                                 ],
                               )

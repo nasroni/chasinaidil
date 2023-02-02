@@ -27,6 +27,7 @@ class SearchBar extends StatelessWidget {
               ? context.width - 70
               : context.width,
           child: CupertinoSearchTextField(
+            style: TextStyle(color: context.theme.primaryColor),
             autocorrect: false,
             placeholder: 'Ҷустуҷӯ',
             onTap: () {

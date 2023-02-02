@@ -8,6 +8,14 @@ class AppTheme {
     brightness: Brightness.light,
     scaffoldBackgroundColor: Colors.white,
     primaryColor: Colors.black,
+    shadowColor: Colors.grey.shade100,
+    dividerColor: Colors.grey.shade300,
+    cardColor: Colors.black45,
+    primaryTextTheme: const TextTheme(
+        bodyMedium: TextStyle(
+      //fontFamily: 'UbuntuMono',
+      fontSize: 18,
+    )),
     textTheme: TextTheme(
       titleLarge: const TextStyle(
         color: Colors.black,
@@ -18,13 +26,24 @@ class AppTheme {
         //fontFamily: 'UbuntuMono',
         fontSize: 18,
       ),
-      displayMedium: _displayMedium,
-      displaySmall:
-          _displayMedium.copyWith(fontWeight: FontWeight.w500, fontSize: 16),
+      bodySmall: const TextStyle(
+        color: Colors.black45,
+        fontSize: 15,
+      ),
+      displayLarge: _displayLarge,
+      displayMedium:
+          _displayLarge.copyWith(fontWeight: FontWeight.w500, fontSize: 16),
+      displaySmall: const TextStyle(
+        color: Colors.black,
+        fontSize: 17,
+        fontWeight: FontWeight.w600,
+        fontFamily: '.SF Pro Text',
+        letterSpacing: -0.4,
+      ),
     ),
   );
 
-  static const _displayMedium = TextStyle(
+  static const _displayLarge = TextStyle(
     color: Colors.black,
     fontSize: 25,
     fontFamily: 'SF Pro Display',
@@ -38,9 +57,26 @@ class AppTheme {
   late final darkThemeData = lightThemeData.copyWith(
     brightness: Brightness.dark,
     scaffoldBackgroundColor: Colors.black87,
+    shadowColor: Colors.black.withBlue(15).withRed(15).withGreen(15),
     primaryColor: Colors.grey.shade100,
+    dividerColor: Colors.grey.shade800,
+    cardColor: Colors.grey.shade400,
+    primaryTextTheme: TextTheme(
+      bodyMedium: lightThemeData.primaryTextTheme.bodyMedium?.copyWith(
+        color: Colors.grey.shade100,
+      ),
+    ),
     textTheme: TextTheme(
       titleLarge: lightThemeData.textTheme.titleLarge?.copyWith(
+        color: Colors.grey.shade100,
+      ),
+      bodyMedium: lightThemeData.textTheme.bodyMedium?.copyWith(
+        color: Colors.grey.shade100,
+      ),
+      bodySmall: lightThemeData.textTheme.bodySmall?.copyWith(
+        color: Colors.grey.shade600,
+      ),
+      displayLarge: lightThemeData.textTheme.displayLarge?.copyWith(
         color: Colors.grey.shade100,
       ),
       displayMedium: lightThemeData.textTheme.displayMedium?.copyWith(

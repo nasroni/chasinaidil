@@ -92,7 +92,10 @@ class HomeView extends GetView<HomeController> {
                                 AlbumList(
                                   songBook: SongBook.playlists,
                                   changeNotifier: controller.isPlaylistsOpen,
-                                )*/
+                                ),*/
+                                SizedBox(
+                                  height: context.height / 14,
+                                )
                               ],
                             ),
                           ),
@@ -116,7 +119,6 @@ class AlbumList extends StatelessWidget {
   Widget build(BuildContext context) {
     return Obx(
       () => Container(
-        //color: Colors.red,
         width: context.width,
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Wrap(
@@ -150,20 +152,30 @@ class AlbumButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoButton(
-      onPressed: () =>
-          Get.toNamed(Routes.ALBUM, arguments: album), // TODO: implement click
+      onPressed: () => Get.toNamed(Routes.ALBUM, arguments: album),
       padding: EdgeInsets.zero,
       child: SizedBox(
         width: (context.width / 3) - 26.7,
-        //height: (context.width / 3) - 26.7,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ClipRRect(
               borderRadius: BorderRadius.circular(7),
-              child: Image.asset(
-                album.coverPath,
-                height: (context.width / 3) - 26.7,
+              child: Stack(
+                children: [
+                  Image.asset(
+                    album.coverPath,
+                    height: (context.width / 3) - 26.7,
+                  ),
+                  Positioned.fill(
+                    child: Opacity(
+                      opacity: Get.isDarkMode ? 0.1 : 0,
+                      child: Container(
+                        color: const Color(0xFF000000),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
             const SizedBox(
@@ -173,7 +185,7 @@ class AlbumButton extends StatelessWidget {
               album.title,
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
-              style: const TextStyle(fontSize: 14, color: Colors.black),
+              style: context.theme.textTheme.bodyMedium?.copyWith(fontSize: 14),
             )
           ],
         ),
@@ -201,9 +213,9 @@ class BookTitle extends StatelessWidget {
         child: Row(
           children: [
             Obx(
-              () => const Icon(
+              () => Icon(
                 CupertinoIcons.chevron_right,
-                color: Colors.black,
+                color: context.theme.primaryColor,
                 size: 25,
               )
                   .animate(
@@ -224,8 +236,8 @@ class BookTitle extends StatelessWidget {
             ),
             Text(
               ' ${HomeController.giveBookTitle(songBook)}',
-              style: const TextStyle(
-                color: Colors.black,
+              style: TextStyle(
+                color: context.theme.primaryColor,
                 fontSize: 25,
                 fontWeight: FontWeight.w700,
               ),

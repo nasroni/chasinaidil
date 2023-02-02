@@ -101,7 +101,8 @@ class TransposeButtons extends StatelessWidget {
       /*fixedSize: size,
       minimumSize: size,
       maximumSize: size,*/
-      textStyle: MaterialStatePropertyAll(Get.textTheme.bodyMedium),
+      textStyle:
+          MaterialStatePropertyAll(Get.theme.primaryTextTheme.bodyMedium),
       shape: const MaterialStatePropertyAll(
           RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.zero))),
       overlayColor: const MaterialStatePropertyAll(Colors.transparent),

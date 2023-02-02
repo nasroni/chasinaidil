@@ -22,7 +22,6 @@ class SearchAppBar extends StatelessWidget {
       centerTitle: false,
       toolbarHeight:
           Platform.isAndroid ? (80 * size) / 100 : (110 * size) / 100,
-      //backgroundColor: Get.theme.backgroundColor,
       backgroundColor: context.theme.scaffoldBackgroundColor,
       titleTextStyle: context.textTheme.titleLarge,
       elevation: 0,
@@ -31,8 +30,14 @@ class SearchAppBar extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 40, right: 20),
           child: IconButton(
               onPressed: () {
-                Get.changeThemeMode(
-                    Get.isDarkMode ? ThemeMode.light : ThemeMode.dark);
+                /*Get.changeThemeMode(
+                  Get.isDarkMode ? ThemeMode.light : ThemeMode.dark,
+                );*/
+                Get.changeTheme(
+                  Get.isDarkMode
+                      ? AppTheme().lightThemeData
+                      : AppTheme().darkThemeData,
+                );
               },
               icon: Icon(
                 CupertinoIcons.settings,
