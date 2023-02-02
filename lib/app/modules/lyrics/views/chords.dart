@@ -199,7 +199,15 @@ class WordWiseWithChords extends StatelessWidget {
             // end of chord
             else if (letter == ']') {
               chordToggle = false;
-              String transposedChord = controller.transpose(currentChord);
+              String transposedChord;
+              if (currentChord.contains('/')) {
+                var chordParts = currentChord.split('/');
+                transposedChord = controller.transpose(chordParts[0]) +
+                    '/' +
+                    controller.transpose(chordParts[1]);
+              } else {
+                transposedChord = controller.transpose(currentChord);
+              }
               chordAhead = transposedChord.length + 1;
               chord += transposedChord;
             }
