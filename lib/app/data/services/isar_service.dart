@@ -88,9 +88,9 @@ class IsarService {
         .findAll();
   }
 
-  Future<void> cleanDb() async {
+  Future<void> cleanSongTable() async {
     final isar = await db;
-    await isar.writeTxn(() => isar.clear());
+    await isar.writeTxn(() => isar.songs.clear());
   }
 
   Future<Isar> openDB() async {

@@ -8,16 +8,16 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 
 class LoadingController extends GetxController {
-  RxString progressState = "wait ...".obs;
+  RxString progressState = "Интизор шавед ...".obs;
 
   Future<void> import() async {
     //final stowa = Stopwatch()..start();
     // chasinaidil import
-    progressState.value = "loading started";
+    //progressState.value = "loading started";
 
     final songList = await HomeController.importService.list("Хазинаи Дил");
 
-    progressState.value = "Importing songtexts";
+    //progressState.value = "Importing songtexts";
 
     final songListWithText = (await Future.wait(
       songList.map(
@@ -31,12 +31,12 @@ class LoadingController extends GetxController {
     ))
         .toList();
 
-    progressState.value = "Writing to db (wait up to 3 minutes)";
+    progressState.value = "Захира, илтимос то 3 дақиқа интизор шавед";
 
-    await HomeController.isar.cleanDb();
+    await HomeController.isar.cleanSongTable();
     await HomeController.isar.saveSongList(songListWithText);
 
-    progressState.value = "Finished";
+    progressState.value = "Тамом";
 
     GetStorage().write(Prefs.numDBversion, ReleaseConfig.dbversion);
 

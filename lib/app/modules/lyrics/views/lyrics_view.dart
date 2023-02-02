@@ -44,7 +44,7 @@ class LyricsView extends GetView<LyricsController> {
             child: SongTitle(song: song),
           ),
         ),
-        trailing: const Icon(Icons.play_circle_outline_sharp),
+        //trailing: const Icon(Icons.play_circle_outline_sharp, ),
       ),
       body: Column(
         children: [
