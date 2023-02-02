@@ -1,8 +1,12 @@
 import 'dart:io';
 
+import 'package:chasinaidil/app/modules/app_controller.dart';
+import 'package:chasinaidil/theme.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:get/state_manager.dart';
 
 class SearchAppBar extends StatelessWidget {
   final int size;
@@ -18,13 +22,28 @@ class SearchAppBar extends StatelessWidget {
       centerTitle: false,
       toolbarHeight:
           Platform.isAndroid ? (80 * size) / 100 : (110 * size) / 100,
-      backgroundColor: Get.theme.backgroundColor,
-      titleTextStyle: Get.textTheme.titleLarge,
+      //backgroundColor: Get.theme.backgroundColor,
+      backgroundColor: context.theme.scaffoldBackgroundColor,
+      titleTextStyle: context.textTheme.titleLarge,
       elevation: 0,
-      systemOverlayStyle: const SystemUiOverlayStyle(
-        statusBarColor: Colors.black,
-        statusBarIconBrightness: Brightness.light,
-        statusBarBrightness: Brightness.light,
+      actions: [
+        Padding(
+          padding: const EdgeInsets.only(bottom: 40, right: 20),
+          child: IconButton(
+              onPressed: () {
+                Get.changeThemeMode(
+                    Get.isDarkMode ? ThemeMode.light : ThemeMode.dark);
+              },
+              icon: Icon(
+                CupertinoIcons.settings,
+                color: context.theme.primaryColor,
+              )),
+        )
+      ],
+      systemOverlayStyle: SystemUiOverlayStyle(
+        statusBarColor: context.theme.primaryColor,
+        statusBarIconBrightness: context.theme.brightness,
+        statusBarBrightness: context.theme.brightness,
       ),
     );
   }

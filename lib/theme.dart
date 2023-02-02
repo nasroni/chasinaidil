@@ -1,35 +1,56 @@
 import 'package:flutter/material.dart';
 
 class AppTheme {
-  AppTheme._();
+  AppTheme();
+  //AppTheme._();
 
-  static final lightTheme = ThemeData(
-    backgroundColor: Colors.white,
-    textTheme: const TextTheme(
-      titleLarge: TextStyle(
+  final lightThemeData = ThemeData(
+    brightness: Brightness.light,
+    scaffoldBackgroundColor: Colors.white,
+    primaryColor: Colors.black,
+    textTheme: TextTheme(
+      titleLarge: const TextStyle(
         color: Colors.black,
         fontWeight: FontWeight.w700,
         fontSize: 30,
       ),
-      bodyMedium: TextStyle(
+      bodyMedium: const TextStyle(
         //fontFamily: 'UbuntuMono',
         fontSize: 18,
       ),
+      displayMedium: _displayMedium,
+      displaySmall:
+          _displayMedium.copyWith(fontWeight: FontWeight.w500, fontSize: 16),
     ),
   );
 
-  static final darkTheme = ThemeData(
-    backgroundColor: Colors.black87,
-    textTheme: const TextTheme(
-      titleLarge: TextStyle(
-        color: Colors.white,
-        fontWeight: FontWeight.w700,
-        fontSize: 30,
-      ),
-      bodyMedium: TextStyle(
-        //fontFamily: 'UbuntuMono',
+  static const _displayMedium = TextStyle(
+    color: Colors.black,
+    fontSize: 25,
+    fontFamily: 'SF Pro Display',
+    fontWeight: FontWeight.w700,
+    letterSpacing: 0.4,
+  );
 
-        fontSize: 18,
+  lightTheme() => lightThemeData;
+  darkTheme() => darkThemeData;
+
+  late final darkThemeData = lightThemeData.copyWith(
+    brightness: Brightness.dark,
+    scaffoldBackgroundColor: Colors.black87,
+    primaryColor: Colors.grey.shade100,
+    textTheme: TextTheme(
+      titleLarge: lightThemeData.textTheme.titleLarge?.copyWith(
+        color: Colors.grey.shade100,
+      ),
+      displayMedium: lightThemeData.textTheme.displayMedium?.copyWith(
+        color: Colors.grey.shade100,
+      ),
+      displaySmall: lightThemeData.textTheme.displaySmall?.copyWith(
+        color: Colors.grey.shade100,
+      ),
+      bodyLarge: lightThemeData.textTheme.bodyLarge?.copyWith(
+        color: Colors.grey.shade100,
       ),
     ),
   );

@@ -37,7 +37,7 @@ class HomeView extends GetView<HomeController> {
 
     return Obx(() => Scaffold(
           body: Container(
-            color: Get.theme.backgroundColor,
+            color: context.theme.scaffoldBackgroundColor,
             child: Column(
               children: [
                 AnimatedSize(

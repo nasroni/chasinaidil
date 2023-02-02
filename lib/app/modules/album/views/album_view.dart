@@ -14,21 +14,6 @@ class AlbumView extends GetView<AlbumController> {
 
   @override
   Widget build(BuildContext context) {
-    /*if (GetPlatform.isAndroid) {
-      SystemChrome.setEnabledSystemUIMode(
-        SystemUiMode.manual,
-        overlays: [SystemUiOverlay.top, SystemUiOverlay.bottom],
-      );
-    }*/
-    /*GetPlatform.isAndroid
-        ? SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
-            SystemUiOverlay.top,
-            SystemUiOverlay.top,
-            SystemUiOverlay.bottom,
-          ])
-        : SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-            overlays: [SystemUiOverlay.top]);*/
-
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -60,12 +45,11 @@ class AlbumView extends GetView<AlbumController> {
                   ),
                   Text(
                     controller.album.title,
-                    style: const TextStyle(fontSize: 25),
+                    style: context.theme.textTheme.displayMedium,
                   ),
                   Text(
                     HomeController.giveBookTitle(controller.album.songBook),
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w500),
+                    style: context.theme.textTheme.displaySmall,
                   ),
                   const SizedBox(
                     height: 10,
