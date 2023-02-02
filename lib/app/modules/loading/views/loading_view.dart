@@ -45,7 +45,10 @@ class LoadingView extends GetView {
               height:
                   (context.isLandscape ? context.height : context.width) / 7,
             ),
-            Obx(() => Text(controller.progressState.value)),
+            Obx(() => Text(
+                  controller.progressState.value,
+                  style: const TextStyle(fontSize: 14),
+                )),
           ],
         ),
       ),

@@ -1,3 +1,4 @@
+import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:isar/isar.dart';
 
 part 'song.g.dart';
@@ -38,7 +39,9 @@ class Song {
       "assets/chasinaidil/covers/cd_${albumId.toString().padLeft(2, "0")}_hq.jpg";
 
   @Index(type: IndexType.value, caseSensitive: false)
-  List<String> get titleWords => Isar.splitWords(title);
+  List<String> get titleWords {
+    return Isar.splitWords('$title ${AppController.transcribe(title)}');
+  }
 
   @Index(type: IndexType.value, caseSensitive: false)
   List<String> get lyricsWords => Isar.splitWords(lyrics);
