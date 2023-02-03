@@ -1,5 +1,6 @@
 import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SongTitle extends StatelessWidget {
   const SongTitle({
@@ -18,17 +19,17 @@ class SongTitle extends StatelessWidget {
           child: Text(
             "${song.songNumber}. ${song.title}",
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Colors.black,
+            style: TextStyle(
+              color: context.theme.primaryColor,
               overflow: TextOverflow.ellipsis,
               fontWeight: FontWeight.w700,
             ),
           ),
         ),
         // indicate there is more to see
-        const Icon(
+        Icon(
           Icons.keyboard_arrow_down_sharp,
-          color: Colors.black,
+          color: context.theme.primaryColor,
         )
       ],
     );

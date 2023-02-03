@@ -23,12 +23,14 @@ class _ZoomTextViewState extends State<ZoomTextView> {
 
   @override
   Widget build(BuildContext context) {
-    TextStyle chordsStyle = AppTheme.chordText;
-    TextStyle lyricsStyle =
-        controller.isChordMode ? AppTheme.chordLyricsText : AppTheme.lyricsText;
+    TextStyle chordsStyle = context.theme.primaryTextTheme.bodySmall!;
+    //TextStyle chordsStyle = AppTheme.chordText;
+    TextStyle lyricsStyle = controller.isChordMode
+        ? context.theme.primaryTextTheme.bodyLarge!
+        : context.theme.primaryTextTheme.displayLarge!;
     TextStyle titleStyle = controller.isChordMode
-        ? AppTheme.chordsTitleText
-        : AppTheme.lyricsTitleText;
+        ? context.theme.primaryTextTheme.displaySmall!
+        : context.theme.primaryTextTheme.displayMedium!;
 
     chordsStyle =
         chordsStyle.apply(fontSizeFactor: scaleFactor, fontSizeDelta: 1.5);
@@ -57,7 +59,7 @@ class _ZoomTextViewState extends State<ZoomTextView> {
         GetStorage().write(Prefs.numZoomlevel, scaleFactor);
       }),
       child: Container(
-        color: Colors.white,
+        color: context.theme.scaffoldBackgroundColor,
         height: context.height,
         width: context.width,
         child: SingleChildScrollView(

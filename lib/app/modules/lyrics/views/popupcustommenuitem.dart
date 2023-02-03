@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:chasinaidil/app/modules/lyrics/controllers/lyrics_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +39,7 @@ class PopupCustomMenuItem extends StatelessWidget {
               onTapFunction!(context);
             }
           },
-          style: buttonMyCustomStyle(position),
+          style: buttonMyCustomStyle(position, context),
           child: Container(
             width: width ? context.width / 1.33 : null,
             height: kMinInteractiveDimensionCupertino,
@@ -53,7 +51,7 @@ class PopupCustomMenuItem extends StatelessWidget {
                   // name of item / action, that is current line and button
                   text,
                   style: TextStyle(
-                    color: Colors.black,
+                    color: context.theme.primaryColor,
                     // mark for example when currently selected mode is
                     fontWeight: bold ? FontWeight.bold : FontWeight.normal,
                   ),
@@ -61,7 +59,7 @@ class PopupCustomMenuItem extends StatelessWidget {
                 // optical explanation of 'text'
                 Icon(
                   icon,
-                  color: Colors.black,
+                  color: context.theme.primaryColor,
                 ),
               ],
             ),
@@ -71,7 +69,7 @@ class PopupCustomMenuItem extends StatelessWidget {
     });
   }
 
-  ButtonStyle buttonMyCustomStyle(int position) {
+  ButtonStyle buttonMyCustomStyle(int position, BuildContext context) {
     //const MaterialStateProperty<Size?>? size = null;
 
     return ButtonStyle(
@@ -95,7 +93,7 @@ class PopupCustomMenuItem extends StatelessWidget {
       backgroundColor: MaterialStateProperty.resolveWith<Color?>(
           (Set<MaterialState> states) {
         if (states.contains(MaterialState.pressed)) {
-          return const Color.fromRGBO(209, 209, 209, 1);
+          return context.theme.dividerColor;
         }
         return null;
       }),

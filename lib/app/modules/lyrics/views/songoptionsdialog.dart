@@ -34,9 +34,19 @@ class SongOptionsDialog extends StatelessWidget {
           children: [
             Container(
               decoration: BoxDecoration(
-                color: Colors.grey.shade200,
+                color: context.isDarkMode
+                    ? context.theme.shadowColor
+                    : context.theme.unselectedWidgetColor,
                 borderRadius: BorderRadius.circular(10),
-                boxShadow: const [BoxShadow(blurRadius: 70, spreadRadius: -25)],
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 70,
+                    spreadRadius: -25,
+                    color: context.isDarkMode
+                        ? Colors.grey.shade600
+                        : context.theme.primaryColor,
+                  )
+                ],
               ),
               child: Column(
                 children: [

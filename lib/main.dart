@@ -16,6 +16,7 @@ Future<void> main() async {
       title: "Хазинаи Дил",
       theme: AppTheme().lightTheme(),
       darkTheme: AppTheme().darkTheme(),
+      //themeMode: ThemeMode.dark,
       debugShowCheckedModeBanner: false,
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,

@@ -25,11 +25,11 @@ class TransposeButtons extends StatelessWidget {
             width: kMinInteractiveDimensionCupertino,
             height: kMinInteractiveDimensionCupertino,
             child: TextButton(
-              style: buttonMyCustomStyle(),
+              style: buttonMyCustomStyle(context),
               onPressed: () => controller.decreaseTranspose(),
-              child: const Icon(
+              child: Icon(
                 Icons.remove,
-                color: Colors.black,
+                color: context.theme.primaryColor,
               ),
             ),
           ),
@@ -39,20 +39,20 @@ class TransposeButtons extends StatelessWidget {
           // indicate that this line is for transposing and for resetting transposing
           Expanded(
             child: TextButton(
-              style: buttonMyCustomStyle(),
+              style: buttonMyCustomStyle(context),
               onPressed: () => controller.resetTranspose(),
               child: Container(
                 height: kMinInteractiveDimensionCupertino,
                 padding: const EdgeInsets.only(left: 15, right: 15),
                 alignment: Alignment.center,
                 child: RichText(
-                  text: const TextSpan(
+                  text: TextSpan(
                       text: 'Интиқол\n',
                       style: TextStyle(
-                        color: Colors.black,
+                        color: context.theme.primaryColor,
                         fontSize: 16,
                       ),
-                      children: [
+                      children: const [
                         TextSpan(
                           text: '(Транспозиция)',
                           style: TextStyle(
@@ -78,10 +78,10 @@ class TransposeButtons extends StatelessWidget {
             height: kMinInteractiveDimensionCupertino,
             child: TextButton(
               onPressed: () => controller.increaseTranspose(),
-              style: buttonMyCustomStyle(),
-              child: const Icon(
+              style: buttonMyCustomStyle(context),
+              child: Icon(
                 Icons.add,
-                color: Colors.black,
+                color: context.theme.primaryColor,
               ),
             ),
           ),
@@ -91,7 +91,7 @@ class TransposeButtons extends StatelessWidget {
   }
 
   // button settings as well as click animation via materialstateproperty
-  ButtonStyle buttonMyCustomStyle() {
+  ButtonStyle buttonMyCustomStyle(BuildContext context) {
     //const MaterialStateProperty<Size?>? size = null;
 
     return ButtonStyle(
@@ -109,7 +109,8 @@ class TransposeButtons extends StatelessWidget {
       backgroundColor: MaterialStateProperty.resolveWith<Color?>(
           (Set<MaterialState> states) {
         if (states.contains(MaterialState.pressed)) {
-          return const Color.fromRGBO(209, 209, 209, 1);
+          //return const Color.fromRGBO(209, 209, 209, 1);
+          return context.theme.dividerColor;
         }
         return null;
       }),

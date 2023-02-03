@@ -35,6 +35,7 @@ class LyricsView extends GetView<LyricsController> {
 
     return Scaffold(
       appBar: MyCupertinoNavigationBar(
+        backgroundColor: context.theme.shadowColor,
         middle: SizedBox(
           width: context.width / 2,
           child: CupertinoButton(
@@ -46,7 +47,7 @@ class LyricsView extends GetView<LyricsController> {
             },
             minSize: 0,
             padding: const EdgeInsets.all(2),
-            color: Get.theme.scaffoldBackgroundColor,
+            color: context.theme.shadowColor,
             child: SongTitle(song: song),
           ),
         ),

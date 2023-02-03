@@ -9,13 +9,20 @@ class AppTheme {
     scaffoldBackgroundColor: Colors.white,
     primaryColor: Colors.black,
     shadowColor: Colors.grey.shade100,
+    unselectedWidgetColor: Colors.grey.shade200,
     dividerColor: Colors.grey.shade300,
     cardColor: Colors.black45,
     primaryTextTheme: const TextTheme(
-        bodyMedium: TextStyle(
-      //fontFamily: 'UbuntuMono',
-      fontSize: 18,
-    )),
+      bodyMedium: TextStyle(
+        //fontFamily: 'UbuntuMono',
+        fontSize: 18,
+      ),
+      bodySmall: chordText,
+      bodyLarge: chordLyricsText,
+      displayLarge: lyricsText,
+      displayMedium: lyricsTitleText,
+      displaySmall: chordsTitleText,
+    ),
     textTheme: TextTheme(
       titleLarge: const TextStyle(
         color: Colors.black,
@@ -58,10 +65,26 @@ class AppTheme {
     brightness: Brightness.dark,
     scaffoldBackgroundColor: Colors.black87,
     shadowColor: Colors.black.withBlue(15).withRed(15).withGreen(15),
+    unselectedWidgetColor: Colors.black.withBlue(30).withRed(30).withGreen(30),
     primaryColor: Colors.grey.shade100,
     dividerColor: Colors.grey.shade800,
     cardColor: Colors.grey.shade400,
     primaryTextTheme: TextTheme(
+      bodySmall: lightThemeData.primaryTextTheme.bodySmall?.copyWith(
+        color: const Color.fromARGB(255, 78, 104, 255),
+      ),
+      bodyLarge: lightThemeData.primaryTextTheme.bodyLarge?.copyWith(
+        color: Colors.grey.shade200,
+      ),
+      displayLarge: lightThemeData.primaryTextTheme.displayLarge?.copyWith(
+        color: Colors.grey.shade200,
+      ),
+      displayMedium: lightThemeData.primaryTextTheme.displayMedium?.copyWith(
+        color: const Color.fromARGB(255, 78, 104, 255),
+      ),
+      displaySmall: lightThemeData.primaryTextTheme.displaySmall?.copyWith(
+        color: const Color.fromARGB(255, 78, 104, 255),
+      ),
       bodyMedium: lightThemeData.primaryTextTheme.bodyMedium?.copyWith(
         color: Colors.grey.shade100,
       ),

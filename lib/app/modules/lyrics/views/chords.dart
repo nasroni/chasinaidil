@@ -55,10 +55,10 @@ class ChordsView extends StatelessWidget {
           lineText = "Купрук";
         } else if (sanitizedLine == '#part') {
           return Divider(
-            color: Colors.black26,
+            color: context.theme.cardColor,
             endIndent: context.width / 3,
             indent: context.width / 3,
-            thickness: 1.5 * currentZoom,
+            thickness: 1.2 * currentZoom,
             height: 30 * currentZoom,
           );
         } else {
@@ -68,6 +68,7 @@ class ChordsView extends StatelessWidget {
         double paddingRight = controller.isChordMode ? 8 : 30;
 
         return Container(
+          color: context.theme.scaffoldBackgroundColor,
           padding: context.isLandscape
               ? EdgeInsets.fromLTRB(
                   50, 25 * currentZoom * 0.8, 50, 2 * currentZoom * 0.8)
@@ -105,7 +106,7 @@ class ChordsView extends StatelessWidget {
                 20, 5 * currentZoom * 0.8, paddingRight, 5 * currentZoom * 0.8),
         // backgroundcolor
         //color: toggleBW ? const Color(0xfff0f0f0) : Colors.white,
-        color: Colors.white,
+        color: context.theme.scaffoldBackgroundColor,
         width: double.maxFinite,
         // linebreak wordwise
         child: controller.isChordMode
@@ -121,6 +122,7 @@ class ChordsView extends StatelessWidget {
     }).toList();
 
     // add margin to bottom
+    // ignore: sized_box_for_whitespace
     rendered.add(Container(
       height: context.height / 3,
       width: context.width,
