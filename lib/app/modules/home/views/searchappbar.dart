@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:chasinaidil/app/modules/app_controller.dart';
@@ -7,7 +8,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:get/state_manager.dart';
 import 'package:get_storage/get_storage.dart';
 
 class SearchAppBar extends StatelessWidget {
@@ -28,43 +28,50 @@ class SearchAppBar extends StatelessWidget {
       titleTextStyle: context.textTheme.titleLarge,
       elevation: 0,
       actions: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 40, right: 20),
+        Container(
+          padding: Platform.isAndroid
+              ? const EdgeInsets.only(bottom: 40, right: 0)
+              : const EdgeInsets.only(bottom: 70, right: 0),
           child: TextButton(
-              style: ButtonStyle(
-                splashFactory: NoSplash.splashFactory,
-                overlayColor: MaterialStateColor.resolveWith((states) {
-                  if (states.contains(MaterialState.pressed)) {
-                    return context.theme.shadowColor;
-                  } else {
-                    return Colors.transparent;
-                  }
-                }),
-                shape: MaterialStatePropertyAll(RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50))),
+            style: ButtonStyle(
+              padding: MaterialStatePropertyAll(EdgeInsets.zero),
+              splashFactory: NoSplash.splashFactory,
+              overlayColor: MaterialStateColor.resolveWith((states) {
+                if (states.contains(MaterialState.pressed)) {
+                  return context.theme.shadowColor;
+                } else {
+                  return Colors.transparent;
+                }
+              }),
+              shape: MaterialStatePropertyAll(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100),
+                ),
               ),
-              onPressed: () {
-                GetStorage().write(Prefs.darkMode, !Get.isDarkMode);
+            ),
+            onPressed: () {
+              GetStorage().write(Prefs.darkMode, !Get.isDarkMode);
 
-                Get.changeThemeMode(
-                  Get.isDarkMode ? ThemeMode.light : ThemeMode.dark,
-                );
-                /*Get.changeTheme(
+              Get.changeThemeMode(
+                Get.isDarkMode ? ThemeMode.light : ThemeMode.dark,
+              );
+              /*Get.changeTheme(
                   Get.isDarkMode
                       ? AppTheme().lightThemeData
                       : AppTheme().darkThemeData,
                 );*/
-              },
-              onLongPress: () {
-                GetStorage().remove(Prefs.darkMode);
-                Get.changeThemeMode(ThemeMode.system);
-              },
-              child: Icon(
-                context.isDarkMode
-                    ? CupertinoIcons.moon_fill
-                    : CupertinoIcons.moon,
-                color: context.theme.primaryColor,
-              )),
+            },
+            onLongPress: () {
+              Get.changeThemeMode(ThemeMode.system);
+              GetStorage().remove(Prefs.darkMode);
+            },
+            child: Icon(
+              context.isDarkMode
+                  ? CupertinoIcons.moon_fill
+                  : CupertinoIcons.moon,
+              color: context.theme.primaryColor,
+            ),
+          ),
         )
       ],
       systemOverlayStyle: SystemUiOverlayStyle(
