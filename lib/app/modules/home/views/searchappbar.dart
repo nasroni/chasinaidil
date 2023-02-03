@@ -1,12 +1,14 @@
 import 'dart:io';
 
 import 'package:chasinaidil/app/modules/app_controller.dart';
+import 'package:chasinaidil/prefs.dart';
 import 'package:chasinaidil/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/state_manager.dart';
+import 'package:get_storage/get_storage.dart';
 
 class SearchAppBar extends StatelessWidget {
   final int size;
@@ -28,19 +30,39 @@ class SearchAppBar extends StatelessWidget {
       actions: [
         Padding(
           padding: const EdgeInsets.only(bottom: 40, right: 20),
-          child: IconButton(
+          child: TextButton(
+              style: ButtonStyle(
+                splashFactory: NoSplash.splashFactory,
+                overlayColor: MaterialStateColor.resolveWith((states) {
+                  if (states.contains(MaterialState.pressed)) {
+                    return context.theme.shadowColor;
+                  } else {
+                    return Colors.transparent;
+                  }
+                }),
+                shape: MaterialStatePropertyAll(RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(50))),
+              ),
               onPressed: () {
-                /*Get.changeThemeMode(
+                GetStorage().write(Prefs.darkMode, !Get.isDarkMode);
+
+                Get.changeThemeMode(
                   Get.isDarkMode ? ThemeMode.light : ThemeMode.dark,
-                );*/
-                Get.changeTheme(
+                );
+                /*Get.changeTheme(
                   Get.isDarkMode
                       ? AppTheme().lightThemeData
                       : AppTheme().darkThemeData,
-                );
+                );*/
               },
-              icon: Icon(
-                CupertinoIcons.settings,
+              onLongPress: () {
+                GetStorage().remove(Prefs.darkMode);
+                Get.changeThemeMode(ThemeMode.system);
+              },
+              child: Icon(
+                context.isDarkMode
+                    ? CupertinoIcons.moon_fill
+                    : CupertinoIcons.moon,
                 color: context.theme.primaryColor,
               )),
         )

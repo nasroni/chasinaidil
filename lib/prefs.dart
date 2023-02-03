@@ -1,4 +1,6 @@
 class Prefs {
+  static const darkMode = 'darkmode';
+
   static const numDBversion = 'dbversion';
   static const numZoomlevel = 'zoomlevel';
   static const listLastSearches = 'lastsearches';

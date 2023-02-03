@@ -8,15 +8,21 @@ import 'app/localization.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'app/routes/app_pages.dart';
+import 'prefs.dart';
 
 Future<void> main() async {
   await GetStorage.init();
+  var themeMode = GetStorage().read(Prefs.darkMode) ?? ThemeMode.system;
+  themeMode = themeMode.runtimeType == ThemeMode
+      ? themeMode
+      : (themeMode ? ThemeMode.dark : ThemeMode.light);
+
   runApp(
     GetMaterialApp(
       title: "Хазинаи Дил",
       theme: AppTheme().lightTheme(),
       darkTheme: AppTheme().darkTheme(),
-      //themeMode: ThemeMode.dark,
+      themeMode: themeMode,
       debugShowCheckedModeBanner: false,
       initialRoute: AppPages.INITIAL,
       getPages: AppPages.routes,
