@@ -134,7 +134,7 @@ class IsarService {
 }
 
 Future externalSaveSongList(dynamic songList) async {
-  final isar = await Isar.open([SongSchema], name: 'default');
+  final isar = await Isar.open([SongSchema, PlaylistSchema], name: 'default');
 
   isar.writeTxnSync(() async {
     for (var song in songList) {
