@@ -25,7 +25,12 @@ class AlbumController extends GetxController {
   }
 
   void loadAlbumSongs() async {
-    var songsFromDB = await isar.getSongsFromAlbum(album);
+    List<Song> songsFromDB;
+    if (album.playlist != null) {
+      songsFromDB = await album.playlist!.giveSongList();
+    } else {
+      songsFromDB = await isar.getSongsFromAlbum(album);
+    }
     songs.addAll(songsFromDB);
   }
 

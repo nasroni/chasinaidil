@@ -75,7 +75,7 @@ class AlbumView extends GetView<AlbumController> {
                     ),
                     minSize: 1,
                     padding: EdgeInsets.zero,
-                    child: Icon(CupertinoIcons.delete),
+                    child: const Icon(CupertinoIcons.delete),
                   )
                 : null,
             alwaysShowMiddle: false,
