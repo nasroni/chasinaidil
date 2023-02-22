@@ -29,7 +29,7 @@ class Song {
   }
 
   String get lyrics => textWChords.replaceAll(
-      RegExp(r'\[([A-Hbmsu#0-9]){1,4}(\/[A-H][b#]?)?\]'), '');
+      RegExp(r'\[([A-Hbmsu#0-9]){1,5}(\/[A-H][b#]?)?\]'), '');
 
   @ignore
   String get coverAsset =>
