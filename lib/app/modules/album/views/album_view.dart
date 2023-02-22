@@ -185,7 +185,7 @@ class AlbumView extends GetView<AlbumController> {
                   ),
                   const SizedBox(
                     height: 10,
-                  )
+                  ),
                 ],
               ),
             ),
@@ -199,48 +199,81 @@ class AlbumView extends GetView<AlbumController> {
                   List<Widget> list = [];
                   int count = 0;
                   for (var song in controller.songs) {
-                    list.add(InkWell(
-                      onTap: () => Get.toNamed(Routes.LYRICS, arguments: song),
-                      //color: Colors.white,
-
-                      //: kMinInteractiveDimensionCupertino,
-                      //width: context.width - 16,
-
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 16),
-                        height: kMinInteractiveDimensionCupertino,
-                        width: context.width,
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                    list.add(
+                      Dismissible(
+                        key: Key(song.id.toString()),
+                        background: Container(color: Colors.red),
+                        direction:
+                            controller.album.songBook == SongBook.playlists
+                                ? DismissDirection.endToStart
+                                : DismissDirection.none,
+                        confirmDismiss: (_) => Get.dialog(CupertinoAlertDialog(
+                          title: Text('Remove song'),
+                          content: Text(
+                              "Do you really want to remove the song ${song.title} from this playlist?"),
+                          actions: [
+                            CupertinoDialogAction(
+                              child: const Text('No'),
+                              onPressed: () => Get.back(),
+                            ),
+                            CupertinoDialogAction(
+                              isDestructiveAction: true,
+                              onPressed: () => Get.back(result: true),
+                              child: const Text('Yes'),
+                            ),
+                          ],
+                        )),
+                        child: Column(
                           children: [
-                            SizedBox(
-                              width: 39,
-                              child: Text(
-                                song.songNumber,
-                                //style: const TextStyle(
-                                //   color: Colors.black45, fontSize: 15),
-                                style: context.theme.textTheme.bodySmall,
+                            InkWell(
+                              onTap: () =>
+                                  Get.toNamed(Routes.LYRICS, arguments: song),
+                              //color: Colors.white,
+
+                              //: kMinInteractiveDimensionCupertino,
+                              //width: context.width - 16,
+
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 8, horizontal: 16),
+                                height: kMinInteractiveDimensionCupertino,
+                                width: context.width,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    SizedBox(
+                                      width: 39,
+                                      child: Text(
+                                        song.songNumber,
+                                        //style: const TextStyle(
+                                        //   color: Colors.black45, fontSize: 15),
+                                        style:
+                                            context.theme.textTheme.bodySmall,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        song.title,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
-                            Expanded(
-                              child: Text(
-                                song.title,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
+                            if (count != controller.songs.length - 1)
+                              const Divider(
+                                thickness: 0.5,
+                                indent: 55,
+                                endIndent: 6,
+                                height: 0.5,
+                              )
                           ],
                         ),
                       ),
-                    ));
-                    if (count != controller.songs.length - 1) {
-                      list.add(const Divider(
-                        thickness: 0.5,
-                        indent: 55,
-                        endIndent: 6,
-                        height: 0.5,
-                      ));
-                    } else {
+                    );
+
+                    if (count == controller.songs.length - 1) {
                       list.add(SizedBox(
                         height: context.height / 10,
                       ));
