@@ -1,12 +1,28 @@
+import 'dart:ffi';
+
+import 'package:chasinaidil/app/data/types/playlist.dart';
 import 'package:chasinaidil/app/modules/home/controllers/home_controller.dart';
 
 class Album {
   Album(this.title, this.albumId, this._coverPath, this.songBook);
 
+  Album.fromPlaylist(Playlist this.playlist)
+      : title = playlist.name ?? '',
+        _coverPath = '',
+        albumId = playlist.id,
+        songBook = SongBook.playlists;
+  Album.newPlaylist()
+      : title = 'Нав лист ...',
+        _coverPath = '',
+        albumId = 999999999999999999,
+        songBook = SongBook.playlists,
+        playlist = Playlist()..hexcolor = "#de7e00";
+
   final String title;
   final int albumId;
   final String _coverPath;
   final SongBook songBook;
+  Playlist? playlist;
 
   String get coverPathHq => '${_coverPath}_hq.jpg';
   String get coverPath => '$_coverPath.jpg';
@@ -54,6 +70,13 @@ class Album {
           Album('Чашма 1', 1, _genPath(1, songBook), songBook),
           Album('Чашма 2', 2, _genPath(2, songBook), songBook),
         ];
+      case SongBook.playlists:
+        return [
+          Album.fromPlaylist(Playlist()..name = 'Playlist 1'),
+          Album.fromPlaylist(Playlist()..name = 'Next Playlist'),
+          Album.newPlaylist(),
+        ];
+      //return [];
       default:
         return [];
     }

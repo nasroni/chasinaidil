@@ -1,6 +1,7 @@
 import 'package:chasinaidil/app/data/types/album.dart';
 import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:flutter/foundation.dart';
+import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 
 class IsarService {
@@ -31,6 +32,14 @@ class IsarService {
   Future<Song?> getSongById(int id) async {
     final isar = await db;
     return await isar.songs.where().idEqualTo(id).findFirst();
+  }
+
+  Future<List<Song>> getSongsByIds(List<int> ids) async {
+    final isar = await db;
+    return await isar.songs
+        .filter()
+        .anyOf(ids, (q, id) => q.idEqualTo(id))
+        .findAll();
   }
 
   Future<List<Song>> getAllSongs() async {

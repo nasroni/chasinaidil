@@ -30,11 +30,11 @@ class SearchAppBar extends StatelessWidget {
       actions: [
         Container(
           padding: Platform.isAndroid
-              ? const EdgeInsets.only(bottom: 40, right: 0)
+              ? const EdgeInsets.only(bottom: 30, right: 0)
               : const EdgeInsets.only(bottom: 70, right: 0),
           child: TextButton(
             style: ButtonStyle(
-              padding: MaterialStatePropertyAll(EdgeInsets.zero),
+              padding: const MaterialStatePropertyAll(EdgeInsets.zero),
               splashFactory: NoSplash.splashFactory,
               overlayColor: MaterialStateColor.resolveWith((states) {
                 if (states.contains(MaterialState.pressed)) {

@@ -1,5 +1,5 @@
 name: chasinaidil
-version: 2.3.1+19
+version: 2.3.2+20
 publish_to: none
 description: A new Flutter project.
 environment: 
@@ -19,6 +19,8 @@ dependencies:
   get_storage: ^2.0.3
   share_plus: 4.0.2
   flutter_animate: ^3.1.0
+  flutter_randomcolor: ^1.0.14
+  hexcolor: ^3.0.1
 
 dev_dependencies: 
   build_runner: ^2.3.3
