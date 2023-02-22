@@ -66,6 +66,11 @@ class IsarService {
     return await isar.songs.where().findAll();
   }
 
+  Future<List<Song>> getAllSongsFromSongBook(String songbook) async {
+    final isar = await db;
+    return await isar.songs.filter().bookEqualTo(songbook).findAll();
+  }
+
   Future<List<Song>> getSongsFromAlbum(Album album) async {
     final isar = await db;
 

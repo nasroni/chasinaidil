@@ -1,6 +1,7 @@
 import 'package:chasinaidil/app/data/services/isar_service.dart';
 import 'package:chasinaidil/app/data/types/album.dart';
 import 'package:chasinaidil/app/data/types/song.dart';
+import 'package:chasinaidil/app/modules/home/controllers/home_controller.dart';
 import 'package:get/get.dart';
 
 class AlbumController extends GetxController {
@@ -26,7 +27,12 @@ class AlbumController extends GetxController {
     if (album.playlist != null) {
       songsFromDB = await album.playlist!.giveSongList();
     } else {
-      songsFromDB = await isar.getSongsFromAlbum(album);
+      if (album.albumId == 17 && album.songBook == SongBook.chasinaidil) {
+        songsFromDB = await isar.getAllSongsFromSongBook(
+            HomeController.giveBookTitle(album.songBook));
+      } else {
+        songsFromDB = await isar.getSongsFromAlbum(album);
+      }
     }
     songs.addAll(songsFromDB);
   }
