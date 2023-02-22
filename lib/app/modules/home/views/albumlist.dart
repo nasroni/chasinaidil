@@ -21,7 +21,7 @@ class AlbumList extends StatelessWidget {
         width: context.width,
         padding: const EdgeInsets.symmetric(horizontal: 12),
         child: GetBuilder<AppController>(
-            id: 'deletedPlaylist',
+            id: 'updatePlaylist',
             builder: (context) {
               return FutureBuilder(
                   future: Album.list(songBook),

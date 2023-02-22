@@ -40,7 +40,7 @@ class AlbumController extends GetxController {
 
     if (album.playlist != null) isar.savePlaylist(album.playlist!);
 
-    Get.find<AppController>().update(['playlistUpdate']);
+    //Get.find<AppController>().update(['playlistUpdate']);
     if (album.albumId == 999999999999999999) Get.back(result: album.playlist);
   }
 
@@ -49,12 +49,12 @@ class AlbumController extends GetxController {
 
     if (album.playlist != null) isar.savePlaylist(album.playlist!);
 
-    Get.find<AppController>().update(['playlistUpdate']);
+    //Get.find<AppController>().update(['playlistUpdate']);
   }
 
   void deletePlaylist() {
     isar.deletePlaylist(album.playlist!);
-    Get.find<AppController>().update(['deletedPlaylist']);
+    //Get.find<AppController>().update(['playlistUpdate']);
     Get.back();
   }
 }

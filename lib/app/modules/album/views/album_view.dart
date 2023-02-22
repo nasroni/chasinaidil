@@ -93,7 +93,7 @@ class AlbumView extends GetView<AlbumController> {
                     child: ClipRRect(
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
                       child: GetBuilder<AppController>(
-                          id: 'playlistUpdate',
+                          id: 'updatePlaylist',
                           builder: (context) {
                             return Stack(
                               children: [

@@ -1,6 +1,7 @@
 import 'package:chasinaidil/app/data/types/album.dart';
 import 'package:chasinaidil/app/data/types/playlist.dart';
 import 'package:chasinaidil/app/data/types/song.dart';
+import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:isar/isar.dart';
@@ -15,6 +16,7 @@ class IsarService {
   Future<void> savePlaylist(Playlist playlist) async {
     final isar = await db;
     isar.writeTxnSync<int>(() => isar.playlists.putSync(playlist));
+    Get.find<AppController>().update(['updatePlaylist']);
   }
 
   Future<List<Playlist>> getAllPlaylists() async {
