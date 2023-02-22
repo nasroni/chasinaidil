@@ -1,9 +1,6 @@
-import 'dart:developer';
 import 'dart:io';
 
-import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:chasinaidil/prefs.dart';
-import 'package:chasinaidil/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

@@ -1,4 +1,3 @@
-import 'package:chasinaidil/app/modules/home/controllers/home_controller.dart';
 import 'package:chasinaidil/app/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 
@@ -6,9 +5,11 @@ import 'package:get/get.dart';
 
 import '../controllers/loading_controller.dart';
 
+// ignore: must_be_immutable
 class LoadingView extends GetView {
   LoadingView({Key? key}) : super(key: key);
 
+  @override
   LoadingController controller = Get.put(LoadingController());
 
   @override

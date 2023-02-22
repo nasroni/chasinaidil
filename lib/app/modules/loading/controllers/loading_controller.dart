@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:chasinaidil/app/modules/home/controllers/home_controller.dart';
 import 'package:chasinaidil/prefs.dart';
 import 'package:chasinaidil/release_config.dart';

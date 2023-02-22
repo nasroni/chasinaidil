@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:chasinaidil/app/modules/lyrics/controllers/lyrics_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

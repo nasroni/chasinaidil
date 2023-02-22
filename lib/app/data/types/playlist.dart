@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:chasinaidil/app/data/services/isar_service.dart';
 import 'package:chasinaidil/app/data/types/song.dart';
-import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:flutter_randomcolor/flutter_randomcolor.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';

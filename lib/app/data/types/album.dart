@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:chasinaidil/app/data/services/isar_service.dart';
 import 'package:chasinaidil/app/data/types/playlist.dart';
 import 'package:chasinaidil/app/modules/home/controllers/home_controller.dart';
@@ -32,7 +30,7 @@ class Album {
   String get coverPath => '$_coverPath.jpg';
 
   static String _genPath(int albumId, SongBook songBook) {
-    var folderPath;
+    String folderPath;
     switch (songBook) {
       case SongBook.chasinaidil:
         folderPath = 'chasinaidil';

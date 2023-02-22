@@ -6,7 +6,7 @@ import 'package:get_storage/get_storage.dart';
 
 import '../../../data/types/song.dart';
 
-enum ViewModes { Lyrics, Chords, Sheet }
+enum ViewModes { lyrics, chords, sheet }
 
 class LyricsController extends GetxController {
   final Song song = Get.arguments;
@@ -14,12 +14,12 @@ class LyricsController extends GetxController {
   final Rx<ViewModes> viewMode = ViewModes.values
       .firstWhere(
         (element) => element.name == GetStorage().read(Prefs.mode),
-        orElse: () => ViewModes.Lyrics,
+        orElse: () => ViewModes.lyrics,
       )
       .obs;
-  bool get isLyricsMode => viewMode.value == ViewModes.Lyrics;
-  bool get isChordMode => viewMode.value == ViewModes.Chords;
-  bool get isSheetMode => viewMode.value == ViewModes.Sheet;
+  bool get isLyricsMode => viewMode.value == ViewModes.lyrics;
+  bool get isChordMode => viewMode.value == ViewModes.chords;
+  bool get isSheetMode => viewMode.value == ViewModes.sheet;
 
   final RxInt transposeCount = 0.obs;
 

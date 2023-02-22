@@ -1,12 +1,9 @@
-import 'dart:developer';
-
 import 'package:chasinaidil/app/data/services/isar_service.dart';
 import 'package:chasinaidil/app/data/types/album.dart';
 import 'package:chasinaidil/app/data/types/playlist.dart';
 import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:chasinaidil/app/modules/album/controllers/album_controller.dart';
 import 'package:chasinaidil/app/modules/album/views/album_view.dart';
-import 'package:chasinaidil/app/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

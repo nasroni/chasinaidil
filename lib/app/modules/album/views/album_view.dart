@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:chasinaidil/app/flutter_rewrite/navbar.dart';
 import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:chasinaidil/app/modules/home/controllers/home_controller.dart';
