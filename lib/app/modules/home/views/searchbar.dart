@@ -17,41 +17,49 @@ class SearchBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(
-              vertical: Platform.isAndroid ? 15 : 10,
-              horizontal: _homeController.isSearchActive.value ? 10 : 15),
-          width: _homeController.isSearchActive.value
-              ? context.width - 70
-              : context.width,
-          child: CupertinoSearchTextField(
-            style: TextStyle(color: context.theme.primaryColor),
-            autocorrect: false,
-            placeholder: 'Ҷустуҷӯ',
-            onTap: () {
-              _homeController.openSearch();
-            },
-            onChanged: (value) => _homeController.searchValue.value = value,
-            controller: _homeController.searchEditingController,
-            keyboardType: TextInputType.name,
-            /*onSubmitted: (value) {
-              _homeController.closeSearch();
-              FocusScope.of(context).requestFocus();
-            },*/
+    return WillPopScope(
+      onWillPop: () {
+        _homeController.closeSearch();
+        FocusScope.of(context).unfocus();
+        _homeController.searchEditingController.clear();
+        return Future.value(false);
+      },
+      child: Row(
+        children: [
+          Container(
+            padding: EdgeInsets.symmetric(
+                vertical: Platform.isAndroid ? 15 : 10,
+                horizontal: _homeController.isSearchActive.value ? 10 : 15),
+            width: _homeController.isSearchActive.value
+                ? context.width - 70
+                : context.width,
+            child: CupertinoSearchTextField(
+              style: TextStyle(color: context.theme.primaryColor),
+              autocorrect: false,
+              placeholder: 'Ҷустуҷӯ',
+              onTap: () {
+                _homeController.openSearch();
+              },
+              onChanged: (value) => _homeController.searchValue.value = value,
+              controller: _homeController.searchEditingController,
+              keyboardType: TextInputType.name,
+              /*onSubmitted: (value) {
+                _homeController.closeSearch();
+                FocusScope.of(context).requestFocus();
+              },*/
+            ),
           ),
-        ),
-        _homeController.isSearchActive.value
-            ? TextButton(
-                onPressed: () {
-                  _homeController.closeSearch();
-                  FocusScope.of(context).unfocus();
-                },
-                child: const Text("Қатъ"),
-              )
-            : Container(),
-      ],
+          _homeController.isSearchActive.value
+              ? TextButton(
+                  onPressed: () {
+                    _homeController.closeSearch();
+                    FocusScope.of(context).unfocus();
+                  },
+                  child: const Text("Қатъ"),
+                )
+              : Container(),
+        ],
+      ),
     );
   }
 }
