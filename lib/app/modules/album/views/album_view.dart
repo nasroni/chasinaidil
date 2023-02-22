@@ -152,7 +152,7 @@ class AlbumView extends GetView<AlbumController> {
                   Obx(() {
                     if (controller.isTitleEditing.value) {
                       return SizedBox(
-                        width: context.width / 2,
+                        width: context.width,
                         child: CupertinoTextField.borderless(
                           placeholder: controller.album.playlist?.name,
                           autofocus: true,
