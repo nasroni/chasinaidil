@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -82,6 +83,15 @@ class SongOptionsDialog extends StatelessWidget {
                   controller.isChordMode
                       ? const Divider(thickness: 5, height: 5)
                       : Container(),
+                  PopupCustomMenuItem(
+                    text: 'Add to playlist',
+                    icon: Icons.playlist_add,
+                    onTapFunction: (_) => Get.find<AppController>()
+                        .playlistDialog(controller.song),
+                  ),
+                  const Divider(
+                    height: 0,
+                  ),
                   PopupCustomMenuItem(
                     text: 'Фиристодан ...',
                     icon: CupertinoIcons.share,

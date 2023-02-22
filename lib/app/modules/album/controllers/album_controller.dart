@@ -7,9 +7,12 @@ import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:get/get.dart';
 
 class AlbumController extends GetxController {
+  AlbumController();
+  AlbumController.withAlbum(this.album);
+
   static final IsarService isar = Get.find();
 
-  final Album album = Get.arguments;
+  late Album album = Get.arguments;
 
   final RxList<Song> songs = List<Song>.empty().obs;
 
@@ -33,7 +36,7 @@ class AlbumController extends GetxController {
     if (album.playlist != null) isar.savePlaylist(album.playlist!);
 
     Get.find<AppController>().update(['playlistUpdate']);
-    if (album.albumId == 999999999999999999) Get.back();
+    if (album.albumId == 999999999999999999) Get.back(result: album.playlist);
   }
 
   void setNewColor() {

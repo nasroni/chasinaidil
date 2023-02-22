@@ -60,12 +60,7 @@ int _playlistEstimateSize(
       bytesCount += 3 + value.length * 3;
     }
   }
-  {
-    final value = object.songIds;
-    if (value != null) {
-      bytesCount += 3 + value.length * 8;
-    }
-  }
+  bytesCount += 3 + object.songIds.length * 8;
   return bytesCount;
 }
 
@@ -90,7 +85,7 @@ Playlist _playlistDeserialize(
   object.hexcolor = reader.readString(offsets[0]);
   object.id = id;
   object.name = reader.readStringOrNull(offsets[1]);
-  object.songIds = reader.readLongList(offsets[2]);
+  object.songIds = reader.readLongList(offsets[2]) ?? [];
   return object;
 }
 
@@ -106,7 +101,7 @@ P _playlistDeserializeProp<P>(
     case 1:
       return (reader.readStringOrNull(offset)) as P;
     case 2:
-      return (reader.readLongList(offset)) as P;
+      return (reader.readLongList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
   }
@@ -529,22 +524,6 @@ extension PlaylistQueryFilter
     });
   }
 
-  QueryBuilder<Playlist, Playlist, QAfterFilterCondition> songIdsIsNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNull(
-        property: r'songIds',
-      ));
-    });
-  }
-
-  QueryBuilder<Playlist, Playlist, QAfterFilterCondition> songIdsIsNotNull() {
-    return QueryBuilder.apply(this, (query) {
-      return query.addFilterCondition(const FilterCondition.isNotNull(
-        property: r'songIds',
-      ));
-    });
-  }
-
   QueryBuilder<Playlist, Playlist, QAfterFilterCondition> songIdsElementEqualTo(
       int value) {
     return QueryBuilder.apply(this, (query) {
@@ -800,7 +779,7 @@ extension PlaylistQueryProperty
     });
   }
 
-  QueryBuilder<Playlist, List<int>?, QQueryOperations> songIdsProperty() {
+  QueryBuilder<Playlist, List<int>, QQueryOperations> songIdsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'songIds');
     });

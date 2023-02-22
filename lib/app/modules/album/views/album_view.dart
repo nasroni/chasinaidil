@@ -12,13 +12,25 @@ import 'package:get/get.dart';
 import '../controllers/album_controller.dart';
 
 class AlbumView extends GetView<AlbumController> {
-  const AlbumView({Key? key}) : super(key: key);
+  const AlbumView({Key? key, this.nested = 0}) : super(key: key);
+
+  final int nested;
+
+  @override
+  AlbumController get controller {
+    if (nested == 0) {
+      return super.controller;
+    } else {
+      return Get.find<AlbumController>(tag: nested.toString());
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     var savedContext = context;
-    if (controller.album.albumId == 999999999999999999)
+    if (controller.album.albumId == 999999999999999999) {
       controller.isTitleEditing.value = true;
+    }
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -146,6 +158,7 @@ class AlbumView extends GetView<AlbumController> {
                         child: CupertinoTextField.borderless(
                           placeholder: controller.album.playlist?.name,
                           autofocus: true,
+                          textAlign: TextAlign.center,
                           onSubmitted: (val) => controller.setNewName(val),
                           style: context.theme.textTheme.displayLarge,
                         ),

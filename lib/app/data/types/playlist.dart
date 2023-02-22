@@ -45,19 +45,30 @@ class Playlist {
     }
   }
 
-  List<int>? songIds;
+  List<int> songIds = List.empty(growable: true);
+
+  @ignore
+  final IsarService isar = Get.find();
+
+  void addSong(Song song) {
+    if (!songIds.contains(song.id)) {
+      songIds = [...songIds, song.id];
+      isar.savePlaylist(this);
+    }
+    Get.back();
+    Get.back();
+  }
 
   Future<List<Song>> giveSongList() async {
     IsarService isar = Get.find();
-    if (songIds == null) return Future.value(List<Song>.empty());
-    return await isar.getSongsByIds(songIds!);
+    if (songIds.isEmpty) return Future.value(List<Song>.empty());
+    return await isar.getSongsByIds(songIds);
   }
 
   saveSongList(List<Song> songs) {
-    songIds ??= List.empty();
-    songIds?.clear();
+    songIds.clear();
     for (var song in songs) {
-      songIds?.add(song.id);
+      songIds.add(song.id);
     }
   }
 }
