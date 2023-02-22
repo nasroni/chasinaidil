@@ -208,7 +208,7 @@ class AlbumView extends GetView<AlbumController> {
                                 ? DismissDirection.endToStart
                                 : DismissDirection.none,
                         confirmDismiss: (_) => Get.dialog(CupertinoAlertDialog(
-                          title: Text('Remove song'),
+                          title: const Text('Remove song'),
                           content: Text(
                               "Do you really want to remove the song ${song.title} from this playlist?"),
                           actions: [
@@ -218,7 +218,10 @@ class AlbumView extends GetView<AlbumController> {
                             ),
                             CupertinoDialogAction(
                               isDestructiveAction: true,
-                              onPressed: () => Get.back(result: true),
+                              onPressed: () {
+                                controller.album.playlist?.removeSong(song);
+                                Get.back(result: true);
+                              },
                               child: const Text('Yes'),
                             ),
                           ],

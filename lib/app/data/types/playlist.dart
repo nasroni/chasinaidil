@@ -59,6 +59,11 @@ class Playlist {
     Get.back();
   }
 
+  void removeSong(Song song) {
+    songIds = [...songIds]..remove(song.id);
+    isar.savePlaylist(this);
+  }
+
   Future<List<Song>> giveSongList() async {
     IsarService isar = Get.find();
     if (songIds.isEmpty) return Future.value(List<Song>.empty());
