@@ -1,9 +1,11 @@
+import 'dart:developer';
+
 import 'package:chasinaidil/app/flutter_rewrite/navbar.dart';
+import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:chasinaidil/app/modules/home/controllers/home_controller.dart';
 import 'package:chasinaidil/app/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 
@@ -14,6 +16,9 @@ class AlbumView extends GetView<AlbumController> {
 
   @override
   Widget build(BuildContext context) {
+    var savedContext = context;
+    if (controller.album.albumId == 999999999999999999)
+      controller.isTitleEditing.value = true;
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -24,6 +29,43 @@ class AlbumView extends GetView<AlbumController> {
               controller.album.title,
               style: context.theme.textTheme.displaySmall,
             ),
+            trailing: controller.album.songBook == SongBook.playlists &&
+                    controller.album.albumId != 999999999999999999
+                ? CupertinoButton(
+                    onPressed: () => Get.dialog(
+                      CupertinoAlertDialog(
+                        title: const Text('Delete Playlist'),
+                        content: const Text(
+                            'Shall the playlist be deleted forever?'),
+                        actions: <CupertinoDialogAction>[
+                          CupertinoDialogAction(
+                            /// This parameter indicates this action is the default,
+                            /// and turns the action's text to bold text.
+                            isDefaultAction: true,
+                            onPressed: () {
+                              Get.back();
+                            },
+                            child: const Text('No'),
+                          ),
+                          CupertinoDialogAction(
+                            /// This parameter indicates the action would perform
+                            /// a destructive action such as deletion, and turns
+                            /// the action's text color to red.
+                            isDestructiveAction: true,
+                            onPressed: () {
+                              Get.back();
+                              controller.deletePlaylist();
+                            },
+                            child: const Text('Yes'),
+                          ),
+                        ],
+                      ),
+                    ),
+                    minSize: 1,
+                    padding: EdgeInsets.zero,
+                    child: Icon(CupertinoIcons.delete),
+                  )
+                : null,
             alwaysShowMiddle: false,
             stretch: true,
             largeTitle: Container(
@@ -38,31 +80,94 @@ class AlbumView extends GetView<AlbumController> {
                         borderRadius: BorderRadius.circular(10)),
                     child: ClipRRect(
                       borderRadius: const BorderRadius.all(Radius.circular(10)),
-                      child: Stack(
-                        children: [
-                          Image.asset(
-                            controller.album.coverPath,
-                            height: context.width / 2,
-                          ),
-                          Positioned.fill(
-                            child: Opacity(
-                              opacity: Get.isDarkMode ? 0.2 : 0,
-                              child: Container(
-                                color: const Color(0xFF000000),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                      child: GetBuilder<AppController>(
+                          id: 'playlistUpdate',
+                          builder: (context) {
+                            return Stack(
+                              children: [
+                                if (controller.album.songBook ==
+                                    SongBook.playlists)
+                                  Positioned.fill(
+                                    child: Container(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                if (controller.album.songBook ==
+                                    SongBook.playlists)
+                                  Container(
+                                    height: savedContext.width / 2,
+                                    width: savedContext.width / 2,
+                                    color: controller.album.playlist?.colorBack,
+                                  )
+                                else
+                                  Image.asset(
+                                    controller.album.coverPath,
+                                    height: savedContext.width / 2,
+                                  ),
+                                if (controller.album.songBook ==
+                                    SongBook.playlists)
+                                  Positioned.fill(
+                                    child: Center(
+                                      child: Icon(
+                                        controller.album.albumId ==
+                                                999999999999999999
+                                            ? Icons.add
+                                            : Icons.playlist_add_check,
+                                        //color: HexColor(colorFore),
+                                        color: controller
+                                            .album.playlist?.colorFore,
+                                        size: 80,
+                                      ),
+                                    ),
+                                  ),
+                                Positioned.fill(
+                                  child: GestureDetector(
+                                    onTap: () => controller.setNewColor(),
+                                    child: Opacity(
+                                      opacity: Get.isDarkMode ? 0.2 : 0,
+                                      child: Container(
+                                        color: const Color(0xFF000000),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
                     ),
                   ),
                   const SizedBox(
                     height: 20,
                   ),
-                  Text(
-                    controller.album.title,
-                    style: context.theme.textTheme.displayLarge,
-                  ),
+                  Obx(() {
+                    if (controller.isTitleEditing.value) {
+                      return SizedBox(
+                        width: context.width / 2,
+                        child: CupertinoTextField.borderless(
+                          placeholder: controller.album.playlist?.name,
+                          autofocus: true,
+                          onSubmitted: (val) => controller.setNewName(val),
+                          style: context.theme.textTheme.displayLarge,
+                        ),
+                      );
+                    } else if (controller.album.songBook ==
+                        SongBook.playlists) {
+                      return GestureDetector(
+                        onTap: () {
+                          controller.isTitleEditing.value = true;
+                        },
+                        child: Text(
+                          controller.album.playlist?.name ?? "",
+                          style: context.theme.textTheme.displayLarge,
+                        ),
+                      );
+                    } else {
+                      return Text(
+                        controller.album.title,
+                        style: context.theme.textTheme.displayLarge,
+                      );
+                    }
+                  }),
                   Text(
                     HomeController.giveBookTitle(controller.album.songBook),
                     style: context.theme.textTheme.displayMedium,

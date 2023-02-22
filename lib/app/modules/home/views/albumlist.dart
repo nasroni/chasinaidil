@@ -1,4 +1,5 @@
 import 'package:chasinaidil/app/data/types/album.dart';
+import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:chasinaidil/app/modules/home/controllers/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -19,18 +20,30 @@ class AlbumList extends StatelessWidget {
       () => Container(
         width: context.width,
         padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: Wrap(
-          alignment: WrapAlignment.start,
-          spacing: 20,
-          runSpacing: 15,
-          children: Album.list(songBook)
-              .map(
-                (e) => AlbumButton(
-                  album: e,
-                ),
-              )
-              .toList(),
-        ),
+        child: GetBuilder<AppController>(
+            id: 'deletedPlaylist',
+            builder: (context) {
+              return FutureBuilder(
+                  future: Album.list(songBook),
+                  builder: (context, AsyncSnapshot<List<Album>> snapshot) {
+                    if (snapshot.hasData) {
+                      return Wrap(
+                        alignment: WrapAlignment.start,
+                        spacing: 20,
+                        runSpacing: 15,
+                        children: snapshot.data!
+                            .map(
+                              (e) => AlbumButton(
+                                album: e,
+                              ),
+                            )
+                            .toList(),
+                      );
+                    } else {
+                      return Container();
+                    }
+                  });
+            }),
       )
           .animate(target: changeNotifier.value ? 0 : 1)
           .fadeOut(duration: const Duration(milliseconds: 100))

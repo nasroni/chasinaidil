@@ -17,13 +17,18 @@ const PlaylistSchema = CollectionSchema(
   name: r'Playlist',
   id: 4190497698144499986,
   properties: {
-    r'name': PropertySchema(
+    r'hexcolor': PropertySchema(
       id: 0,
+      name: r'hexcolor',
+      type: IsarType.string,
+    ),
+    r'name': PropertySchema(
+      id: 1,
       name: r'name',
       type: IsarType.string,
     ),
     r'songIds': PropertySchema(
-      id: 1,
+      id: 2,
       name: r'songIds',
       type: IsarType.longList,
     )
@@ -48,6 +53,7 @@ int _playlistEstimateSize(
   Map<Type, List<int>> allOffsets,
 ) {
   var bytesCount = offsets.last;
+  bytesCount += 3 + object.hexcolor.length * 3;
   {
     final value = object.name;
     if (value != null) {
@@ -69,8 +75,9 @@ void _playlistSerialize(
   List<int> offsets,
   Map<Type, List<int>> allOffsets,
 ) {
-  writer.writeString(offsets[0], object.name);
-  writer.writeLongList(offsets[1], object.songIds);
+  writer.writeString(offsets[0], object.hexcolor);
+  writer.writeString(offsets[1], object.name);
+  writer.writeLongList(offsets[2], object.songIds);
 }
 
 Playlist _playlistDeserialize(
@@ -80,9 +87,10 @@ Playlist _playlistDeserialize(
   Map<Type, List<int>> allOffsets,
 ) {
   final object = Playlist();
+  object.hexcolor = reader.readString(offsets[0]);
   object.id = id;
-  object.name = reader.readStringOrNull(offsets[0]);
-  object.songIds = reader.readLongList(offsets[1]);
+  object.name = reader.readStringOrNull(offsets[1]);
+  object.songIds = reader.readLongList(offsets[2]);
   return object;
 }
 
@@ -94,8 +102,10 @@ P _playlistDeserializeProp<P>(
 ) {
   switch (propertyId) {
     case 0:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 1:
+      return (reader.readStringOrNull(offset)) as P;
+    case 2:
       return (reader.readLongList(offset)) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -191,6 +201,136 @@ extension PlaylistQueryWhere on QueryBuilder<Playlist, Playlist, QWhereClause> {
 
 extension PlaylistQueryFilter
     on QueryBuilder<Playlist, Playlist, QFilterCondition> {
+  QueryBuilder<Playlist, Playlist, QAfterFilterCondition> hexcolorEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'hexcolor',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Playlist, Playlist, QAfterFilterCondition> hexcolorGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'hexcolor',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Playlist, Playlist, QAfterFilterCondition> hexcolorLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'hexcolor',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Playlist, Playlist, QAfterFilterCondition> hexcolorBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'hexcolor',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Playlist, Playlist, QAfterFilterCondition> hexcolorStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'hexcolor',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Playlist, Playlist, QAfterFilterCondition> hexcolorEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'hexcolor',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Playlist, Playlist, QAfterFilterCondition> hexcolorContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'hexcolor',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Playlist, Playlist, QAfterFilterCondition> hexcolorMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'hexcolor',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Playlist, Playlist, QAfterFilterCondition> hexcolorIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'hexcolor',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Playlist, Playlist, QAfterFilterCondition> hexcolorIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'hexcolor',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<Playlist, Playlist, QAfterFilterCondition> idEqualTo(Id value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -553,6 +693,18 @@ extension PlaylistQueryLinks
     on QueryBuilder<Playlist, Playlist, QFilterCondition> {}
 
 extension PlaylistQuerySortBy on QueryBuilder<Playlist, Playlist, QSortBy> {
+  QueryBuilder<Playlist, Playlist, QAfterSortBy> sortByHexcolor() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hexcolor', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Playlist, Playlist, QAfterSortBy> sortByHexcolorDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hexcolor', Sort.desc);
+    });
+  }
+
   QueryBuilder<Playlist, Playlist, QAfterSortBy> sortByName() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'name', Sort.asc);
@@ -568,6 +720,18 @@ extension PlaylistQuerySortBy on QueryBuilder<Playlist, Playlist, QSortBy> {
 
 extension PlaylistQuerySortThenBy
     on QueryBuilder<Playlist, Playlist, QSortThenBy> {
+  QueryBuilder<Playlist, Playlist, QAfterSortBy> thenByHexcolor() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hexcolor', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Playlist, Playlist, QAfterSortBy> thenByHexcolorDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'hexcolor', Sort.desc);
+    });
+  }
+
   QueryBuilder<Playlist, Playlist, QAfterSortBy> thenById() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'id', Sort.asc);
@@ -595,6 +759,13 @@ extension PlaylistQuerySortThenBy
 
 extension PlaylistQueryWhereDistinct
     on QueryBuilder<Playlist, Playlist, QDistinct> {
+  QueryBuilder<Playlist, Playlist, QDistinct> distinctByHexcolor(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'hexcolor', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Playlist, Playlist, QDistinct> distinctByName(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -614,6 +785,12 @@ extension PlaylistQueryProperty
   QueryBuilder<Playlist, int, QQueryOperations> idProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'id');
+    });
+  }
+
+  QueryBuilder<Playlist, String, QQueryOperations> hexcolorProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'hexcolor');
     });
   }
 

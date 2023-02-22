@@ -1,4 +1,5 @@
 import 'package:chasinaidil/app/data/types/album.dart';
+import 'package:chasinaidil/app/data/types/playlist.dart';
 import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
@@ -9,6 +10,21 @@ class IsarService {
 
   IsarService() {
     db = openDB();
+  }
+
+  Future<void> savePlaylist(Playlist playlist) async {
+    final isar = await db;
+    isar.writeTxnSync<int>(() => isar.playlists.putSync(playlist));
+  }
+
+  Future<List<Playlist>> getAllPlaylists() async {
+    final isar = await db;
+    return isar.playlists.where().findAll();
+  }
+
+  Future<void> deletePlaylist(Playlist playlist) async {
+    final isar = await db;
+    isar.writeTxnSync<void>(() => isar.playlists.deleteSync(playlist.id));
   }
 
   Future<void> saveSong(Song newSong) async {
@@ -105,7 +121,7 @@ class IsarService {
   Future<Isar> openDB() async {
     if (Isar.instanceNames.isEmpty) {
       return await Isar.open(
-        [SongSchema],
+        [SongSchema, PlaylistSchema],
         inspector: true,
       );
     }

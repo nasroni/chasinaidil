@@ -1,7 +1,9 @@
 import 'dart:ffi';
 
+import 'package:chasinaidil/app/data/services/isar_service.dart';
 import 'package:chasinaidil/app/data/types/playlist.dart';
 import 'package:chasinaidil/app/modules/home/controllers/home_controller.dart';
+import 'package:get/get.dart';
 
 class Album {
   Album(this.title, this.albumId, this._coverPath, this.songBook);
@@ -9,14 +11,16 @@ class Album {
   Album.fromPlaylist(Playlist this.playlist)
       : title = playlist.name ?? '',
         _coverPath = '',
-        albumId = playlist.id,
+        albumId = playlist.id + 700000,
         songBook = SongBook.playlists;
   Album.newPlaylist()
       : title = 'Нав лист ...',
         _coverPath = '',
         albumId = 999999999999999999,
         songBook = SongBook.playlists,
-        playlist = Playlist()..hexcolor = "#de7e00";
+        playlist = Playlist()
+          ..hexcolor = "#de7e00"
+          ..name = 'Нав лист ...';
 
   final String title;
   final int albumId;
@@ -43,7 +47,7 @@ class Album {
     return 'assets/$folderPath/covers/cd_$albumIdString';
   }
 
-  static List<Album> list(SongBook songBook) {
+  static Future<List<Album>> list(SongBook songBook) async {
     switch (songBook) {
       case SongBook.chasinaidil:
         return [
@@ -71,11 +75,16 @@ class Album {
           Album('Чашма 2', 2, _genPath(2, songBook), songBook),
         ];
       case SongBook.playlists:
-        return [
-          Album.fromPlaylist(Playlist()..name = 'Playlist 1'),
-          Album.fromPlaylist(Playlist()..name = 'Next Playlist'),
-          Album.newPlaylist(),
-        ];
+        IsarService isar = Get.find();
+        List<Playlist> playlists = await isar.getAllPlaylists();
+        List<Album> albums = [];
+
+        for (var item in playlists) {
+          albums.add(Album.fromPlaylist(item));
+        }
+        albums.add(Album.newPlaylist());
+
+        return Future.value(albums);
       //return [];
       default:
         return [];

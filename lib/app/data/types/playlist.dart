@@ -15,6 +15,7 @@ class Playlist {
 
   String? name;
 
+  // ignore: unnecessary_getters_setters
   String get hexcolor => _color;
   set hexcolor(String color) => _color = color;
 
@@ -29,6 +30,20 @@ class Playlist {
       format: Format.hex,
     ),
   );
+  void newColor() {
+    _color = RandomColor.getColor(
+      Options(
+        luminosity: Luminosity.dark,
+        format: Format.hex,
+      ),
+    );
+  }
+
+  void setName(String val) {
+    if (val.isNotEmpty) {
+      name = val;
+    }
+  }
 
   List<int>? songIds;
 
