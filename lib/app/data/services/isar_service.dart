@@ -27,6 +27,7 @@ class IsarService {
   Future<void> deletePlaylist(Playlist playlist) async {
     final isar = await db;
     isar.writeTxnSync<void>(() => isar.playlists.deleteSync(playlist.id));
+    Get.find<AppController>().update(['updatePlaylist']);
   }
 
   Future<void> saveSong(Song newSong) async {
