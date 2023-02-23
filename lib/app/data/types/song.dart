@@ -38,6 +38,9 @@ class Song {
   String get coverAssetHQ =>
       "assets/chasinaidil/covers/cd_${albumId.toString().padLeft(2, "0")}_hq.jpg";
 
+  @ignore
+  String get sheetPath => "assets/chasinaidil/sheet/$songNumber.pdf";
+
   @Index(type: IndexType.value, caseSensitive: false)
   List<String> get titleWords {
     return Isar.splitWords('$title ${AppController.transcribe(title)}');

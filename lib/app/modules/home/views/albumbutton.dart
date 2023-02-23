@@ -78,7 +78,6 @@ class AlbumButton extends StatelessWidget {
             GetBuilder<AppController>(
                 id: 'updatePlaylist',
                 builder: (ctx) {
-                  log('hi');
                   return Text(
                     album.songBook == SongBook.playlists
                         ? album.playlist?.name ?? ""

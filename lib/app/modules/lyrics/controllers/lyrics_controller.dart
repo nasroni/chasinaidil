@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:chasinaidil/prefs.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:pdfx/pdfx.dart';
 
 import '../../../data/types/song.dart';
 
@@ -20,6 +21,15 @@ class LyricsController extends GetxController {
   bool get isLyricsMode => viewMode.value == ViewModes.lyrics;
   bool get isChordMode => viewMode.value == ViewModes.chords;
   bool get isSheetMode => viewMode.value == ViewModes.sheet;
+
+  /*PdfController get pdfController {
+    _pdfController ??= PdfController(
+      document: PdfDocument.openAsset(song.sheetPath),
+    );
+    return _pdfController!;
+  }
+
+  PdfController? _pdfController;*/
 
   final RxInt transposeCount = 0.obs;
 
@@ -41,7 +51,7 @@ class LyricsController extends GetxController {
   void setViewMode(ViewModes newViewMode) {
     viewMode.value = newViewMode;
     GetStorage().write(Prefs.mode, newViewMode.name);
-    update(['zoomtextview']);
+    update(['songcontentview']);
   }
 
   transpose(String currentChord) {
