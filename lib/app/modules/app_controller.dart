@@ -41,7 +41,7 @@ class AppController extends GetxController {
 
     Get.dialog(
       CupertinoAlertDialog(
-        title: const Text('Choose a playlist'),
+        title: const Text('Плейлистеро интихоб намо'),
         content: Column(
           children: buttons,
         ),
@@ -171,10 +171,12 @@ class PlaylistSelectButton extends StatelessWidget {
           const SizedBox(
             width: 10,
           ),
-          Text(
-            isNewPlaylist ? "Нав лист ..." : "${playlist.name}",
-            overflow: TextOverflow.ellipsis,
-            style: Get.theme.textTheme.displayMedium?.copyWith(fontSize: 20),
+          Expanded(
+            child: Text(
+              isNewPlaylist ? "Тартиб додан ..." : "${playlist.name}",
+              overflow: TextOverflow.ellipsis,
+              style: Get.theme.textTheme.displayMedium?.copyWith(fontSize: 20),
+            ),
           )
         ],
       ),

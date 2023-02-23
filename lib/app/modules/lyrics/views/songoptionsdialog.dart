@@ -84,7 +84,7 @@ class SongOptionsDialog extends StatelessWidget {
                       ? const Divider(thickness: 5, height: 5)
                       : Container(),
                   PopupCustomMenuItem(
-                    text: 'Add to playlist',
+                    text: 'Ворид ба плейлист',
                     icon: Icons.playlist_add,
                     onTapFunction: (_) => Get.find<AppController>()
                         .playlistDialog(controller.song),

@@ -12,13 +12,13 @@ class Album {
         albumId = playlist.id + 700000,
         songBook = SongBook.playlists;
   Album.newPlaylist()
-      : title = 'Нав лист ...',
+      : title = 'Тартиб додан',
         _coverPath = '',
         albumId = 999999999999999999,
         songBook = SongBook.playlists,
         playlist = Playlist()
           ..hexcolor = "#de7e00"
-          ..name = 'Нав лист ...';
+          ..name = 'Тартиб додан';
 
   final String title;
   final int albumId;

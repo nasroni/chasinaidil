@@ -44,9 +44,9 @@ class AlbumView extends GetView<AlbumController> {
                 ? CupertinoButton(
                     onPressed: () => Get.dialog(
                       CupertinoAlertDialog(
-                        title: const Text('Delete Playlist'),
-                        content: const Text(
-                            'Shall the playlist be deleted forever?'),
+                        title: const Text('Дур кардан'),
+                        content:
+                            const Text('Ҳақиқатан пурра нобуд карда шавад?'),
                         actions: <CupertinoDialogAction>[
                           CupertinoDialogAction(
                             /// This parameter indicates this action is the default,
@@ -55,7 +55,7 @@ class AlbumView extends GetView<AlbumController> {
                             onPressed: () {
                               Get.back();
                             },
-                            child: const Text('No'),
+                            child: const Text('Не'),
                           ),
                           CupertinoDialogAction(
                             /// This parameter indicates the action would perform
@@ -66,7 +66,7 @@ class AlbumView extends GetView<AlbumController> {
                               Get.back();
                               controller.deletePlaylist();
                             },
-                            child: const Text('Yes'),
+                            child: const Text('Бале'),
                           ),
                         ],
                       ),
@@ -208,12 +208,13 @@ class AlbumView extends GetView<AlbumController> {
                                 ? DismissDirection.endToStart
                                 : DismissDirection.none,
                         confirmDismiss: (_) => Get.dialog(CupertinoAlertDialog(
-                          title: const Text('Remove song'),
+                          title: const Text('Берункунии суруд'),
                           content: Text(
-                              "Do you really want to remove the song ${song.title} from this playlist?"),
+                            "Ҳақиқатан суруди \"${song.title}\"-ро аз плейлист дур кардан мехоҳӣ?",
+                          ), //
                           actions: [
                             CupertinoDialogAction(
-                              child: const Text('No'),
+                              child: const Text('Не'),
                               onPressed: () => Get.back(),
                             ),
                             CupertinoDialogAction(
@@ -222,7 +223,7 @@ class AlbumView extends GetView<AlbumController> {
                                 controller.album.playlist?.removeSong(song);
                                 Get.back(result: true);
                               },
-                              child: const Text('Yes'),
+                              child: const Text('Бале'),
                             ),
                           ],
                         )),

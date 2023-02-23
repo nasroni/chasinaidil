@@ -93,7 +93,7 @@ class HomeController extends GetxController {
       case SongBook.others:
         return 'Дигар сурудҳо';
       case SongBook.playlists:
-        return 'Playlists';
+        return 'Плейлистҳо';
     }
   }
 
