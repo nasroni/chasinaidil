@@ -18,10 +18,10 @@ class HomeView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations([
+    /*SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitDown,
       DeviceOrientation.portraitUp,
-    ]);
+    ]);*/
 
     return Obx(() => Scaffold(
           body: Container(

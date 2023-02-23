@@ -1,5 +1,5 @@
 name: chasinaidil
-version: 2.4.0+21
+version: 2.5.0+22
 publish_to: none
 description: A new Flutter project.
 environment: 
@@ -17,8 +17,8 @@ dependencies:
     sdk: flutter
   gesture_x_detector: ^1.1.1
   get_storage: ^2.0.3
-  share_plus: 4.0.2
-  flutter_animate: ^3.1.0
+  share_plus: ^6.3.1
+  flutter_animate: ^4.1.0
   flutter_randomcolor: ^1.0.14
   hexcolor: ^3.0.1
   pdfx: ^2.3.0
