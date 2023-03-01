@@ -1,6 +1,7 @@
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:chasinaidil/app/data/services/isar_service.dart';
 import 'package:chasinaidil/app/data/types/album.dart';
-import 'package:chasinaidil/app/data/types/playlist.dart';
+import 'package:chasinaidil/app/data/types/playlist.dart' as my;
 import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:chasinaidil/app/modules/album/controllers/album_controller.dart';
 import 'package:chasinaidil/app/modules/album/views/album_view.dart';
@@ -10,9 +11,15 @@ import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 class AppController extends GetxController {
+  //final player = AudioPlayer();
+  final player = AssetsAudioPlayer();
+
+  RxBool isSeeking = false.obs;
+  RxDouble seekingVal = 0.0.obs;
+
   void playlistDialog(Song song) async {
     IsarService isar = Get.find();
-    List<Playlist> playlists = await isar.getAllPlaylists();
+    List<my.Playlist> playlists = await isar.getAllPlaylists();
 
     if (playlists.isEmpty) {
       await newPlaylist(song);
@@ -21,7 +28,7 @@ class AppController extends GetxController {
       return;
     }
     List<Widget> buttons = [];
-    for (Playlist playlist in playlists) {
+    for (my.Playlist playlist in playlists) {
       buttons.add(const SizedBox(
         height: 10,
       ));
@@ -34,7 +41,7 @@ class AppController extends GetxController {
       height: 10,
     ));
     buttons.add(PlaylistSelectButton(
-      playlist: Playlist(),
+      playlist: my.Playlist(),
       isNewPlaylist: true,
       song: song,
     ));
@@ -52,7 +59,7 @@ class AppController extends GetxController {
   static Future<void> newPlaylist(Song song) async {
     var album = Album.newPlaylist();
     Get.put(AlbumController.withAlbum(album), tag: 1.toString());
-    Playlist? playlist = await Get.to(const AlbumView(nested: 1));
+    my.Playlist? playlist = await Get.to(const AlbumView(nested: 1));
     playlist?.addSong(song);
   }
 
@@ -114,7 +121,7 @@ class PlaylistSelectButton extends StatelessWidget {
     required this.song,
   });
 
-  final Playlist playlist;
+  final my.Playlist playlist;
 
   final bool isNewPlaylist;
 

@@ -2,7 +2,6 @@ import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:chasinaidil/app/modules/home/views/albumlist.dart';
 import 'package:chasinaidil/app/modules/home/views/searchresults.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 

@@ -9,11 +9,13 @@ import 'package:get/get.dart';
 import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:chasinaidil/app/modules/lyrics/controllers/lyrics_controller.dart';
 import 'package:pdf_render/pdf_render_widgets.dart';
+import 'playerdialog.dart';
 import 'songoptionsdialog.dart';
 import 'zoomtext.dart';
 
 class LyricsView extends GetView<LyricsController> {
   const LyricsView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     /*SystemChrome.setPreferredOrientations([
@@ -60,7 +62,22 @@ class LyricsView extends GetView<LyricsController> {
             child: SongTitle(song: song),
           ),
         ),
-        //trailing: const Icon(Icons.play_circle_outline_sharp, ),
+        trailing: CupertinoButton(
+          onPressed: () => Get.dialog(
+              PlayerDialog(
+                viewController: controller,
+              ),
+              barrierColor: Colors.transparent,
+              barrierDismissible: true),
+          padding: EdgeInsets.zero,
+          minSize: kMinInteractiveDimensionCupertino,
+          alignment: Alignment.centerRight,
+          child: Icon(
+            Icons.play_circle_outline_sharp,
+            color: context.theme.primaryColor,
+            size: 24,
+          ),
+        ),
       ),
       body: GetBuilder<LyricsController>(
           id: 'songcontentview',

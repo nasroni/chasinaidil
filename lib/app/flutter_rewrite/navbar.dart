@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// ignore_for_file: unnecessary_null_comparison
+
 import 'dart:math' as math;
 import 'dart:ui' show ImageFilter;
 
@@ -25,8 +27,6 @@ const double _kNavBarLargeTitleHeightExtension = 300.0;
 const double _kNavBarShowLargeTitleThreshold = 10.0;
 
 const double _kNavBarEdgePadding = 16.0;
-
-const double _kNavBarBottomPadding = 8.0;
 
 const double _kNavBarBackButtonTapWidth = 50.0;
 

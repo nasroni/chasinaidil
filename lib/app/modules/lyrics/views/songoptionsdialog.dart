@@ -20,11 +20,13 @@ class SongOptionsDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(
+      padding: EdgeInsets.only(
         // from top of display
-        vertical: 45,
+        top: 45,
         // from sides of display
-        horizontal: context.width / 6,
+        right: context.width / 6,
+        left: context.width / 6,
+        bottom: 0,
       ),
       child: Material(
         // background where you can click to let it disappear has to be transparent
