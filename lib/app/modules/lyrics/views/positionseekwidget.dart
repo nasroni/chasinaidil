@@ -14,10 +14,10 @@ class PositionSeekWidget extends StatefulWidget {
   });
 
   @override
-  _PositionSeekWidgetState createState() => _PositionSeekWidgetState();
+  PositionSeekWidgetState createState() => PositionSeekWidgetState();
 }
 
-class _PositionSeekWidgetState extends State<PositionSeekWidget> {
+class PositionSeekWidgetState extends State<PositionSeekWidget> {
   late Duration _visibleValue;
   bool listenOnlyUserInterraction = false;
   double get percent => widget.duration.inMilliseconds == 0

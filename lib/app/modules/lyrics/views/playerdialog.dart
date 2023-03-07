@@ -36,6 +36,7 @@ class PlayerDialog extends StatelessWidget {
       //contentPadding: EdgeInsets.zero,
       titlePadding: EdgeInsets.zero,
       iconPadding: EdgeInsets.zero,
+      backgroundColor: Colors.blueGrey.shade100,
 
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4),

@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:just_audio_background/just_audio_background.dart';
 
 import 'app/localization.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -20,12 +19,6 @@ Future<void> main() async {
       : (themeMode ? ThemeMode.dark : ThemeMode.light);
 
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
-  await JustAudioBackground.init(
-    androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
-    androidNotificationChannelName: 'Audio playback',
-    androidNotificationOngoing: true,
-  );
 
   runApp(
     GetMaterialApp(
