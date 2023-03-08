@@ -24,7 +24,7 @@ class AlbumButton extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(7),
               child: GetBuilder<AppController>(
-                  id: 'updatePlaylist',
+                  id: 'updateViews',
                   builder: (_) {
                     return Stack(
                       children: [
@@ -74,7 +74,7 @@ class AlbumButton extends StatelessWidget {
               height: 5,
             ),
             GetBuilder<AppController>(
-                id: 'updatePlaylist',
+                id: 'updateViews',
                 builder: (ctx) {
                   return Text(
                     album.songBook == SongBook.playlists

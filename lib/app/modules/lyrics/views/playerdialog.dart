@@ -40,114 +40,157 @@ class PlayerDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(4),
       ),
-      content: ConstrainedBox(
-        constraints: BoxConstraints.tight(const Size.fromHeight(500)),
-        child: Column(
-          children: [
-            Container(
-              decoration: BoxDecoration(boxShadow: [
-                BoxShadow(
-                  color: context.theme.primaryColor,
-                  blurRadius: 20,
-                  spreadRadius: -10,
-                  offset: const Offset(0, 0),
-                )
-              ]),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(7),
-                child: appc.player.builderPlayerState(
-                  builder: (context, PlayerState state) {
-                    if (appc.player.getCurrentAudioImage?.path != null &&
-                        state != PlayerState.stop) {
-                      return Image.asset(
-                        appc.player.getCurrentAudioImage?.path ?? '',
-                        width: 180,
-                        height: 180,
-                      );
-                    }
-                    return Container(
-                      color: Colors.grey,
-                      width: 180,
-                      height: 180,
-                    );
-                  },
-                ),
-              ),
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            StreamBuilder(
-              stream: appc.player.current,
-              builder: (context, _) {
-                return Text(appc.player.getCurrentAudioTitle);
-              },
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            StreamBuilder(
-              stream: appc.player.current,
-              builder: (context, _) {
-                return Text(appc.player.getCurrentAudioArtist);
-              },
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            appc.player.builderRealtimePlayingInfos(
-              builder: (context, RealtimePlayingInfos infos) {
-                return PositionSeekWidget(
-                  currentPosition: infos.currentPosition,
-                  duration: infos.duration,
-                  seekTo: (val) => appc.player.seek(val),
-                );
-              },
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                appc.player.builderPlayerState(
-                  //builder: (context, RealtimePlayingInfos infos) {
-                  builder: (context, var infos) {
-                    if (true) {
-                      return CupertinoButton(
-                        child: Obx(
-                          () => appc.currentDownloadFinished.value
-                              ? Icon(Icons.access_alarm)
-                              : Icon(Icons.download),
-                        ),
-                        onPressed: () async {
-                          await appc.download(viewController.song);
-                        },
-                      );
-                    }
-                    /*if (infos.isBuffering) {
-                      return Container(
-                        padding: const EdgeInsets.all(10),
-                        child: const CupertinoActivityIndicator(
-                          radius: 20,
-                        ),
-                      );
-                    }
+      content: PlayerView(appc: appc),
+    );
+  }
+}
+
+class PlayerView extends StatelessWidget {
+  PlayerView({
+    super.key,
+    required this.appc,
+  });
+
+  final AppController appc;
+  final LyricsController viewController = Get.find();
+
+  @override
+  Widget build(BuildContext context) {
+    return ConstrainedBox(
+      constraints: BoxConstraints.tight(const Size.fromHeight(500)),
+      child: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(boxShadow: [
+              BoxShadow(
+                color: context.theme.primaryColor,
+                blurRadius: 20,
+                spreadRadius: -10,
+                offset: const Offset(0, 0),
+              )
+            ]),
+            child: appc.player.builderPlayerState(builder: (_, __) {
+              return PlayerAlbumImage(
+                imagePath: appc.player.getCurrentAudioImage?.path,
+              );
+            }),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          StreamBuilder(
+            stream: appc.player.current,
+            builder: (context, _) {
+              return Text(appc.player.getCurrentAudioTitle);
+            },
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          StreamBuilder(
+            stream: appc.player.current,
+            builder: (context, _) {
+              return Text(appc.player.getCurrentAudioArtist);
+            },
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          appc.player.builderRealtimePlayingInfos(
+            builder: (context, RealtimePlayingInfos infos) {
+              return PositionSeekWidget(
+                currentPosition: infos.currentPosition,
+                duration: infos.duration,
+                seekTo: (val) => appc.player.seek(val),
+              );
+            },
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              appc.player.builderPlayerState(
+                //builder: (context, RealtimePlayingInfos infos) {
+                builder: (context, var infos) {
+                  if (true) {
                     return CupertinoButton(
-                      padding: EdgeInsets.zero,
-                      disabledColor: Colors.red,
-                      onPressed: () => appc.player.playOrPause(),
-                      child: Icon(
-                        infos.isPlaying
-                            ? Icons.pause
-                            : Icons.play_arrow_rounded,
-                        color: context.theme.primaryColor,
-                        size: 60,
+                      child: GetBuilder<AppController>(
+                          id: 'updateViews',
+                          builder: (context) {
+                            if (viewController.song.isDownloaded) {
+                              return const Icon(Icons.help_outline);
+                            } else {
+                              return Obx(
+                                () {
+                                  return appc.isDownloading.value
+                                      ? const Icon(Icons.download)
+                                      : const Icon(Icons.access_alarm);
+                                },
+                              );
+                            }
+                          }),
+                      onPressed: () async {
+                        await appc.downloadSong(viewController.song);
+                      },
+                    );
+                  }
+                  /*if (infos.isBuffering) {
+                    return Container(
+                      padding: const EdgeInsets.all(10),
+                      child: const CupertinoActivityIndicator(
+                        radius: 20,
                       ),
-                    );*/
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
+                    );
+                  }
+                  return CupertinoButton(
+                    padding: EdgeInsets.zero,
+                    disabledColor: Colors.red,
+                    onPressed: () => appc.player.playOrPause(),
+                    child: Icon(
+                      infos.isPlaying
+                          ? Icons.pause
+                          : Icons.play_arrow_rounded,
+                      color: context.theme.primaryColor,
+                      size: 60,
+                    ),
+                  );*/
+                },
+              ),
+              Obx(() => Text("${appc.downloadPercentage}")),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class PlayerAlbumImage extends StatelessWidget {
+  const PlayerAlbumImage({
+    super.key,
+    required this.imagePath,
+  });
+
+  final String? imagePath;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(7),
+      child: Builder(
+        builder: (_) {
+          if (imagePath != null) {
+            return Image.asset(
+              imagePath ?? '',
+              width: 180,
+              height: 180,
+            );
+          }
+          return Container(
+            color: Colors.grey,
+            width: 180,
+            height: 180,
+          );
+        },
       ),
     );
   }

@@ -38,7 +38,7 @@ class Song {
 
   @ignore
   DateTime? get downloaded =>
-      DateTime.tryParse(GetStorage().read(id.toString()));
+      DateTime.tryParse(GetStorage().read(id.toString()) ?? '');
 
   @ignore
   bool get isDownloaded {

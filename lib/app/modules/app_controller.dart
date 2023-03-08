@@ -12,8 +12,11 @@ import 'package:chasinaidil/app/modules/album/views/album_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:path_provider/path_provider.dart';
+
+import 'home/controllers/home_controller.dart';
 
 class AppController extends GetxController {
   @override
@@ -24,31 +27,189 @@ class AppController extends GetxController {
     super.onInit();
   }
 
-  final RxBool currentDownloadFinished = false.obs;
+  RxBool isCurrentlyPlayingView = false.obs;
 
-  Future<void> download(Song song) async {
+  List<Audio> currentAudios = List.empty(growable: true);
+
+  placePlaylist(List<Song> songs, String? songTitle) async {
+    // Convert songs to Audio objects (with metas)
+    for (var song in songs) {
+      currentAudios.add(await song.audio);
+    }
+    // get start index depending on titlt
+    int startIndex = 0;
+    if (songTitle != null) {
+      startIndex = currentAudios
+          .indexWhere((Audio audio) => audio.metas.title == songTitle);
+      if (startIndex == -1) startIndex = 0;
+    }
+
+    // Build playlist
+    Playlist playlist = Playlist(
+      audios: currentAudios,
+      startIndex: startIndex,
+    );
+
+    // Start playlist
+    player.pause();
+    player.open(
+      playlist,
+      audioFocusStrategy: const AudioFocusStrategy.request(
+        resumeAfterInterruption: true,
+      ),
+      autoStart: true,
+      headPhoneStrategy: HeadPhoneStrategy.pauseOnUnplugPlayOnPlug,
+      loopMode: LoopMode.none,
+      playInBackground: PlayInBackground.enabled,
+      showNotification: true,
+    );
+  }
+
+  Future<List<Song>> getAllDownloadedSongsFromBook(
+      SongBook book, bool reverse) async {
+    IsarService isar = Get.find();
+    String title = HomeController.giveBookTitle(book);
+    List<Song> songs = await isar.getAllSongsFromSongBook(title);
+    return getAllDownloadedFromSonglist(songs, reverse);
+  }
+
+  Future<List<Song>> getAllDownloadedSongsFromAlbum(
+      Album album, bool reverse) async {
+    IsarService isar = Get.find();
+    List<Song> songs = await isar.getSongsFromAlbum(album);
+    return getAllDownloadedFromSonglist(songs, reverse);
+  }
+
+  Future<List<Song>> getAllDownloadedSongsFromPlaylist(
+      my.Playlist playlist, bool reverse) async {
+    List<Song> songs = await playlist.giveSongList();
+    return getAllDownloadedFromSonglist(songs, reverse);
+  }
+
+  List<Song> getAllDownloadedFromSonglist(List<Song> songs, bool reverse) {
+    if (!reverse) {
+      // return downloaded songs
+      return songs.where((Song e) => e.isDownloaded).toList();
+    } else {
+      // return UNdownloaded songs
+      return songs.where((Song e) => !e.isDownloaded).toList();
+    }
+  }
+
+  final RxBool isDownloading = false.obs;
+  final RxDouble downloadPercentage = 100.0.obs;
+
+  // download a single song, for use in audio menu
+  Future<void> downloadSong(Song song) async {
+    // reset download progress notifiers
+    isDownloading.value = true;
+    downloadPercentage.value = 0;
+
+    // get inapp folder
     Directory appDocDir = await getApplicationDocumentsDirectory();
+
+    // take and ensure existence of songbookpath
     Directory bookDir = Directory('${appDocDir.path}/${song.book}');
     bookDir.createSync();
+
+    // remove old download if it has
+    ALDownloader.cancelAll();
+
     ALDownloader.remove(song.audioPathOnline);
+    // Start download
     ALDownloader.download(
       song.audioPathOnline,
       directoryPath: bookDir.path,
       fileName: "${song.songNumber}.mp3",
       redownloadIfNeeded: true,
     );
+
+    // gather progress data
     ALDownloader.addDownloaderHandlerInterface(
-        ALDownloaderHandlerInterface(
-          succeededHandler: () async {
-            currentDownloadFinished.value = true;
-            log((await ALDownloaderFileManager.getPhysicalFilePathForUrl(
-                    song.audioPathOnline))
-                .toString());
-          },
-          failedHandler: () => currentDownloadFinished.value = true,
-          progressHandler: (progress) => log(progress.toString()),
-        ),
-        song.audioPathOnline);
+      ALDownloaderHandlerInterface(
+        succeededHandler: () async {
+          // reset download progress, as was before starting, so another song can be downloaded too
+          isDownloading.value = false;
+          downloadPercentage.value = 100;
+          // then mark song as downloaded
+          markSongDownloaded(song);
+        },
+        failedHandler: () {
+          // reset download progress, as was before starting, so it can be started again
+          isDownloading.value = false;
+          downloadPercentage.value = 100;
+          log('moin');
+          // here don't update anything
+        },
+        progressHandler: (progress) {
+          // update progress percentage
+          downloadPercentage.value = (progress * 100).toPrecision(2);
+        },
+      ),
+      song.audioPathOnline,
+    );
+  }
+
+  // download list
+  downloadList(List<Song> songs) async {
+    // get inapp folder
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+
+    // make list with download items
+    List<ALDownloaderBatcherInputVO> vos = songs.map((Song song) {
+      // take and ensure existence of songbookpath
+      Directory bookDir = Directory('${appDocDir.path}/${song.book}');
+      bookDir.createSync();
+
+      // Create a VO with url, path and filename
+      return ALDownloaderBatcherInputVO(song.audioPathOnline)
+        ..directoryPath = bookDir.path
+        ..fileName = "${song.songNumber}.mp3"
+        ..redownloadIfNeeded = true;
+    }).toList();
+
+    ALDownloaderBatcher.remove(
+      vos.map((ALDownloaderBatcherInputVO e) => e.url).toList(),
+    );
+
+    // start download
+    ALDownloaderBatcher.downloadUrlsWithVOs(
+      vos,
+      downloaderHandlerInterface: ALDownloaderHandlerInterface(
+        succeededHandler: () async {
+          // reset download progress, as was before starting, so another song can be downloaded too
+          isDownloading.value = false;
+          downloadPercentage.value = 100;
+          // then mark downloaded songs as downloaded
+          for (var song in songs) {
+            // check if song is on local disk
+            bool isSuccessfull =
+                await ALDownloaderFileManager.isExistPhysicalFilePathForUrl(
+              song.audioPathOnline,
+            );
+            if (isSuccessfull) {
+              markSongDownloaded(song);
+            }
+          }
+        },
+        failedHandler: () {
+          // reset download progress, as was before starting, so it can be started again
+          isDownloading.value = false;
+          downloadPercentage.value = 100;
+          // here don't update anything
+        },
+        progressHandler: (progress) {
+          // update progress percentage
+          downloadPercentage.value = (progress * 100).toPrecision(2);
+        },
+      ),
+    );
+  }
+
+  void markSongDownloaded(Song song) {
+    // save to getstorage that when song was saved
+    GetStorage().write(song.id.toString(), DateTime.now().toIso8601String());
+    update(['updateViews']);
   }
 
   //final player = AudioPlayer();
