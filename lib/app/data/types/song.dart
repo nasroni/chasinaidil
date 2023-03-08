@@ -1,6 +1,8 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:chasinaidil/app/modules/app_controller.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
 
 part 'song.g.dart';
 
@@ -14,6 +16,8 @@ class Song {
   final String? psalm;
   final int? duration;
   String textWChords;
+  final DateTime? newRecording;
+  final bool hasKaraoke = false;
 
   String get songNumber => songNumberInt.toString();
   final int songNumberInt;
@@ -33,6 +37,17 @@ class Song {
       RegExp(r'\[([A-Hbmsu#0-9]){1,5}(\/[A-H][b#]?)?\]'), '');
 
   @ignore
+  DateTime? get downloaded =>
+      DateTime.tryParse(GetStorage().read(id.toString()));
+
+  @ignore
+  bool get isDownloaded {
+    if (downloaded == null) return false;
+    if (newRecording == null) return true;
+    return downloaded!.isAfter(newRecording!);
+  }
+
+  @ignore
   String get coverAsset =>
       "assets/chasinaidil/covers/cd_${albumId.toString().padLeft(2, "0")}.jpg";
   @ignore
@@ -43,12 +58,17 @@ class Song {
   String get sheetPath => "assets/chasinaidil/sheet/$songNumber.pdf";
 
   @ignore
-  String get audioPath =>
+  String get audioPathOnline =>
       "https://chasinaidil.nasroni.one/mp3/all/$songNumber.mp3";
+  @ignore
+  Future<String> get audioPathLocal async {
+    String folder = (await getApplicationSupportDirectory()).path;
+    return "$folder/$book/$songNumber.mp3";
+  }
 
   @ignore
-  Audio get audio => Audio.network(
-        audioPath,
+  Future<Audio> get audio async => Audio.file(
+        await audioPathLocal,
         metas: Metas(
           artist: book,
           //artist: "isoimaseh.com",
@@ -66,14 +86,16 @@ class Song {
   @Index(type: IndexType.value, caseSensitive: false)
   List<String> get lyricsWords => Isar.splitWords(lyrics);
 
-  Song(
-      {required this.songNumberInt,
-      required this.title,
-      this.albumId,
-      this.book = "Гуногун",
-      this.psalm,
-      this.duration,
-      this.textWChords = ""});
+  Song({
+    required this.songNumberInt,
+    required this.title,
+    this.albumId,
+    this.book = "Гуногун",
+    this.psalm,
+    this.duration,
+    this.textWChords = "",
+    this.newRecording,
+  });
 
   factory Song.fromJson(Map<String, dynamic> parsedJson) {
     return Song(
@@ -85,6 +107,7 @@ class Song {
       duration: parsedJson['duration'] is String
           ? null
           : (parsedJson['duration'] * 1000).round(),
+      newRecording: DateTime.tryParse(parsedJson['newRecording'] ?? ""),
     );
   }
 }

@@ -26,26 +26,27 @@ class AppController extends GetxController {
 
   final RxBool currentDownloadFinished = false.obs;
 
-  Future<void> download(String url, String number) async {
+  Future<void> download(Song song) async {
     Directory appDocDir = await getApplicationDocumentsDirectory();
-    Directory chasinaiDir = Directory('${appDocDir.path}/chasinaidil');
-    chasinaiDir.createSync();
+    Directory bookDir = Directory('${appDocDir.path}/${song.book}');
+    bookDir.createSync();
     ALDownloader.download(
-      url,
-      directoryPath: chasinaiDir.path,
-      fileName: "$number.mp3",
+      song.audioPathOnline,
+      directoryPath: bookDir.path,
+      fileName: "${song.songNumber}.mp3",
     );
     ALDownloader.addDownloaderHandlerInterface(
         ALDownloaderHandlerInterface(
           succeededHandler: () async {
             currentDownloadFinished.value = true;
-            log((await ALDownloaderFileManager.getPhysicalFilePathForUrl(url))
+            log((await ALDownloaderFileManager.getPhysicalFilePathForUrl(
+                    song.audioPathOnline))
                 .toString());
           },
           failedHandler: () => currentDownloadFinished.value = true,
           progressHandler: (progress) => log(progress.toString()),
         ),
-        url);
+        song.audioPathOnline);
   }
 
   //final player = AudioPlayer();

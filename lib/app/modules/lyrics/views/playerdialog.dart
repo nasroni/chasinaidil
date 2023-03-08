@@ -118,8 +118,7 @@ class PlayerDialog extends StatelessWidget {
                               : Icon(Icons.download),
                         ),
                         onPressed: () async {
-                          await appc.download(viewController.song.audioPath,
-                              viewController.song.songNumber);
+                          await appc.download(viewController.song);
                         },
                       );
                     }
