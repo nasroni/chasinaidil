@@ -30,10 +30,12 @@ class AppController extends GetxController {
     Directory appDocDir = await getApplicationDocumentsDirectory();
     Directory bookDir = Directory('${appDocDir.path}/${song.book}');
     bookDir.createSync();
+    ALDownloader.remove(song.audioPathOnline);
     ALDownloader.download(
       song.audioPathOnline,
       directoryPath: bookDir.path,
       fileName: "${song.songNumber}.mp3",
+      redownloadIfNeeded: true,
     );
     ALDownloader.addDownloaderHandlerInterface(
         ALDownloaderHandlerInterface(

@@ -62,7 +62,7 @@ class Song {
       "https://chasinaidil.nasroni.one/mp3/all/$songNumber.mp3";
   @ignore
   Future<String> get audioPathLocal async {
-    String folder = (await getApplicationSupportDirectory()).path;
+    String folder = (await getApplicationDocumentsDirectory()).path;
     return "$folder/$book/$songNumber.mp3";
   }
 
