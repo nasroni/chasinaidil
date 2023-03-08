@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:chasinaidil/app/flutter_rewrite/navbar.dart';
 import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:chasinaidil/app/modules/home/controllers/home_controller.dart';
@@ -6,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 
 import '../controllers/album_controller.dart';
 
@@ -25,6 +29,7 @@ class AlbumView extends GetView<AlbumController> {
 
   @override
   Widget build(BuildContext context) {
+    AppController appc = Get.find();
     var savedContext = context;
     if (controller.album.albumId == 999999999999999999) {
       controller.isTitleEditing.value = true;
@@ -184,8 +189,126 @@ class AlbumView extends GetView<AlbumController> {
                     style: context.theme.textTheme.displayMedium,
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
+                  GetBuilder<AppController>(
+                      id: 'updateViews',
+                      builder: (_) {
+                        return Container(
+                          width: context.width,
+                          padding: const EdgeInsets.only(right: 15),
+                          child: Row(
+                            children: [
+                              if (!controller.isNothingDownloaded &&
+                                  !(appc.isDownloading.value &&
+                                      controller.isFirstDownload.value))
+                                Flexible(
+                                  flex: 2,
+                                  fit: FlexFit.tight,
+                                  child: CupertinoButton(
+                                    onPressed: () => null,
+                                    color: context.theme.secondaryHeaderColor,
+                                    padding: const EdgeInsets.all(11),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: const [
+                                        Icon(
+                                          CupertinoIcons.play_arrow_solid,
+                                          size: 20,
+                                        ),
+                                        Text(' Play'),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              if (!controller.isNothingDownloaded &&
+                                  !(appc.isDownloading.value &&
+                                      controller.isFirstDownload.value))
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                              if (!controller.isNothingDownloaded &&
+                                  !(appc.isDownloading.value &&
+                                      controller.isFirstDownload.value))
+                                Flexible(
+                                  flex: 2,
+                                  fit: FlexFit.tight,
+                                  child: CupertinoButton(
+                                    color: context.theme.secondaryHeaderColor,
+                                    onPressed: () => null,
+                                    padding: const EdgeInsets.all(11),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: const [
+                                        Icon(
+                                          CupertinoIcons.shuffle,
+                                          size: 20,
+                                        ),
+                                        Text('  Shuffle'),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              if (!controller.isNothingDownloaded &&
+                                  !(appc.isDownloading.value &&
+                                      controller.isFirstDownload.value))
+                                const SizedBox(
+                                  width: 10,
+                                ),
+                              if (!controller.isEverythingDownloaded)
+                                Expanded(
+                                  child: appc.isDownloading.value
+                                      ? SizedBox(
+                                          height: 44,
+                                          child: LiquidLinearProgressIndicator(
+                                            backgroundColor: context
+                                                .theme.scaffoldBackgroundColor,
+                                            borderRadius: 4,
+                                            value:
+                                                appc.downloadPercentage.value /
+                                                    100,
+                                            valueColor: AlwaysStoppedAnimation(
+                                              context
+                                                  .theme.secondaryHeaderColor,
+                                            ),
+                                            center: Text(
+                                              "${appc.downloadPercentage.value.round()} %",
+                                              style: context
+                                                  .theme.textTheme.bodyLarge,
+                                            ),
+                                          ),
+                                        )
+                                      : CupertinoButton(
+                                          color: context
+                                              .theme.secondaryHeaderColor,
+                                          disabledColor: Colors.grey.shade500,
+                                          onPressed: () async {
+                                            var songsToDownload = await appc
+                                                .getAllDownloadedSongsFromAlbum(
+                                                    controller.album, true);
+                                            appc.downloadList(songsToDownload);
+                                            if (controller
+                                                .isNothingDownloaded) {
+                                              controller.isFirstDownload.value =
+                                                  true;
+                                            }
+                                          },
+                                          padding: const EdgeInsets.all(11),
+                                          child: const Icon(
+                                            Icons.download,
+                                            size: 20,
+                                          ),
+                                        ),
+                                ),
+                            ],
+                          ),
+                        );
+                      }),
+                  const SizedBox(
+                    height: 10,
+                  )
                 ],
               ),
             ),
@@ -194,101 +317,117 @@ class AlbumView extends GetView<AlbumController> {
             hasScrollBody: false,
             child: Material(
               color: context.theme.scaffoldBackgroundColor,
-              child: Obx(
-                () {
-                  List<Widget> list = [];
-                  int count = 0;
-                  for (var song in controller.songs) {
-                    list.add(
-                      Dismissible(
-                        key: Key(song.id.toString()),
-                        background: Container(color: Colors.red),
-                        direction:
-                            controller.album.songBook == SongBook.playlists
-                                ? DismissDirection.endToStart
-                                : DismissDirection.none,
-                        confirmDismiss: (_) => Get.dialog(CupertinoAlertDialog(
-                          title: const Text('Берункунии суруд'),
-                          content: Text(
-                            "Ҳақиқатан суруди \"${song.title}\"-ро аз плейлист дур кардан мехоҳӣ?",
-                          ), //
-                          actions: [
-                            CupertinoDialogAction(
-                              child: const Text('Не'),
-                              onPressed: () => Get.back(),
-                            ),
-                            CupertinoDialogAction(
-                              isDestructiveAction: true,
-                              onPressed: () {
-                                controller.album.playlist?.removeSong(song);
-                                Get.back(result: true);
-                              },
-                              child: const Text('Бале'),
-                            ),
-                          ],
-                        )),
-                        child: Column(
-                          children: [
-                            InkWell(
-                              onTap: () =>
-                                  Get.toNamed(Routes.LYRICS, arguments: song),
-                              //color: Colors.white,
+              child: GetBuilder<AppController>(
+                  id: 'updateViews',
+                  builder: (_) {
+                    return Obx(
+                      () {
+                        List<Widget> list = [];
+                        int count = 0;
+                        for (var song in controller.songs) {
+                          list.add(
+                            Dismissible(
+                              key: Key(song.id.toString()),
+                              background: Container(color: Colors.red),
+                              direction: controller.album.songBook ==
+                                      SongBook.playlists
+                                  ? DismissDirection.endToStart
+                                  : DismissDirection.none,
+                              confirmDismiss: (_) =>
+                                  Get.dialog(CupertinoAlertDialog(
+                                title: const Text('Берункунии суруд'),
+                                content: Text(
+                                  "Ҳақиқатан суруди \"${song.title}\"-ро аз плейлист дур кардан мехоҳӣ?",
+                                ), //
+                                actions: [
+                                  CupertinoDialogAction(
+                                    child: const Text('Не'),
+                                    onPressed: () => Get.back(),
+                                  ),
+                                  CupertinoDialogAction(
+                                    isDestructiveAction: true,
+                                    onPressed: () {
+                                      controller.album.playlist
+                                          ?.removeSong(song);
+                                      Get.back(result: true);
+                                    },
+                                    child: const Text('Бале'),
+                                  ),
+                                ],
+                              )),
+                              child: Column(
+                                children: [
+                                  InkWell(
+                                    onTap: () => Get.toNamed(Routes.LYRICS,
+                                        arguments: song),
+                                    //color: Colors.white,
 
-                              //: kMinInteractiveDimensionCupertino,
-                              //width: context.width - 16,
+                                    //: kMinInteractiveDimensionCupertino,
+                                    //width: context.width - 16,
 
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 8, horizontal: 16),
-                                height: kMinInteractiveDimensionCupertino,
-                                width: context.width,
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    SizedBox(
-                                      width: 39,
-                                      child: Text(
-                                        song.songNumber,
-                                        //style: const TextStyle(
-                                        //   color: Colors.black45, fontSize: 15),
-                                        style:
-                                            context.theme.textTheme.bodySmall,
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8, horizontal: 16),
+                                      height: kMinInteractiveDimensionCupertino,
+                                      width: context.width,
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          SizedBox(
+                                            width: 39,
+                                            child: Text(
+                                              song.songNumber,
+                                              //style: const TextStyle(
+                                              //   color: Colors.black45, fontSize: 15),
+                                              style: context
+                                                  .theme.textTheme.bodySmall,
+                                            ),
+                                          ),
+                                          if (song.isDownloaded)
+                                            const Icon(
+                                              Icons.download_done,
+                                              color: Colors.green,
+                                            ),
+                                          if (song.isDownloaded)
+                                            const SizedBox(
+                                              width: 5,
+                                            ),
+                                          Expanded(
+                                            child: Text(
+                                              song.title,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                    Expanded(
-                                      child: Text(
-                                        song.title,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                  if (count != controller.songs.length - 1)
+                                    const Divider(
+                                      thickness: 0.5,
+                                      indent: 55,
+                                      endIndent: 6,
+                                      height: 0.5,
+                                    )
+                                ],
                               ),
                             ),
-                            if (count != controller.songs.length - 1)
-                              const Divider(
-                                thickness: 0.5,
-                                indent: 55,
-                                endIndent: 6,
-                                height: 0.5,
-                              )
-                          ],
-                        ),
-                      ),
-                    );
+                          );
 
-                    if (count == controller.songs.length - 1) {
-                      list.add(SizedBox(
-                        height: context.height / 10,
-                      ));
-                    }
-                    count++;
-                  }
-                  return Column(
-                    children: list,
-                  );
-                },
-              ),
+                          if (count == controller.songs.length - 1) {
+                            list.add(SizedBox(
+                              height: context.height / 10,
+                            ));
+                          }
+                          count++;
+                        }
+                        return Column(
+                          children: list,
+                        );
+                      },
+                    );
+                  }),
             ),
           )
         ],

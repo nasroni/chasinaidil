@@ -152,6 +152,10 @@ class AppController extends GetxController {
 
   // download list
   downloadList(List<Song> songs) async {
+    log("list downloading");
+    downloadPercentage.value = 0.0;
+    isDownloading.value = true;
+    update(['updateViews']);
     // get inapp folder
     Directory appDocDir = await getApplicationDocumentsDirectory();
 
@@ -193,14 +197,25 @@ class AppController extends GetxController {
           }
         },
         failedHandler: () {
+          log("failed somehow");
           // reset download progress, as was before starting, so it can be started again
           isDownloading.value = false;
-          downloadPercentage.value = 100;
+          downloadPercentage.value = 100.0;
           // here don't update anything
         },
-        progressHandler: (progress) {
+        progressHandler: (progress) async {
           // update progress percentage
           downloadPercentage.value = (progress * 100).toPrecision(2);
+          for (var song in songs) {
+            // check if song is on local disk
+            bool isSuccessfull =
+                await ALDownloaderFileManager.isExistPhysicalFilePathForUrl(
+              song.audioPathOnline,
+            );
+            if (isSuccessfull && !song.isDownloaded) {
+              markSongDownloaded(song);
+            }
+          }
         },
       ),
     );

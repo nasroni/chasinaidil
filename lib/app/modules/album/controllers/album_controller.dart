@@ -1,6 +1,7 @@
 import 'package:chasinaidil/app/data/services/isar_service.dart';
 import 'package:chasinaidil/app/data/types/album.dart';
 import 'package:chasinaidil/app/data/types/song.dart';
+import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:chasinaidil/app/modules/home/controllers/home_controller.dart';
 import 'package:get/get.dart';
 
@@ -14,11 +15,18 @@ class AlbumController extends GetxController {
 
   final RxList<Song> songs = List<Song>.empty().obs;
 
+  bool get isEverythingDownloaded =>
+      songs.indexWhere((Song song) => !song.isDownloaded) == -1;
+  bool get isNothingDownloaded =>
+      songs.indexWhere((Song song) => song.isDownloaded) == -1;
+  RxBool isFirstDownload = false.obs;
+
   final RxBool isTitleEditing = false.obs;
 
   @override
   void onInit() {
     loadAlbumSongs();
+    //Get.find<AppController>().update(['updateViews']);
     super.onInit();
   }
 
@@ -35,6 +43,7 @@ class AlbumController extends GetxController {
       }
     }
     songs.addAll(songsFromDB);
+    Get.find<AppController>().update(['updateViews']);
   }
 
   void setNewName(String value) {

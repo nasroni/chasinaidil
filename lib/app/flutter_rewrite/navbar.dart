@@ -20,7 +20,8 @@ const double _kNavBarPersistentHeight = kMinInteractiveDimensionCupertino;
 
 /// Size increase from expanding the navigation bar into an iOS-11-style large title
 /// form in a [CustomScrollView].
-const double _kNavBarLargeTitleHeightExtension = 300.0;
+const double _kNavBarLargeTitleHeightExtension =
+    300.0 + kMinInteractiveDimensionCupertino + 20;
 
 /// Number of logical pixels scrolled down before the title text is transferred
 /// from the normal navigation bar to a big title below the navigation bar.

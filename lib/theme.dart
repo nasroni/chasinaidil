@@ -5,6 +5,7 @@ class AppTheme {
   //AppTheme._();
 
   final lightThemeData = ThemeData(
+    secondaryHeaderColor: Colors.blueGrey.shade600,
     brightness: Brightness.light,
     scaffoldBackgroundColor: Colors.white,
     primaryColor: Colors.black,
@@ -62,6 +63,7 @@ class AppTheme {
   darkTheme() => darkThemeData;
 
   late final darkThemeData = lightThemeData.copyWith(
+    secondaryHeaderColor: Colors.blueGrey.shade800,
     brightness: Brightness.dark,
     scaffoldBackgroundColor: Colors.black87,
     shadowColor: Colors.black.withBlue(15).withRed(15).withGreen(15),
