@@ -1,6 +1,6 @@
 import 'dart:developer';
-import 'dart:io';
 
+import 'package:al_downloader/al_downloader.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:chasinaidil/app/modules/lyrics/controllers/lyrics_controller.dart';
@@ -8,7 +8,6 @@ import 'package:chasinaidil/app/modules/lyrics/views/positionseekwidget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 class PlayerDialog extends StatelessWidget {
   const PlayerDialog({
@@ -21,11 +20,11 @@ class PlayerDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppController appc = Get.find();
-    appc.player.open(
+    /*appc.player.open(
       viewController.song.audio,
       autoStart: false,
       showNotification: true,
-    );
+    );*/
 
     return AlertDialog(
       alignment: Alignment.topRight,
@@ -105,36 +104,26 @@ class PlayerDialog extends StatelessWidget {
                 );
               },
             ),
-            /*StreamBuilder(
-              stream: (appc.player.realtimePlayingInfos),
-              builder: (context, snapshot) {
-                if (snapshot.data == null) return Container();
-                RealtimePlayingInfos data = snapshot.data!;
-                return Slider(
-                  thumbColor: Colors.transparent,
-                  value: appc.isSeeking.value
-                      ? appc.seekingVal.value
-                      : data.currentPosition.inSeconds.toDouble(),
-                  max: appc.player.current.value?.audio.duration.inSeconds
-                          .toDouble() ??
-                      360,
-                  onChangeStart: (_) => appc.isSeeking.value = true,
-                  onChangeEnd: (value) {
-                    appc.isSeeking.value = false;
-                    appc.player.seek(Duration(
-                      seconds: value.round(),
-                    ));
-                  },
-                  onChanged: (value) => appc.seekingVal.value = value,
-                );
-              },
-            ),*/
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                appc.player.builderRealtimePlayingInfos(
-                  builder: (context, RealtimePlayingInfos infos) {
-                    if (infos.isBuffering) {
+                appc.player.builderPlayerState(
+                  //builder: (context, RealtimePlayingInfos infos) {
+                  builder: (context, var infos) {
+                    if (true) {
+                      return CupertinoButton(
+                        child: Obx(
+                          () => appc.currentDownloadFinished.value
+                              ? Icon(Icons.access_alarm)
+                              : Icon(Icons.download),
+                        ),
+                        onPressed: () async {
+                          await appc.download(viewController.song.audioPath,
+                              viewController.song.songNumber);
+                        },
+                      );
+                    }
+                    /*if (infos.isBuffering) {
                       return Container(
                         padding: const EdgeInsets.all(10),
                         child: const CupertinoActivityIndicator(
@@ -153,7 +142,7 @@ class PlayerDialog extends StatelessWidget {
                         color: context.theme.primaryColor,
                         size: 60,
                       ),
-                    );
+                    );*/
                   },
                 ),
               ],

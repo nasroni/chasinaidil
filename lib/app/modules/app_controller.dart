@@ -1,3 +1,7 @@
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:al_downloader/al_downloader.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:chasinaidil/app/data/services/isar_service.dart';
 import 'package:chasinaidil/app/data/types/album.dart';
@@ -9,8 +13,41 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:path_provider/path_provider.dart';
 
 class AppController extends GetxController {
+  @override
+  void onInit() {
+    ALDownloader.initialize();
+    ALDownloader.configurePrint(enabled: false, frequentEnabled: false);
+
+    super.onInit();
+  }
+
+  final RxBool currentDownloadFinished = false.obs;
+
+  Future<void> download(String url, String number) async {
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+    Directory chasinaiDir = Directory('${appDocDir.path}/chasinaidil');
+    chasinaiDir.createSync();
+    ALDownloader.download(
+      url,
+      directoryPath: chasinaiDir.path,
+      fileName: "$number.mp3",
+    );
+    ALDownloader.addDownloaderHandlerInterface(
+        ALDownloaderHandlerInterface(
+          succeededHandler: () async {
+            currentDownloadFinished.value = true;
+            log((await ALDownloaderFileManager.getPhysicalFilePathForUrl(url))
+                .toString());
+          },
+          failedHandler: () => currentDownloadFinished.value = true,
+          progressHandler: (progress) => log(progress.toString()),
+        ),
+        url);
+  }
+
   //final player = AudioPlayer();
   final player = AssetsAudioPlayer();
 

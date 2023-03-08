@@ -1,8 +1,6 @@
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:isar/isar.dart';
-import 'package:just_audio/just_audio.dart';
-import 'package:just_audio_background/just_audio_background.dart';
 
 part 'song.g.dart';
 
@@ -49,15 +47,6 @@ class Song {
       "https://chasinaidil.nasroni.one/mp3/all/$songNumber.mp3";
 
   @ignore
-  /*AudioSource get audio => AudioSource.uri(
-        Uri.parse(audioPath),
-        tag: MediaItem(
-          id: "$id",
-          title: title,
-          album: book,
-          artUri: Uri.parse("asset:///$coverAssetHQ"),
-        ),
-      );*/
   Audio get audio => Audio.network(
         audioPath,
         metas: Metas(
