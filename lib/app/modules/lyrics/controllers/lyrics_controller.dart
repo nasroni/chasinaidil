@@ -16,7 +16,7 @@ class LyricsController extends GetxController {
     super.dispose();
   }
 
-  final Song song = Get.arguments;
+  Song song = Get.arguments;
 
   final Rx<ViewModes> viewMode = ViewModes.values
       .firstWhere(

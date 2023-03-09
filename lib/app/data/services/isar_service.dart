@@ -53,6 +53,11 @@ class IsarService {
     return await isar.songs.where().idEqualTo(id).findFirst();
   }
 
+  Future<Song?> getSongByTitle(String title) async {
+    final isar = await db;
+    return await isar.songs.where().filter().titleContains(title).findFirst();
+  }
+
   Future<List<Song>> getSongsByIds(List<int> ids) async {
     final isar = await db;
     return await isar.songs

@@ -63,6 +63,7 @@ class AppTheme {
   darkTheme() => darkThemeData;
 
   late final darkThemeData = lightThemeData.copyWith(
+    dialogBackgroundColor: Colors.grey.shade900,
     secondaryHeaderColor: Colors.blueGrey.shade800,
     brightness: Brightness.dark,
     scaffoldBackgroundColor: Colors.black87,

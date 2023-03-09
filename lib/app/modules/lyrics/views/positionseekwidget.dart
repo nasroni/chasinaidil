@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 //import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 
 class PositionSeekWidget extends StatefulWidget {
@@ -40,22 +41,33 @@ class PositionSeekWidgetState extends State<PositionSeekWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          SizedBox(
-            width: 40,
-            child: Text(durationToString(widget.currentPosition)),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        SizedBox(
+          width: 38,
+          child: Text(
+            durationToString(widget.currentPosition),
+            style: context.theme.textTheme.labelSmall,
           ),
-          Expanded(
+        ),
+        Expanded(
+          child: SliderTheme(
+            data: SliderThemeData(
+              thumbShape: SliderComponentShape.noThumb,
+              overlayShape: const RoundSliderOverlayShape(overlayRadius: 10),
+              trackHeight: 4,
+              overlayColor: Colors.transparent,
+              activeTrackColor: Colors.grey.shade500,
+              inactiveTrackColor: Colors.grey.shade300,
+            ),
             child: Slider(
               min: 0,
               max: widget.duration.inMilliseconds.toDouble(),
               value: percent * widget.duration.inMilliseconds.toDouble(),
+
               /*style:
-                  SliderStyle(variant: Colors.grey, accent: Colors.grey[500]),*/
+                    SliderStyle(variant: Colors.grey, accent: Colors.grey[500]),*/
               onChangeEnd: (newValue) {
                 setState(() {
                   listenOnlyUserInterraction = false;
@@ -75,12 +87,15 @@ class PositionSeekWidgetState extends State<PositionSeekWidget> {
               },
             ),
           ),
-          SizedBox(
-            width: 40,
-            child: Text(durationToString(widget.duration)),
+        ),
+        SizedBox(
+          width: 38,
+          child: Text(
+            durationToString(widget.duration),
+            style: context.theme.textTheme.labelSmall,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
