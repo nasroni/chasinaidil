@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'dart:math';
 
+import 'package:al_downloader/al_downloader.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:chasinaidil/app/flutter_rewrite/navbar.dart';
@@ -10,6 +12,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 
 import '../controllers/album_controller.dart';
@@ -396,32 +399,67 @@ class AlbumView extends GetView<AlbumController> {
                             Dismissible(
                               key: Key(song.id.toString()),
                               background: Container(color: Colors.red),
-                              direction: controller.album.songBook ==
-                                      SongBook.playlists
+                              direction: (controller.album.songBook ==
+                                          SongBook.playlists) ||
+                                      (song.isDownloaded)
                                   ? DismissDirection.endToStart
                                   : DismissDirection.none,
-                              confirmDismiss: (_) =>
-                                  Get.dialog(CupertinoAlertDialog(
-                                title: const Text('Берункунии суруд'),
-                                content: Text(
-                                  "Ҳақиқатан суруди \"${song.title}\"-ро аз плейлист дур кардан мехоҳӣ?",
-                                ), //
-                                actions: [
-                                  CupertinoDialogAction(
-                                    child: const Text('Не'),
-                                    onPressed: () => Get.back(),
-                                  ),
-                                  CupertinoDialogAction(
-                                    isDestructiveAction: true,
-                                    onPressed: () {
-                                      controller.album.playlist
-                                          ?.removeSong(song);
-                                      Get.back(result: true);
-                                    },
-                                    child: const Text('Бале'),
-                                  ),
-                                ],
-                              )),
+                              confirmDismiss: (_) {
+                                if (controller.album.songBook ==
+                                    SongBook.playlists) {
+                                  return Get.dialog(CupertinoAlertDialog(
+                                    title: const Text('Берункунии суруд'),
+                                    content: Text(
+                                      "Ҳақиқатан суруди \"${song.title}\"-ро аз плейлист дур кардан мехоҳӣ?",
+                                    ), //
+                                    actions: [
+                                      CupertinoDialogAction(
+                                        child: const Text('Не'),
+                                        onPressed: () => Get.back(),
+                                      ),
+                                      CupertinoDialogAction(
+                                        isDestructiveAction: true,
+                                        onPressed: () {
+                                          controller.album.playlist
+                                              ?.removeSong(song);
+                                          Get.back(result: true);
+                                        },
+                                        child: const Text('Бале'),
+                                      ),
+                                    ],
+                                  ));
+                                } else {
+                                  return Get.dialog(CupertinoAlertDialog(
+                                    title: const Text('Delete audio az суруд'),
+                                    content: Text(
+                                      "Ҳақиқатан audioi суруди \"${song.title}\"-ро аз telefon дур кардан мехоҳӣ?",
+                                    ), //
+                                    actions: [
+                                      CupertinoDialogAction(
+                                        child: const Text('Не'),
+                                        onPressed: () => Get.back(),
+                                      ),
+                                      CupertinoDialogAction(
+                                        isDestructiveAction: true,
+                                        onPressed: () async {
+                                          GetStorage()
+                                              .remove(song.id.toString());
+                                          try {
+                                            ALDownloader.remove(
+                                                song.audioPathOnline);
+                                          } catch (_) {}
+
+                                          appc.update(['updateViews']);
+                                          Get.back();
+                                          /*song.audioPathLocal.then(
+                                              (value) => File(value).delete());*/
+                                        },
+                                        child: const Text('Бале'),
+                                      ),
+                                    ],
+                                  ));
+                                }
+                              },
                               child: Column(
                                 children: [
                                   InkWell(
