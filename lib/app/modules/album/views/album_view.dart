@@ -271,7 +271,7 @@ class AlbumView extends GetView<AlbumController> {
                                           CupertinoIcons.play_arrow_solid,
                                           size: 20,
                                         ),
-                                        Text(' Play'),
+                                        Text(' cароидан'),
                                       ],
                                     ),
                                   ),
@@ -326,7 +326,7 @@ class AlbumView extends GetView<AlbumController> {
                                           CupertinoIcons.shuffle,
                                           size: 20,
                                         ),
-                                        Text('  Shuffle'),
+                                        Text('  бетартиб'),
                                       ],
                                     ),
                                   ),
@@ -340,7 +340,7 @@ class AlbumView extends GetView<AlbumController> {
                               if (!controller.isEverythingDownloaded)
                                 Expanded(
                                   child: appc.isDownloadingMultiple.value &&
-                                          (appc.idCurrentlyDLMultiple ==
+                                          (appc.idCurrentlyDLMultiple.value ==
                                                   controller.album.albumId
                                                       .toString() &&
                                               appc.songBookCurrentlyDLMultiple ==

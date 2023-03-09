@@ -26,7 +26,7 @@ class HomeController extends GetxController {
   final RxBool isChasinaiDilOpen = true.obs;
   final RxBool isTshashmaOpen = false.obs;
   final RxBool isOthersOpen = false.obs;
-  final RxBool isPlaylistsOpen = false.obs;
+  final RxBool isPlaylistsOpen = true.obs;
 
   late final Worker searchWorker;
 
