@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'dart:math';
 
 import 'package:al_downloader/al_downloader.dart';
@@ -244,6 +243,36 @@ class AlbumView extends GetView<AlbumController> {
                                       if (controller.album.albumId == 17 &&
                                           controller.album.songBook ==
                                               SongBook.chasinaidil) {
+                                        bool shallProceed = await Get.dialog(
+                                            CupertinoAlertDialog(
+                                          title: const Text('боргирӣ кардан'),
+                                          content: const Text(
+                                              'Ҳақиқатан тамоми сурудҳои Хазинаи Дилро боргирӣ кардан мехоҳӣ? (зиёда аз 1GB)?'),
+                                          actions: <CupertinoDialogAction>[
+                                            CupertinoDialogAction(
+                                              /// This parameter indicates this action is the default,
+                                              /// and turns the action's text to bold text.
+                                              isDefaultAction: false,
+                                              isDestructiveAction: true,
+                                              onPressed: () {
+                                                Get.back(result: false);
+                                              },
+                                              child: const Text('Не'),
+                                            ),
+                                            CupertinoDialogAction(
+                                              /// This parameter indicates the action would perform
+                                              /// a destructive action such as deletion, and turns
+                                              /// the action's text color to red.
+                                              isDefaultAction: true,
+                                              isDestructiveAction: false,
+                                              onPressed: () {
+                                                Get.back(result: true);
+                                              },
+                                              child: const Text('Бале'),
+                                            ),
+                                          ],
+                                        ));
+                                        if (shallProceed == false) return;
                                         songs = await appc
                                             .getAllDownloadedSongsFromBook(
                                                 SongBook.chasinaidil, false);
@@ -373,8 +402,8 @@ class AlbumView extends GetView<AlbumController> {
                                           color: context
                                               .theme.secondaryHeaderColor,
                                           disabledColor: Colors.grey.shade500,
-                                          onPressed: appc
-                                                      .idCurrentlyDLMultiple !=
+                                          onPressed: appc.idCurrentlyDLMultiple
+                                                      .value !=
                                                   ""
                                               ? null
                                               : () async {
