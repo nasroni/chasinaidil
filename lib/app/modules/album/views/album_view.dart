@@ -52,23 +52,30 @@ class AlbumView extends GetView<AlbumController> {
             trailing: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                if (appc.player.current.value != null)
-                  CupertinoButton(
-                    onPressed: () => Get.dialog(
-                        const PlayerDialog(
-                          viewingSong: null,
+                StreamBuilder(
+                  stream: appc.player.playerState,
+                  builder: (_, __) {
+                    if (appc.player.current.hasValue) {
+                      return CupertinoButton(
+                        onPressed: () => Get.dialog(
+                            const PlayerDialog(
+                              viewingSong: null,
+                            ),
+                            barrierColor: Colors.transparent,
+                            barrierDismissible: true),
+                        padding: EdgeInsets.zero,
+                        minSize: kMinInteractiveDimensionCupertino,
+                        alignment: Alignment.centerRight,
+                        child: const Icon(
+                          CupertinoIcons.playpause,
+                          //color: context.theme.primaryColor,
+                          size: 24,
                         ),
-                        barrierColor: Colors.transparent,
-                        barrierDismissible: true),
-                    padding: EdgeInsets.zero,
-                    minSize: kMinInteractiveDimensionCupertino,
-                    alignment: Alignment.centerRight,
-                    child: const Icon(
-                      CupertinoIcons.playpause,
-                      //color: context.theme.primaryColor,
-                      size: 24,
-                    ),
-                  ),
+                      );
+                    }
+                    return Container();
+                  },
+                ),
                 if (controller.album.songBook == SongBook.playlists &&
                     controller.album.albumId != 999999999999999999)
                   CupertinoButton(
@@ -226,7 +233,7 @@ class AlbumView extends GetView<AlbumController> {
                           child: Row(
                             children: [
                               if (!controller.isNothingDownloaded &&
-                                  !(appc.isDownloading.value &&
+                                  !(appc.isDownloadingMultiple.value &&
                                       controller.isFirstDownload.value))
                                 Flexible(
                                   flex: 2,
@@ -270,13 +277,13 @@ class AlbumView extends GetView<AlbumController> {
                                   ),
                                 ),
                               if (!controller.isNothingDownloaded &&
-                                  !(appc.isDownloading.value &&
+                                  !(appc.isDownloadingMultiple.value &&
                                       controller.isFirstDownload.value))
                                 const SizedBox(
                                   width: 10,
                                 ),
                               if (!controller.isNothingDownloaded &&
-                                  !(appc.isDownloading.value &&
+                                  !(appc.isDownloadingMultiple.value &&
                                       controller.isFirstDownload.value))
                                 Flexible(
                                   flex: 2,
@@ -324,29 +331,35 @@ class AlbumView extends GetView<AlbumController> {
                                   ),
                                 ),
                               if (!controller.isNothingDownloaded &&
-                                  !(appc.isDownloading.value &&
+                                  !(appc.isDownloadingMultiple.value &&
                                       controller.isFirstDownload.value))
                                 const SizedBox(
                                   width: 10,
                                 ),
                               if (!controller.isEverythingDownloaded)
                                 Expanded(
-                                  child: appc.isDownloading.value
+                                  child: appc.isDownloadingMultiple.value &&
+                                          (appc.idCurrentlyDLMultiple ==
+                                                  controller.album.albumId
+                                                      .toString() &&
+                                              appc.songBookCurrentlyDLMultiple ==
+                                                  controller.album.songBook)
                                       ? SizedBox(
                                           height: 44,
                                           child: LiquidLinearProgressIndicator(
                                             backgroundColor: context
                                                 .theme.scaffoldBackgroundColor,
                                             borderRadius: 4,
-                                            value:
-                                                appc.downloadPercentage.value /
-                                                    100,
+                                            value: appc
+                                                    .downloadPercentageMultiple
+                                                    .value /
+                                                100,
                                             valueColor: AlwaysStoppedAnimation(
                                               context
                                                   .theme.secondaryHeaderColor,
                                             ),
                                             center: Text(
-                                              "${appc.downloadPercentage.value.round()} %",
+                                              "${appc.downloadPercentageMultiple.value.round()} %",
                                               style: context
                                                   .theme.textTheme.bodyLarge,
                                             ),
@@ -356,37 +369,54 @@ class AlbumView extends GetView<AlbumController> {
                                           color: context
                                               .theme.secondaryHeaderColor,
                                           disabledColor: Colors.grey.shade500,
-                                          onPressed: () async {
-                                            List<Song> songsToDownload;
-                                            if (controller.album.albumId ==
-                                                    17 &&
-                                                controller.album.songBook ==
-                                                    SongBook.chasinaidil) {
-                                              songsToDownload = await appc
-                                                  .getAllDownloadedSongsFromBook(
-                                                      SongBook.chasinaidil,
-                                                      true);
-                                            } else if (controller
-                                                    .album.songBook ==
-                                                SongBook.playlists) {
-                                              songsToDownload = await appc
-                                                  .getAllDownloadedSongsFromPlaylist(
-                                                      controller
-                                                          .album.playlist!,
-                                                      true);
-                                            } else {
-                                              songsToDownload = await appc
-                                                  .getAllDownloadedSongsFromAlbum(
-                                                      controller.album, true);
-                                            }
+                                          onPressed: appc
+                                                      .idCurrentlyDLMultiple !=
+                                                  ""
+                                              ? null
+                                              : () async {
+                                                  List<Song> songsToDownload;
 
-                                            appc.downloadList(songsToDownload);
-                                            if (controller
-                                                .isNothingDownloaded) {
-                                              controller.isFirstDownload.value =
-                                                  true;
-                                            }
-                                          },
+                                                  if (controller
+                                                              .album.albumId ==
+                                                          17 &&
+                                                      controller
+                                                              .album.songBook ==
+                                                          SongBook
+                                                              .chasinaidil) {
+                                                    songsToDownload = await appc
+                                                        .getAllDownloadedSongsFromBook(
+                                                            SongBook
+                                                                .chasinaidil,
+                                                            true);
+                                                  } else if (controller
+                                                          .album.songBook ==
+                                                      SongBook.playlists) {
+                                                    songsToDownload = await appc
+                                                        .getAllDownloadedSongsFromPlaylist(
+                                                            controller.album
+                                                                .playlist!,
+                                                            true);
+                                                  } else {
+                                                    songsToDownload = await appc
+                                                        .getAllDownloadedSongsFromAlbum(
+                                                            controller.album,
+                                                            true);
+                                                  }
+
+                                                  appc.downloadList(
+                                                      songsToDownload);
+                                                  appc.idCurrentlyDLMultiple =
+                                                      controller.album.albumId
+                                                          .toString();
+                                                  appc.songBookCurrentlyDLMultiple =
+                                                      controller.album.songBook;
+
+                                                  if (controller
+                                                      .isNothingDownloaded) {
+                                                    controller.isFirstDownload
+                                                        .value = true;
+                                                  }
+                                                },
                                           padding: const EdgeInsets.all(11),
                                           child: const Icon(
                                             Icons.download,

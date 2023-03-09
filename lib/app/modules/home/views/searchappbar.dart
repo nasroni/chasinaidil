@@ -28,28 +28,35 @@ class SearchAppBar extends StatelessWidget {
       titleTextStyle: context.textTheme.titleLarge,
       elevation: 0,
       actions: [
-        if (appc.player.current.value != null)
-          Container(
-            padding: Platform.isAndroid
-                ? const EdgeInsets.only(bottom: 30, right: 0)
-                : const EdgeInsets.only(bottom: 70, right: 0),
-            child: CupertinoButton(
-              onPressed: () => Get.dialog(
-                  const PlayerDialog(
-                    viewingSong: null,
+        StreamBuilder(
+          stream: appc.player.playerState,
+          builder: (_, __) {
+            if (appc.player.current.hasValue) {
+              return Container(
+                padding: Platform.isAndroid
+                    ? const EdgeInsets.only(bottom: 30, right: 0)
+                    : const EdgeInsets.only(bottom: 70, right: 0),
+                child: CupertinoButton(
+                  onPressed: () => Get.dialog(
+                      const PlayerDialog(
+                        viewingSong: null,
+                      ),
+                      barrierColor: Colors.transparent,
+                      barrierDismissible: true),
+                  padding: EdgeInsets.zero,
+                  minSize: kMinInteractiveDimensionCupertino,
+                  alignment: Alignment.centerRight,
+                  child: Icon(
+                    CupertinoIcons.playpause,
+                    color: context.theme.primaryColor,
+                    size: 24,
                   ),
-                  barrierColor: Colors.transparent,
-                  barrierDismissible: true),
-              padding: EdgeInsets.zero,
-              minSize: kMinInteractiveDimensionCupertino,
-              alignment: Alignment.centerRight,
-              child: Icon(
-                CupertinoIcons.playpause,
-                color: context.theme.primaryColor,
-                size: 24,
-              ),
-            ),
-          ),
+                ),
+              );
+            }
+            return Container();
+          },
+        ),
         Container(
           padding: Platform.isAndroid
               ? const EdgeInsets.only(bottom: 30, right: 0)

@@ -97,6 +97,21 @@ class HomeController extends GetxController {
     }
   }
 
+  static SongBook giveSongBookEnum(String title) {
+    switch (title) {
+      case 'Хазинаи Дил':
+        return SongBook.chasinaidil;
+      case 'Чашма':
+        return SongBook.tshashma;
+      case 'Дигар сурудҳо':
+        return SongBook.others;
+      case 'Плейлистҳо':
+        return SongBook.playlists;
+      default:
+        return SongBook.others;
+    }
+  }
+
   Future<void> openSearch() async {
     isSearchActive.value = true;
     showLastSearchedSongs();

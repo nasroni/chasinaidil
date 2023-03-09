@@ -99,14 +99,20 @@ class AppController extends GetxController {
     }
   }
 
-  final RxBool isDownloading = false.obs;
-  final RxDouble downloadPercentage = 100.0.obs;
+  final RxBool isDownloadingMultiple = false.obs;
+  final RxDouble downloadPercentageMultiple = 100.0.obs;
+  String idCurrentlyDLMultiple = "";
+  SongBook songBookCurrentlyDLMultiple = SongBook.chasinaidil;
+
+  final RxBool isDownloadingSingle = false.obs;
+  final RxDouble downloadPercentageSingle = 100.0.obs;
 
   // download a single song, for use in audio menu
   Future<void> downloadSong(Song song) async {
     // reset download progress notifiers
-    isDownloading.value = true;
-    downloadPercentage.value = 0;
+    isDownloadingSingle.value = true;
+    downloadPercentageSingle.value = 0;
+    update(['updateViews']);
 
     // get inapp folder
     Directory appDocDir = await getApplicationDocumentsDirectory();
@@ -132,21 +138,21 @@ class AppController extends GetxController {
       ALDownloaderHandlerInterface(
         succeededHandler: () async {
           // reset download progress, as was before starting, so another song can be downloaded too
-          isDownloading.value = false;
-          downloadPercentage.value = 100;
+          isDownloadingSingle.value = false;
+          downloadPercentageSingle.value = 100;
           // then mark song as downloaded
           markSongDownloaded(song);
         },
         failedHandler: () {
           // reset download progress, as was before starting, so it can be started again
-          isDownloading.value = false;
-          downloadPercentage.value = 100;
+          isDownloadingSingle.value = false;
+          downloadPercentageSingle.value = 100;
           log('moin');
           // here don't update anything
         },
         progressHandler: (progress) {
           // update progress percentage
-          downloadPercentage.value = (progress * 100).toPrecision(2);
+          downloadPercentageSingle.value = (progress * 100).toPrecision(2);
         },
       ),
       song.audioPathOnline,
@@ -156,8 +162,8 @@ class AppController extends GetxController {
   // download list
   downloadList(List<Song> songs) async {
     log("list downloading");
-    downloadPercentage.value = 0.0;
-    isDownloading.value = true;
+    downloadPercentageMultiple.value = 0.0;
+    isDownloadingMultiple.value = true;
     update(['updateViews']);
     // get inapp folder
     Directory appDocDir = await getApplicationDocumentsDirectory();
@@ -185,8 +191,8 @@ class AppController extends GetxController {
       downloaderHandlerInterface: ALDownloaderHandlerInterface(
         succeededHandler: () async {
           // reset download progress, as was before starting, so another song can be downloaded too
-          isDownloading.value = false;
-          downloadPercentage.value = 100;
+          isDownloadingMultiple.value = false;
+          downloadPercentageMultiple.value = 100;
           // then mark downloaded songs as downloaded
           for (var song in songs) {
             // check if song is on local disk
@@ -197,18 +203,21 @@ class AppController extends GetxController {
             if (isSuccessfull) {
               markSongDownloaded(song);
             }
+            idCurrentlyDLMultiple = "";
           }
         },
         failedHandler: () {
           log("failed somehow");
           // reset download progress, as was before starting, so it can be started again
-          isDownloading.value = false;
-          downloadPercentage.value = 100.0;
+          isDownloadingMultiple.value = false;
+          downloadPercentageMultiple.value = 100.0;
+          idCurrentlyDLMultiple = "";
+
           // here don't update anything
         },
         progressHandler: (progress) async {
           // update progress percentage
-          downloadPercentage.value = (progress * 100).toPrecision(2);
+          downloadPercentageMultiple.value = (progress * 100).toPrecision(2);
           for (var song in songs) {
             // check if song is on local disk
             bool isSuccessfull =
