@@ -207,6 +207,7 @@ class AppController extends GetxController {
             }
           }
           idCurrentlyDLMultiple.value = "";
+          log('finished and resetted');
           update(['updateViews']);
         },
         failedHandler: () {
@@ -223,17 +224,13 @@ class AppController extends GetxController {
           log("progr:$progress");
           downloadPercentageMultiple.value = (progress * 100).toPrecision(2);
           for (var song in songs) {
-            // check if song is on local disk
-            bool isSuccessfull =
-                await ALDownloaderFileManager.isExistPhysicalFilePathForUrl(
-              song.audioPathOnline,
-            );
-            //if (Platform.isAndroid) {
-            isSuccessfull = (await ALDownloaderBatcher.getStatusForUrls(
-                    [song.audioPathOnline])) ==
-                ALDownloaderStatus.succeeded;
+            // check if song is complete downloaded
+
+            double progress =
+                await ALDownloader.getProgressForUrl(song.audioPathOnline);
+            //log(isSuccessfull.toString());
             //}
-            if (isSuccessfull && !song.isDownloaded) {
+            if (progress == 1.0) {
               markSongDownloaded(song);
             }
           }
@@ -242,10 +239,19 @@ class AppController extends GetxController {
     );
   }
 
-  void markSongDownloaded(Song song) {
+  void markSongDownloaded(Song song) async {
     // save to getstorage that when song was saved
-    GetStorage().write(song.id.toString(), DateTime.now().toIso8601String());
-    update(['updateViews']);
+    double progress =
+        await ALDownloader.getProgressForUrl(song.audioPathOnline);
+    ALDownloaderStatus state =
+        await ALDownloader.getStatusForUrl(song.audioPathOnline);
+
+    if (progress == 1.0 && state == ALDownloaderStatus.succeeded) {
+      GetStorage().write(song.id.toString(), DateTime.now().toIso8601String());
+      update(['updateViews']);
+    } else {
+      ALDownloader.remove(song.audioPathOnline);
+    }
   }
 
   //final player = AudioPlayer();

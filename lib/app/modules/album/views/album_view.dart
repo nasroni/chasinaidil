@@ -1,3 +1,4 @@
+import 'dart:developer' as d;
 import 'dart:math';
 
 import 'package:al_downloader/al_downloader.dart';
@@ -237,73 +238,8 @@ class AlbumView extends GetView<AlbumController> {
                                 Flexible(
                                   flex: 2,
                                   fit: FlexFit.tight,
-                                  child: CupertinoButton(
-                                    onPressed: () async {
-                                      List<Song> songs;
-                                      if (controller.album.albumId == 17 &&
-                                          controller.album.songBook ==
-                                              SongBook.chasinaidil) {
-                                        bool shallProceed = await Get.dialog(
-                                            CupertinoAlertDialog(
-                                          title: const Text('боргирӣ кардан'),
-                                          content: const Text(
-                                              'Ҳақиқатан тамоми сурудҳои Хазинаи Дилро боргирӣ кардан мехоҳӣ? (зиёда аз 1GB)?'),
-                                          actions: <CupertinoDialogAction>[
-                                            CupertinoDialogAction(
-                                              /// This parameter indicates this action is the default,
-                                              /// and turns the action's text to bold text.
-                                              isDefaultAction: false,
-                                              isDestructiveAction: true,
-                                              onPressed: () {
-                                                Get.back(result: false);
-                                              },
-                                              child: const Text('Не'),
-                                            ),
-                                            CupertinoDialogAction(
-                                              /// This parameter indicates the action would perform
-                                              /// a destructive action such as deletion, and turns
-                                              /// the action's text color to red.
-                                              isDefaultAction: true,
-                                              isDestructiveAction: false,
-                                              onPressed: () {
-                                                Get.back(result: true);
-                                              },
-                                              child: const Text('Бале'),
-                                            ),
-                                          ],
-                                        ));
-                                        if (shallProceed == false) return;
-                                        songs = await appc
-                                            .getAllDownloadedSongsFromBook(
-                                                SongBook.chasinaidil, false);
-                                      } else if (controller.album.songBook ==
-                                          SongBook.playlists) {
-                                        songs = await appc
-                                            .getAllDownloadedSongsFromPlaylist(
-                                                controller.album.playlist!,
-                                                false);
-                                      } else {
-                                        songs = await appc
-                                            .getAllDownloadedSongsFromAlbum(
-                                                controller.album, false);
-                                      }
-                                      appc.player.shuffle = false;
-                                      appc.placePlaylist(songs, null);
-                                    },
-                                    color: context.theme.secondaryHeaderColor,
-                                    padding: const EdgeInsets.all(11),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: const [
-                                        Icon(
-                                          CupertinoIcons.play_arrow_solid,
-                                          size: 20,
-                                        ),
-                                        Text(' cароидан'),
-                                      ],
-                                    ),
-                                  ),
+                                  child: PlayButton(
+                                      controller: controller, appc: appc),
                                 ),
                               if (!controller.isNothingDownloaded &&
                                   !(appc.isDownloadingMultiple.value &&
@@ -376,101 +312,71 @@ class AlbumView extends GetView<AlbumController> {
                                                   controller.album.songBook)
                                       ? SizedBox(
                                           height: 44,
-                                          child: Obx(
-                                            () => LiquidLinearProgressIndicator(
-                                              backgroundColor: context.theme
-                                                  .scaffoldBackgroundColor,
-                                              borderRadius: 4,
-                                              value: appc
-                                                      .downloadPercentageMultiple
-                                                      .value /
-                                                  100,
-                                              valueColor:
-                                                  AlwaysStoppedAnimation(
-                                                context
-                                                    .theme.secondaryHeaderColor,
-                                              ),
-                                              center: Text(
-                                                "${appc.downloadPercentageMultiple.value.round()} %",
-                                                style: context
-                                                    .theme.textTheme.bodyLarge,
+                                          child: CupertinoButton(
+                                            onPressed: () {
+                                              Get.dialog(CupertinoAlertDialog(
+                                                title:
+                                                    const Text('Қатъ кардан'),
+                                                content: const Text(
+                                                    'Ҳақиқатан боргириро қатъ кардан мехоҳӣ?'),
+                                                actions: <
+                                                    CupertinoDialogAction>[
+                                                  CupertinoDialogAction(
+                                                    /// This parameter indicates this action is the default,
+                                                    /// and turns the action's text to bold text.
+                                                    isDefaultAction: true,
+                                                    onPressed: () {
+                                                      Get.back();
+                                                    },
+                                                    child: const Text('Не'),
+                                                  ),
+                                                  CupertinoDialogAction(
+                                                    /// This parameter indicates the action would perform
+                                                    /// a destructive action such as deletion, and turns
+                                                    /// the action's text color to red.
+                                                    isDestructiveAction: true,
+                                                    onPressed: () {
+                                                      Get.back();
+                                                      ALDownloader.cancelAll();
+                                                      appc.isDownloadingMultiple
+                                                          .value = false;
+                                                      appc.idCurrentlyDLMultiple
+                                                          .value = "";
+                                                      appc.update(
+                                                          ['updateViews']);
+                                                    },
+                                                    child: const Text('Бале'),
+                                                  ),
+                                                ],
+                                              ));
+                                            },
+                                            padding: EdgeInsets.zero,
+                                            child: Obx(
+                                              () =>
+                                                  LiquidLinearProgressIndicator(
+                                                backgroundColor: context.theme
+                                                    .scaffoldBackgroundColor,
+                                                borderRadius: 4,
+                                                value: appc
+                                                        .downloadPercentageMultiple
+                                                        .value /
+                                                    100,
+                                                valueColor:
+                                                    AlwaysStoppedAnimation(
+                                                  context.theme
+                                                      .secondaryHeaderColor,
+                                                ),
+                                                center: Text(
+                                                  "${appc.downloadPercentageMultiple.value.round()} %",
+                                                  style: context.theme.textTheme
+                                                      .bodyLarge,
+                                                ),
                                               ),
                                             ),
                                           ),
                                         )
-                                      : CupertinoButton(
-                                          color: context
-                                              .theme.secondaryHeaderColor,
-                                          disabledColor: Colors.grey.shade500,
-                                          onPressed: appc.idCurrentlyDLMultiple
-                                                      .value !=
-                                                  ""
-                                              ? null
-                                              : () async {
-                                                  List<Song> songsToDownload;
-
-                                                  if (controller
-                                                              .album.albumId ==
-                                                          17 &&
-                                                      controller
-                                                              .album.songBook ==
-                                                          SongBook
-                                                              .chasinaidil) {
-                                                    songsToDownload = await appc
-                                                        .getAllDownloadedSongsFromBook(
-                                                            SongBook
-                                                                .chasinaidil,
-                                                            true);
-                                                  } else if (controller
-                                                          .album.songBook ==
-                                                      SongBook.playlists) {
-                                                    songsToDownload = await appc
-                                                        .getAllDownloadedSongsFromPlaylist(
-                                                            controller.album
-                                                                .playlist!,
-                                                            true);
-                                                  } else {
-                                                    songsToDownload = await appc
-                                                        .getAllDownloadedSongsFromAlbum(
-                                                            controller.album,
-                                                            true);
-                                                  }
-
-                                                  appc.downloadList(
-                                                      songsToDownload);
-                                                  appc.idCurrentlyDLMultiple
-                                                          .value =
-                                                      controller.album.albumId
-                                                          .toString();
-                                                  appc.songBookCurrentlyDLMultiple =
-                                                      controller.album.songBook;
-
-                                                  if (controller
-                                                      .isNothingDownloaded) {
-                                                    controller.isFirstDownload
-                                                        .value = true;
-                                                    ever(
-                                                        appc.idCurrentlyDLMultiple,
-                                                        (callback) {
-                                                      if (callback == "") {
-                                                        controller
-                                                            .isFirstDownload
-                                                            .value = false;
-                                                        Get.find<
-                                                                AppController>()
-                                                            .update([
-                                                          'updateViews'
-                                                        ]);
-                                                      }
-                                                    });
-                                                  }
-                                                },
-                                          padding: const EdgeInsets.all(11),
-                                          child: const Icon(
-                                            Icons.download,
-                                            size: 20,
-                                          ),
-                                        ),
+                                      : DownloadListButton(
+                                          appc: appc, controller: controller),
                                 ),
                             ],
                           ),
@@ -498,7 +404,21 @@ class AlbumView extends GetView<AlbumController> {
                           list.add(
                             Dismissible(
                               key: Key(song.id.toString()),
-                              background: Container(color: Colors.red),
+                              background: Container(
+                                color: Colors.red,
+                                child: Row(
+                                  children: const [
+                                    Spacer(),
+                                    Icon(
+                                      Icons.delete,
+                                      color: Colors.white,
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    )
+                                  ],
+                                ),
+                              ),
                               direction: (controller.album.songBook ==
                                           SongBook.playlists) ||
                                       (song.isDownloaded)
@@ -530,9 +450,10 @@ class AlbumView extends GetView<AlbumController> {
                                   ));
                                 } else {
                                   return Get.dialog(CupertinoAlertDialog(
-                                    title: const Text('Delete audio az суруд'),
+                                    title:
+                                        const Text('Дуркунии аудио аз суруд'),
                                     content: Text(
-                                      "Ҳақиқатан audioi суруди \"${song.title}\"-ро аз telefon дур кардан мехоҳӣ?",
+                                      "Ҳақиқатаб суруди \"${song.title}\"-ро аз телефон дур кардан мехоҳӣ?",
                                     ), //
                                     actions: [
                                       CupertinoDialogAction(
@@ -635,6 +556,141 @@ class AlbumView extends GetView<AlbumController> {
                   }),
             ),
           )
+        ],
+      ),
+    );
+  }
+}
+
+class DownloadListButton extends StatelessWidget {
+  const DownloadListButton({
+    super.key,
+    required this.appc,
+    required this.controller,
+  });
+
+  final AppController appc;
+  final AlbumController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoButton(
+      color: context.theme.secondaryHeaderColor,
+      disabledColor: Colors.grey.shade500,
+      onPressed: appc.idCurrentlyDLMultiple.value != ""
+          ? null
+          : () async {
+              List<Song> songsToDownload;
+
+              if (controller.album.albumId == 17 &&
+                  controller.album.songBook == SongBook.chasinaidil) {
+                d.log("hello");
+
+                bool? shallProceed = await Get.dialog(CupertinoAlertDialog(
+                  title: const Text('боргирӣ кардан'),
+                  content: const Text(
+                      'Ҳақиқатан тамоми сурудҳои Хазинаи Дилро боргирӣ кардан мехоҳӣ? (зиёда аз 1GB)'),
+                  actions: <CupertinoDialogAction>[
+                    CupertinoDialogAction(
+                      /// This parameter indicates this action is the default,
+                      /// and turns the action's text to bold text.
+                      isDefaultAction: false,
+                      isDestructiveAction: true,
+                      onPressed: () {
+                        Get.back(result: false);
+                      },
+                      child: const Text('Не'),
+                    ),
+                    CupertinoDialogAction(
+                      /// This parameter indicates the action would perform
+                      /// a destructive action such as deletion, and turns
+                      /// the action's text color to red.
+                      isDefaultAction: true,
+                      isDestructiveAction: false,
+                      onPressed: () {
+                        Get.back(result: true);
+                      },
+                      child: const Text('Бале'),
+                    ),
+                  ],
+                ));
+                if (shallProceed == null || shallProceed == false) {
+                  return;
+                }
+
+                songsToDownload = await appc.getAllDownloadedSongsFromBook(
+                    SongBook.chasinaidil, true);
+              } else if (controller.album.songBook == SongBook.playlists) {
+                songsToDownload = await appc.getAllDownloadedSongsFromPlaylist(
+                    controller.album.playlist!, true);
+              } else {
+                songsToDownload = await appc.getAllDownloadedSongsFromAlbum(
+                    controller.album, true);
+              }
+
+              appc.downloadList(songsToDownload);
+              appc.idCurrentlyDLMultiple.value =
+                  controller.album.albumId.toString();
+              appc.songBookCurrentlyDLMultiple = controller.album.songBook;
+
+              if (controller.isNothingDownloaded) {
+                controller.isFirstDownload.value = true;
+                ever(appc.idCurrentlyDLMultiple, (callback) {
+                  if (callback == "") {
+                    controller.isFirstDownload.value = false;
+                    Get.find<AppController>().update(['updateViews']);
+                  }
+                });
+              }
+            },
+      padding: const EdgeInsets.all(11),
+      child: const Icon(
+        Icons.download,
+        size: 20,
+      ),
+    );
+  }
+}
+
+class PlayButton extends StatelessWidget {
+  const PlayButton({
+    super.key,
+    required this.controller,
+    required this.appc,
+  });
+
+  final AlbumController controller;
+  final AppController appc;
+
+  @override
+  Widget build(BuildContext context) {
+    return CupertinoButton(
+      onPressed: () async {
+        List<Song> songs;
+        if (controller.album.albumId == 17 &&
+            controller.album.songBook == SongBook.chasinaidil) {
+          songs = await appc.getAllDownloadedSongsFromBook(
+              SongBook.chasinaidil, false);
+        } else if (controller.album.songBook == SongBook.playlists) {
+          songs = await appc.getAllDownloadedSongsFromPlaylist(
+              controller.album.playlist!, false);
+        } else {
+          songs = await appc.getAllDownloadedSongsFromAlbum(
+              controller.album, false);
+        }
+        appc.player.shuffle = false;
+        appc.placePlaylist(songs, null);
+      },
+      color: context.theme.secondaryHeaderColor,
+      padding: const EdgeInsets.all(11),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: const [
+          Icon(
+            CupertinoIcons.play_arrow_solid,
+            size: 20,
+          ),
+          Text(' cароидан'),
         ],
       ),
     );
