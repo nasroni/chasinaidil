@@ -1,5 +1,6 @@
-import 'dart:developer';
+import 'dart:math';
 
+import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:chasinaidil/app/flutter_rewrite/navbar.dart';
 import 'package:chasinaidil/app/modules/app_controller.dart';
@@ -206,7 +207,28 @@ class AlbumView extends GetView<AlbumController> {
                                   flex: 2,
                                   fit: FlexFit.tight,
                                   child: CupertinoButton(
-                                    onPressed: () => null,
+                                    onPressed: () async {
+                                      List<Song> songs;
+                                      if (controller.album.albumId == 17 &&
+                                          controller.album.songBook ==
+                                              SongBook.chasinaidil) {
+                                        songs = await appc
+                                            .getAllDownloadedSongsFromBook(
+                                                SongBook.chasinaidil, false);
+                                      } else if (controller.album.songBook ==
+                                          SongBook.playlists) {
+                                        songs = await appc
+                                            .getAllDownloadedSongsFromPlaylist(
+                                                controller.album.playlist!,
+                                                false);
+                                      } else {
+                                        songs = await appc
+                                            .getAllDownloadedSongsFromAlbum(
+                                                controller.album, false);
+                                      }
+                                      appc.player.shuffle = false;
+                                      appc.placePlaylist(songs, null);
+                                    },
                                     color: context.theme.secondaryHeaderColor,
                                     padding: const EdgeInsets.all(11),
                                     child: Row(
@@ -236,7 +258,32 @@ class AlbumView extends GetView<AlbumController> {
                                   fit: FlexFit.tight,
                                   child: CupertinoButton(
                                     color: context.theme.secondaryHeaderColor,
-                                    onPressed: () => null,
+                                    onPressed: () async {
+                                      List<Song> songs;
+                                      if (controller.album.albumId == 17 &&
+                                          controller.album.songBook ==
+                                              SongBook.chasinaidil) {
+                                        songs = await appc
+                                            .getAllDownloadedSongsFromBook(
+                                                SongBook.chasinaidil, false);
+                                      } else if (controller.album.songBook ==
+                                          SongBook.playlists) {
+                                        songs = await appc
+                                            .getAllDownloadedSongsFromPlaylist(
+                                                controller.album.playlist!,
+                                                false);
+                                      } else {
+                                        songs = await appc
+                                            .getAllDownloadedSongsFromAlbum(
+                                                controller.album, false);
+                                      }
+                                      appc.player.shuffle = true;
+                                      appc.player.setLoopMode(LoopMode.none);
+                                      String titleStartSong =
+                                          songs[Random().nextInt(songs.length)]
+                                              .title;
+                                      appc.placePlaylist(songs, titleStartSong);
+                                    },
                                     padding: const EdgeInsets.all(11),
                                     child: Row(
                                       mainAxisAlignment:
@@ -285,9 +332,29 @@ class AlbumView extends GetView<AlbumController> {
                                               .theme.secondaryHeaderColor,
                                           disabledColor: Colors.grey.shade500,
                                           onPressed: () async {
-                                            var songsToDownload = await appc
-                                                .getAllDownloadedSongsFromAlbum(
-                                                    controller.album, true);
+                                            List<Song> songsToDownload;
+                                            if (controller.album.albumId ==
+                                                    17 &&
+                                                controller.album.songBook ==
+                                                    SongBook.chasinaidil) {
+                                              songsToDownload = await appc
+                                                  .getAllDownloadedSongsFromBook(
+                                                      SongBook.chasinaidil,
+                                                      true);
+                                            } else if (controller
+                                                    .album.songBook ==
+                                                SongBook.playlists) {
+                                              songsToDownload = await appc
+                                                  .getAllDownloadedSongsFromPlaylist(
+                                                      controller
+                                                          .album.playlist!,
+                                                      true);
+                                            } else {
+                                              songsToDownload = await appc
+                                                  .getAllDownloadedSongsFromAlbum(
+                                                      controller.album, true);
+                                            }
+
                                             appc.downloadList(songsToDownload);
                                             if (controller
                                                 .isNothingDownloaded) {

@@ -33,6 +33,7 @@ class AppController extends GetxController {
 
   placePlaylist(List<Song> songs, String? songTitle) async {
     // Convert songs to Audio objects (with metas)
+    currentAudios.clear();
     for (var song in songs) {
       currentAudios.add(await song.audio);
     }
@@ -51,7 +52,9 @@ class AppController extends GetxController {
     );
 
     // Start playlist
-    player.pause();
+    //player.pause();
+    await player.stop();
+
     player.open(
       playlist,
       audioFocusStrategy: const AudioFocusStrategy.request(
