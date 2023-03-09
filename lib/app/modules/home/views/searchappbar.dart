@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:chasinaidil/app/modules/app_controller.dart';
+import 'package:chasinaidil/app/modules/lyrics/views/playerdialog.dart';
 import 'package:chasinaidil/prefs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +15,7 @@ class SearchAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AppController appc = Get.find();
     return AppBar(
       title: Container(
         padding: const EdgeInsets.only(top: 35),
@@ -25,6 +28,28 @@ class SearchAppBar extends StatelessWidget {
       titleTextStyle: context.textTheme.titleLarge,
       elevation: 0,
       actions: [
+        if (appc.player.current.value != null)
+          Container(
+            padding: Platform.isAndroid
+                ? const EdgeInsets.only(bottom: 30, right: 0)
+                : const EdgeInsets.only(bottom: 70, right: 0),
+            child: CupertinoButton(
+              onPressed: () => Get.dialog(
+                  const PlayerDialog(
+                    viewingSong: null,
+                  ),
+                  barrierColor: Colors.transparent,
+                  barrierDismissible: true),
+              padding: EdgeInsets.zero,
+              minSize: kMinInteractiveDimensionCupertino,
+              alignment: Alignment.centerRight,
+              child: Icon(
+                CupertinoIcons.playpause,
+                color: context.theme.primaryColor,
+                size: 24,
+              ),
+            ),
+          ),
         Container(
           padding: Platform.isAndroid
               ? const EdgeInsets.only(bottom: 30, right: 0)

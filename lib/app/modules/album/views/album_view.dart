@@ -7,6 +7,7 @@ import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:chasinaidil/app/flutter_rewrite/navbar.dart';
 import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:chasinaidil/app/modules/home/controllers/home_controller.dart';
+import 'package:chasinaidil/app/modules/lyrics/views/playerdialog.dart';
 import 'package:chasinaidil/app/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -48,9 +49,29 @@ class AlbumView extends GetView<AlbumController> {
               controller.album.title,
               style: context.theme.textTheme.displaySmall,
             ),
-            trailing: controller.album.songBook == SongBook.playlists &&
-                    controller.album.albumId != 999999999999999999
-                ? CupertinoButton(
+            trailing: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                if (appc.player.current.value != null)
+                  CupertinoButton(
+                    onPressed: () => Get.dialog(
+                        const PlayerDialog(
+                          viewingSong: null,
+                        ),
+                        barrierColor: Colors.transparent,
+                        barrierDismissible: true),
+                    padding: EdgeInsets.zero,
+                    minSize: kMinInteractiveDimensionCupertino,
+                    alignment: Alignment.centerRight,
+                    child: const Icon(
+                      CupertinoIcons.playpause,
+                      //color: context.theme.primaryColor,
+                      size: 24,
+                    ),
+                  ),
+                if (controller.album.songBook == SongBook.playlists &&
+                    controller.album.albumId != 999999999999999999)
+                  CupertinoButton(
                     onPressed: () => Get.dialog(
                       CupertinoAlertDialog(
                         title: const Text('Дур кардан'),
@@ -81,10 +102,11 @@ class AlbumView extends GetView<AlbumController> {
                       ),
                     ),
                     minSize: 1,
-                    padding: EdgeInsets.zero,
+                    padding: const EdgeInsets.only(left: 16),
                     child: const Icon(CupertinoIcons.delete),
                   )
-                : null,
+              ],
+            ),
             alwaysShowMiddle: false,
             stretch: true,
             largeTitle: Container(

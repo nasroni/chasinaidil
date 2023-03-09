@@ -65,7 +65,7 @@ class LyricsView extends GetView<LyricsController> {
         trailing: CupertinoButton(
           onPressed: () => Get.dialog(
               PlayerDialog(
-                viewController: controller,
+                viewingSong: controller.song,
               ),
               barrierColor: Colors.transparent,
               barrierDismissible: true),
@@ -73,7 +73,7 @@ class LyricsView extends GetView<LyricsController> {
           minSize: kMinInteractiveDimensionCupertino,
           alignment: Alignment.centerRight,
           child: Icon(
-            Icons.play_circle_outline_sharp,
+            CupertinoIcons.playpause,
             color: context.theme.primaryColor,
             size: 24,
           ),

@@ -1,6 +1,3 @@
-import 'dart:developer';
-
-import 'package:al_downloader/al_downloader.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:chasinaidil/app/data/services/isar_service.dart';
 import 'package:chasinaidil/app/data/types/song.dart';
@@ -15,10 +12,12 @@ import 'package:get/get.dart';
 class PlayerDialog extends StatelessWidget {
   const PlayerDialog({
     super.key,
-    required this.viewController,
+    this.viewingSong,
+    //required this.viewController,
   });
 
-  final LyricsController viewController;
+  //final LyricsController viewController;
+  final Song? viewingSong;
 
   @override
   Widget build(BuildContext context) {
@@ -43,24 +42,30 @@ class PlayerDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
-      content: PlayerView(appc: appc),
+      content: PlayerView(
+        appc: appc,
+        viewingSong: viewingSong,
+      ),
     );
   }
 }
 
 class PlayerView extends StatelessWidget {
-  PlayerView({
+  const PlayerView({
     super.key,
     required this.appc,
+    required this.viewingSong,
   });
 
   final AppController appc;
-  final LyricsController viewController = Get.find();
+  final Song? viewingSong;
+  //final LyricsController viewController = Get.find();
 
   @override
   Widget build(BuildContext context) {
     return ConstrainedBox(
-      constraints: BoxConstraints.tight(const Size(220, 500)),
+      constraints: BoxConstraints.tight(
+          viewingSong == null ? const Size(220, 442) : const Size(220, 500)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -106,39 +111,115 @@ class PlayerView extends StatelessWidget {
               );
             },
           ),
+          const SizedBox(
+            height: 15,
+          ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              appc.player.builderPlayerState(
-                //builder: (context, RealtimePlayingInfos infos) {
-                builder: (context, var infos) {
-                  if (true) {
-                    return CupertinoButton(
-                      child: GetBuilder<AppController>(
-                          id: 'updateViews',
-                          builder: (context) {
-                            if (viewController.song.isDownloaded) {
-                              return const Icon(Icons.help_outline);
-                            } else {
-                              return Obx(
-                                () {
-                                  return appc.isDownloading.value
-                                      ? const Icon(Icons.download)
-                                      : const Icon(Icons.access_alarm);
-                                },
-                              );
-                            }
-                          }),
-                      onPressed: () async {
-                        await appc.downloadSong(viewController.song);
-                      },
-                    );
-                  }
+              CupertinoButton(
+                onPressed: () =>
+                    appc.player.seekBy(const Duration(seconds: -10)),
+                padding: EdgeInsets.zero,
+                child: Icon(
+                  Icons.replay_10_rounded,
+                  color: context.theme.primaryColor,
+                ),
+              ),
+              CupertinoButton(
+                onPressed: () => appc.player.previous(),
+                padding: EdgeInsets.zero,
+                child: Icon(
+                  CupertinoIcons.backward_fill,
+                  color: context.theme.primaryColor,
+                ),
+              ),
+              StreamBuilder(
+                stream: appc.player.playerState,
+                builder: (_, AsyncSnapshot<PlayerState> snap) {
+                  return CupertinoButton(
+                    onPressed: () => appc.player.playOrPause(),
+                    padding: const EdgeInsets.only(left: 0),
+                    child: Icon(
+                      appc.player.isPlaying.value
+                          ? CupertinoIcons.pause_solid
+                          : CupertinoIcons.play_arrow_solid,
+                      color: context.theme.primaryColor,
+                      size: 43,
+                    ),
+                  );
                 },
               ),
-              Obx(() => Text("${appc.downloadPercentage}")),
+              CupertinoButton(
+                onPressed: () => appc.player.next(stopIfLast: true),
+                padding: EdgeInsets.zero,
+                child: Icon(
+                  CupertinoIcons.forward_fill,
+                  color: context.theme.primaryColor,
+                ),
+              ),
+              CupertinoButton(
+                onPressed: () => appc.player.seekBy(
+                  const Duration(seconds: 10),
+                ),
+                padding: EdgeInsets.zero,
+                child: Icon(
+                  Icons.forward_10_rounded,
+                  color: context.theme.primaryColor,
+                ),
+              ),
             ],
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CupertinoButton(
+                onPressed: () => appc.player.toggleShuffle(),
+                padding: EdgeInsets.zero,
+                child: StreamBuilder(
+                  stream: appc.player.isShuffling,
+                  builder: (_, snapshot) {
+                    return Icon(
+                      CupertinoIcons.shuffle_medium,
+                      color: snapshot.data ?? false
+                          ? context.theme.primaryColor
+                          : context.theme.cardColor.withAlpha(90),
+                    );
+                  },
+                ),
+              ),
+              CupertinoButton(
+                onPressed: () {
+                  switch (appc.player.loopMode.value) {
+                    case LoopMode.none:
+                      appc.player.setLoopMode(LoopMode.single);
+                      break;
+                    case LoopMode.single:
+                      appc.player.setLoopMode(LoopMode.playlist);
+                      break;
+                    case LoopMode.playlist:
+                      appc.player.setLoopMode(LoopMode.none);
+                      break;
+                  }
+                },
+                padding: EdgeInsets.zero,
+                child: StreamBuilder(
+                  stream: appc.player.loopMode,
+                  builder: (_, snapshot) {
+                    var mode = snapshot.data ?? LoopMode.none;
+                    return Icon(
+                      mode == LoopMode.single
+                          ? CupertinoIcons.repeat_1
+                          : CupertinoIcons.repeat,
+                      color: mode == LoopMode.none
+                          ? context.theme.cardColor.withAlpha(90)
+                          : context.theme.primaryColor,
+                    );
+                  },
+                ),
+              ),
+            ],
+          )
         ],
       ),
     );
@@ -157,12 +238,14 @@ class PlayerAlbumImageWithBox extends StatelessWidget {
   Widget build(BuildContext context) {
     return CupertinoButton(
       onPressed: () async {
-        String title = appc.player.getCurrentAudioTitle;
-        IsarService isar = Get.find();
-        Song? song = await isar.getSongByTitle(title);
-        LyricsController lyricsController = Get.find();
-        lyricsController.song = song!;
-        await Get.offAndToNamed(Routes.LYRICS, arguments: song);
+        if (appc.player.isPlaying.value) {
+          String title = appc.player.getCurrentAudioTitle;
+          IsarService isar = Get.find();
+          Song? song = await isar.getSongByTitle(title);
+          LyricsController lyricsController = Get.find();
+          lyricsController.song = song!;
+          await Get.offAndToNamed(Routes.LYRICS, arguments: song);
+        }
       },
       padding: EdgeInsets.zero,
       child: Container(
