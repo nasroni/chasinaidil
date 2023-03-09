@@ -58,8 +58,12 @@ class PositionSeekWidgetState extends State<PositionSeekWidget> {
               overlayShape: const RoundSliderOverlayShape(overlayRadius: 10),
               trackHeight: 4,
               overlayColor: Colors.transparent,
-              activeTrackColor: Colors.grey.shade500,
-              inactiveTrackColor: Colors.grey.shade300,
+              activeTrackColor: context.isDarkMode
+                  ? Colors.grey.shade400
+                  : Colors.grey.shade500,
+              inactiveTrackColor: context.isDarkMode
+                  ? Colors.grey.shade800
+                  : Colors.grey.shade300,
             ),
             child: Slider(
               min: 0,
