@@ -32,6 +32,7 @@ class AppController extends GetxController {
   List<Audio> currentAudios = List.empty(growable: true);
 
   placePlaylist(List<Song> songs, String? songTitle) async {
+    log('songtitle: $songTitle');
     // Convert songs to Audio objects (with metas)
     currentAudios.clear();
     for (var song in songs) {

@@ -87,7 +87,7 @@ class PlayerView extends StatelessWidget {
                 ),
                 appc.isCurrentlyPlayingView.value
                     ? Text(
-                        viewingSong!.title,
+                        '${viewingSong!.songNumber}. ${viewingSong!.title}',
                         maxLines: 1,
                         textAlign: TextAlign.start,
                         style: context.theme.textTheme.displayLarge
@@ -262,7 +262,9 @@ class PlayerView extends StatelessWidget {
                                 viewingSong!.book);
                             var songs = await appc
                                 .getAllDownloadedSongsFromBook(songBook, false);
-                            appc.placePlaylist(songs, viewingSong!.title);
+                            appc.player.shuffle = false;
+                            appc.placePlaylist(songs,
+                                "${viewingSong!.songNumber}. ${viewingSong!.title}");
                             appc.isCurrentlyPlayingView.value = false;
                           },
                           color: context.theme.secondaryHeaderColor,
@@ -379,12 +381,17 @@ class PlayerAlbumImageWithBox extends StatelessWidget {
           ? null
           : () async {
               if (appc.player.isPlaying.value) {
-                String title = appc.player.getCurrentAudioTitle;
+                String title = appc.player.getCurrentAudioTitle
+                    .replaceFirst(RegExp(r'[0-9]+\. '), '');
                 IsarService isar = Get.find();
                 Song? song = await isar.getSongByTitle(title);
-                LyricsController lyricsController = Get.find();
-                lyricsController.song = song!;
-                await Get.offAndToNamed(Routes.LYRICS, arguments: song);
+                try {
+                  LyricsController lyricsController = Get.find();
+                  lyricsController.song = song!;
+                  await Get.offAndToNamed(Routes.LYRICS, arguments: song);
+                } catch (e) {
+                  Get.toNamed(Routes.LYRICS, arguments: song);
+                }
               }
             },
       padding: EdgeInsets.zero,

@@ -1,4 +1,5 @@
 import 'package:chasinaidil/app/modules/home/controllers/home_controller.dart';
+import 'package:chasinaidil/app/routes/app_pages.dart';
 import 'package:chasinaidil/prefs.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -60,7 +61,7 @@ class SearchResultView extends StatelessWidget {
                 color: Colors.transparent,
                 child: InkWell(
                   onTap: () {
-                    Get.toNamed('/lyrics', arguments: currentResult);
+                    Get.toNamed(Routes.LYRICS, arguments: currentResult);
 
                     // Save 5 last opened songs
                     final List<dynamic> lastSearches =
@@ -71,10 +72,10 @@ class SearchResultView extends StatelessWidget {
                     GetStorage().write(Prefs.listLastSearches, lastSearches);
                   },
                   onLongPress: () {
-                    Get.snackbar(
+                    /*Get.snackbar(
                       currentResult.title,
                       "Will be implemented later",
-                    );
+                    );*/
                   },
                   enableFeedback: true,
                   child: Padding(

@@ -311,9 +311,10 @@ class AlbumView extends GetView<AlbumController> {
                                       }
                                       appc.player.shuffle = true;
                                       appc.player.setLoopMode(LoopMode.none);
+                                      Song randomSong =
+                                          songs[Random().nextInt(songs.length)];
                                       String titleStartSong =
-                                          songs[Random().nextInt(songs.length)]
-                                              .title;
+                                          "${randomSong.songNumber}. ${randomSong.title}";
                                       appc.placePlaylist(songs, titleStartSong);
                                     },
                                     padding: const EdgeInsets.all(11),
