@@ -24,7 +24,11 @@ class PlayerDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppController appc = Get.find();
-    if (!appc.player.current.hasValue) appc.isCurrentlyPlayingView.value = true;
+    if (appc.player.getCurrentAudioTitle == "") {
+      appc.isCurrentlyPlayingView.value = true;
+    } else {
+      appc.isCurrentlyPlayingView.value = false;
+    }
     /*appc.player.open(
       viewController.song.audio,
       autoStart: false,

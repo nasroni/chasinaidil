@@ -102,7 +102,7 @@ class AppController extends GetxController {
 
   final RxBool isDownloadingMultiple = false.obs;
   final RxDouble downloadPercentageMultiple = 100.0.obs;
-  String idCurrentlyDLMultiple = "";
+  RxString idCurrentlyDLMultiple = "".obs;
   SongBook songBookCurrentlyDLMultiple = SongBook.chasinaidil;
 
   final RxBool isDownloadingSingle = false.obs;
@@ -194,6 +194,7 @@ class AppController extends GetxController {
           // reset download progress, as was before starting, so another song can be downloaded too
           isDownloadingMultiple.value = false;
           downloadPercentageMultiple.value = 100;
+
           // then mark downloaded songs as downloaded
           for (var song in songs) {
             // check if song is on local disk
@@ -204,20 +205,22 @@ class AppController extends GetxController {
             if (isSuccessfull) {
               markSongDownloaded(song);
             }
-            idCurrentlyDLMultiple = "";
           }
+          idCurrentlyDLMultiple.value = "";
+          update(['updateViews']);
         },
         failedHandler: () {
           log("failed somehow");
           // reset download progress, as was before starting, so it can be started again
           isDownloadingMultiple.value = false;
           downloadPercentageMultiple.value = 100.0;
-          idCurrentlyDLMultiple = "";
+          idCurrentlyDLMultiple.value = "";
 
           // here don't update anything
         },
         progressHandler: (progress) async {
           // update progress percentage
+          log("progr:$progress");
           downloadPercentageMultiple.value = (progress * 100).toPrecision(2);
           for (var song in songs) {
             // check if song is on local disk
@@ -225,6 +228,11 @@ class AppController extends GetxController {
                 await ALDownloaderFileManager.isExistPhysicalFilePathForUrl(
               song.audioPathOnline,
             );
+            //if (Platform.isAndroid) {
+            isSuccessfull = (await ALDownloaderBatcher.getStatusForUrls(
+                    [song.audioPathOnline])) ==
+                ALDownloaderStatus.succeeded;
+            //}
             if (isSuccessfull && !song.isDownloaded) {
               markSongDownloaded(song);
             }

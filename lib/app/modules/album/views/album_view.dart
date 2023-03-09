@@ -347,22 +347,25 @@ class AlbumView extends GetView<AlbumController> {
                                                   controller.album.songBook)
                                       ? SizedBox(
                                           height: 44,
-                                          child: LiquidLinearProgressIndicator(
-                                            backgroundColor: context
-                                                .theme.scaffoldBackgroundColor,
-                                            borderRadius: 4,
-                                            value: appc
-                                                    .downloadPercentageMultiple
-                                                    .value /
-                                                100,
-                                            valueColor: AlwaysStoppedAnimation(
-                                              context
-                                                  .theme.secondaryHeaderColor,
-                                            ),
-                                            center: Text(
-                                              "${appc.downloadPercentageMultiple.value.round()} %",
-                                              style: context
-                                                  .theme.textTheme.bodyLarge,
+                                          child: Obx(
+                                            () => LiquidLinearProgressIndicator(
+                                              backgroundColor: context.theme
+                                                  .scaffoldBackgroundColor,
+                                              borderRadius: 4,
+                                              value: appc
+                                                      .downloadPercentageMultiple
+                                                      .value /
+                                                  100,
+                                              valueColor:
+                                                  AlwaysStoppedAnimation(
+                                                context
+                                                    .theme.secondaryHeaderColor,
+                                              ),
+                                              center: Text(
+                                                "${appc.downloadPercentageMultiple.value.round()} %",
+                                                style: context
+                                                    .theme.textTheme.bodyLarge,
+                                              ),
                                             ),
                                           ),
                                         )
@@ -406,7 +409,8 @@ class AlbumView extends GetView<AlbumController> {
 
                                                   appc.downloadList(
                                                       songsToDownload);
-                                                  appc.idCurrentlyDLMultiple =
+                                                  appc.idCurrentlyDLMultiple
+                                                          .value =
                                                       controller.album.albumId
                                                           .toString();
                                                   appc.songBookCurrentlyDLMultiple =
@@ -416,6 +420,20 @@ class AlbumView extends GetView<AlbumController> {
                                                       .isNothingDownloaded) {
                                                     controller.isFirstDownload
                                                         .value = true;
+                                                    ever(
+                                                        appc.idCurrentlyDLMultiple,
+                                                        (callback) {
+                                                      if (callback == "") {
+                                                        controller
+                                                            .isFirstDownload
+                                                            .value = false;
+                                                        Get.find<
+                                                                AppController>()
+                                                            .update([
+                                                          'updateViews'
+                                                        ]);
+                                                      }
+                                                    });
                                                   }
                                                 },
                                           padding: const EdgeInsets.all(11),
