@@ -57,38 +57,43 @@ const SongSchema = CollectionSchema(
       name: r'lyricsWords',
       type: IsarType.stringList,
     ),
-    r'newRecording': PropertySchema(
+    r'md5hash': PropertySchema(
       id: 8,
+      name: r'md5hash',
+      type: IsarType.string,
+    ),
+    r'newRecording': PropertySchema(
+      id: 9,
       name: r'newRecording',
       type: IsarType.dateTime,
     ),
     r'psalm': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'psalm',
       type: IsarType.string,
     ),
     r'songNumber': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'songNumber',
       type: IsarType.string,
     ),
     r'songNumberInt': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'songNumberInt',
       type: IsarType.long,
     ),
     r'textWChords': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'textWChords',
       type: IsarType.string,
     ),
     r'title': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'title',
       type: IsarType.string,
     ),
     r'titleWords': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'titleWords',
       type: IsarType.stringList,
     )
@@ -150,6 +155,12 @@ int _songEstimateSize(
     }
   }
   {
+    final value = object.md5hash;
+    if (value != null) {
+      bytesCount += 3 + value.length * 3;
+    }
+  }
+  {
     final value = object.psalm;
     if (value != null) {
       bytesCount += 3 + value.length * 3;
@@ -182,13 +193,14 @@ void _songSerialize(
   writer.writeBool(offsets[5], object.hasRecording);
   writer.writeString(offsets[6], object.lyrics);
   writer.writeStringList(offsets[7], object.lyricsWords);
-  writer.writeDateTime(offsets[8], object.newRecording);
-  writer.writeString(offsets[9], object.psalm);
-  writer.writeString(offsets[10], object.songNumber);
-  writer.writeLong(offsets[11], object.songNumberInt);
-  writer.writeString(offsets[12], object.textWChords);
-  writer.writeString(offsets[13], object.title);
-  writer.writeStringList(offsets[14], object.titleWords);
+  writer.writeString(offsets[8], object.md5hash);
+  writer.writeDateTime(offsets[9], object.newRecording);
+  writer.writeString(offsets[10], object.psalm);
+  writer.writeString(offsets[11], object.songNumber);
+  writer.writeLong(offsets[12], object.songNumberInt);
+  writer.writeString(offsets[13], object.textWChords);
+  writer.writeString(offsets[14], object.title);
+  writer.writeStringList(offsets[15], object.titleWords);
 }
 
 Song _songDeserialize(
@@ -203,11 +215,12 @@ Song _songDeserialize(
     duration: reader.readLongOrNull(offsets[3]),
     hasKaraoke: reader.readBoolOrNull(offsets[4]) ?? false,
     hasRecording: reader.readBoolOrNull(offsets[5]) ?? true,
-    newRecording: reader.readDateTimeOrNull(offsets[8]),
-    psalm: reader.readStringOrNull(offsets[9]),
-    songNumberInt: reader.readLong(offsets[11]),
-    textWChords: reader.readStringOrNull(offsets[12]) ?? "",
-    title: reader.readString(offsets[13]),
+    md5hash: reader.readStringOrNull(offsets[8]),
+    newRecording: reader.readDateTimeOrNull(offsets[9]),
+    psalm: reader.readStringOrNull(offsets[10]),
+    songNumberInt: reader.readLong(offsets[12]),
+    textWChords: reader.readStringOrNull(offsets[13]) ?? "",
+    title: reader.readString(offsets[14]),
   );
   return object;
 }
@@ -236,18 +249,20 @@ P _songDeserializeProp<P>(
     case 7:
       return (reader.readStringList(offset) ?? []) as P;
     case 8:
-      return (reader.readDateTimeOrNull(offset)) as P;
-    case 9:
       return (reader.readStringOrNull(offset)) as P;
+    case 9:
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 10:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 11:
-      return (reader.readLong(offset)) as P;
-    case 12:
-      return (reader.readStringOrNull(offset) ?? "") as P;
-    case 13:
       return (reader.readString(offset)) as P;
+    case 12:
+      return (reader.readLong(offset)) as P;
+    case 13:
+      return (reader.readStringOrNull(offset) ?? "") as P;
     case 14:
+      return (reader.readString(offset)) as P;
+    case 15:
       return (reader.readStringList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1359,6 +1374,150 @@ extension SongQueryFilter on QueryBuilder<Song, Song, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Song, Song, QAfterFilterCondition> md5hashIsNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNull(
+        property: r'md5hash',
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> md5hashIsNotNull() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(const FilterCondition.isNotNull(
+        property: r'md5hash',
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> md5hashEqualTo(
+    String? value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'md5hash',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> md5hashGreaterThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'md5hash',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> md5hashLessThan(
+    String? value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'md5hash',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> md5hashBetween(
+    String? lower,
+    String? upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'md5hash',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> md5hashStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'md5hash',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> md5hashEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'md5hash',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> md5hashContains(String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'md5hash',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> md5hashMatches(String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'md5hash',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> md5hashIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'md5hash',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> md5hashIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'md5hash',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<Song, Song, QAfterFilterCondition> newRecordingIsNull() {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(const FilterCondition.isNull(
@@ -2318,6 +2477,18 @@ extension SongQuerySortBy on QueryBuilder<Song, Song, QSortBy> {
     });
   }
 
+  QueryBuilder<Song, Song, QAfterSortBy> sortByMd5hash() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'md5hash', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterSortBy> sortByMd5hashDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'md5hash', Sort.desc);
+    });
+  }
+
   QueryBuilder<Song, Song, QAfterSortBy> sortByNewRecording() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'newRecording', Sort.asc);
@@ -2488,6 +2659,18 @@ extension SongQuerySortThenBy on QueryBuilder<Song, Song, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Song, Song, QAfterSortBy> thenByMd5hash() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'md5hash', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterSortBy> thenByMd5hashDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'md5hash', Sort.desc);
+    });
+  }
+
   QueryBuilder<Song, Song, QAfterSortBy> thenByNewRecording() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'newRecording', Sort.asc);
@@ -2612,6 +2795,13 @@ extension SongQueryWhereDistinct on QueryBuilder<Song, Song, QDistinct> {
     });
   }
 
+  QueryBuilder<Song, Song, QDistinct> distinctByMd5hash(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'md5hash', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Song, Song, QDistinct> distinctByNewRecording() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'newRecording');
@@ -2711,6 +2901,12 @@ extension SongQueryProperty on QueryBuilder<Song, Song, QQueryProperty> {
   QueryBuilder<Song, List<String>, QQueryOperations> lyricsWordsProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'lyricsWords');
+    });
+  }
+
+  QueryBuilder<Song, String?, QQueryOperations> md5hashProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'md5hash');
     });
   }
 

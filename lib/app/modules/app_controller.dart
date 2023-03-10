@@ -9,6 +9,7 @@ import 'package:chasinaidil/app/data/types/playlist.dart' as my;
 import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:chasinaidil/app/modules/album/controllers/album_controller.dart';
 import 'package:chasinaidil/app/modules/album/views/album_view.dart';
+import 'package:crypto/crypto.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,13 +26,16 @@ class AppController extends GetxController {
   void onInit() {
     ALDownloader.initialize();
     ALDownloader.configurePrint(enabled: false, frequentEnabled: false);
+
     jplayer.playbackEventStream.listen((_) async {
       int? index = jplayer.currentIndex;
       log("indexStream: $index");
-      if (index == null) {
+      if (index == null ||
+          currentAudios.isEmpty ||
+          currentAudios.length < (index)) {
         mediaItemStreamController.add(null);
       } else {
-        var mediaItem = (currentAudios[index].tag as MediaItem);
+        var mediaItem = (currentAudios[index!].tag as MediaItem);
         if (mediaItem != currentMediaItem) {
           mediaItemStreamController.add(mediaItem);
           currentMediaItem = mediaItem;
@@ -276,13 +280,25 @@ class AppController extends GetxController {
         await ALDownloader.getProgressForUrl(song.audioPathOnline);
     ALDownloaderStatus state =
         await ALDownloader.getStatusForUrl(song.audioPathOnline);
+    String? path = await ALDownloaderFileManager.getPhysicalFilePathForUrl(
+        song.audioPathOnline);
 
-    if (progress == 1.0 && state == ALDownloaderStatus.succeeded) {
-      GetStorage().write(song.id.toString(), DateTime.now().toIso8601String());
-      update(['updateViews']);
-    } else {
-      ALDownloader.remove(song.audioPathOnline);
+    if (progress == 1.0 &&
+        state == ALDownloaderStatus.succeeded &&
+        path != null) {
+      var md5hash =
+          md5.convert(await File.fromUri(Uri.file(path)).readAsBytes());
+      if (md5hash.toString() == song.md5hash) {
+        GetStorage()
+            .write(song.id.toString(), DateTime.now().toIso8601String());
+        update(['updateViews']);
+        return;
+      } else {
+        log("hashing wrong of song ${song.songNumber} ${song.title}");
+      }
     }
+    ALDownloader.remove(song.audioPathOnline);
+    update(['updateViews']);
   }
 
   //final player = AudioPlayer();

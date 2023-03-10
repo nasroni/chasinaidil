@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:al_downloader/al_downloader.dart';
 import 'package:chasinaidil/app/data/services/isar_service.dart';
 import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:chasinaidil/app/modules/app_controller.dart';
@@ -305,23 +306,31 @@ class PlayerView extends StatelessWidget {
                           ),
                         );
                       } else if (appc.isDownloadingSingle.value) {
-                        return Obx(() => SizedBox(
-                              height: 44,
-                              child: LiquidLinearProgressIndicator(
-                                backgroundColor:
-                                    context.theme.scaffoldBackgroundColor,
-                                borderRadius: 4,
-                                value:
-                                    appc.downloadPercentageSingle.value / 100,
-                                valueColor: AlwaysStoppedAnimation(
-                                  context.theme.secondaryHeaderColor,
+                        return CupertinoButton(
+                          padding: EdgeInsets.zero,
+                          onPressed: () {
+                            ALDownloader.cancelAll();
+                            appc.isDownloadingSingle.value = false;
+                            appc.update(['updateViews']);
+                          },
+                          child: Obx(() => SizedBox(
+                                height: 44,
+                                child: LiquidLinearProgressIndicator(
+                                  backgroundColor:
+                                      context.theme.scaffoldBackgroundColor,
+                                  borderRadius: 4,
+                                  value:
+                                      appc.downloadPercentageSingle.value / 100,
+                                  valueColor: AlwaysStoppedAnimation(
+                                    context.theme.secondaryHeaderColor,
+                                  ),
+                                  center: Text(
+                                    "${appc.downloadPercentageSingle.value.round()} %",
+                                    style: context.theme.textTheme.bodyLarge,
+                                  ),
                                 ),
-                                center: Text(
-                                  "${appc.downloadPercentageSingle.value.round()} %",
-                                  style: context.theme.textTheme.bodyLarge,
-                                ),
-                              ),
-                            ));
+                              )),
+                        );
                       } else {
                         return CupertinoButton(
                           onPressed: () => appc.downloadSong(viewingSong!),

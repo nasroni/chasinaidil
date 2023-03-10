@@ -22,6 +22,7 @@ class Song {
   final DateTime? newRecording;
   final bool hasKaraoke;
   final bool hasRecording;
+  final String? md5hash;
 
   String get songNumber => songNumberInt.toString();
   final int songNumberInt;
@@ -111,18 +112,18 @@ class Song {
   @Index(type: IndexType.value, caseSensitive: false)
   List<String> get lyricsWords => Isar.splitWords(lyrics);
 
-  Song({
-    required this.songNumberInt,
-    required this.title,
-    this.albumId,
-    this.book = "Гуногун",
-    this.psalm,
-    this.duration,
-    this.textWChords = "",
-    this.newRecording,
-    this.hasKaraoke = false,
-    this.hasRecording = true,
-  });
+  Song(
+      {required this.songNumberInt,
+      required this.title,
+      this.albumId,
+      this.book = "Гуногун",
+      this.psalm,
+      this.duration,
+      this.textWChords = "",
+      this.newRecording,
+      this.hasKaraoke = false,
+      this.hasRecording = true,
+      this.md5hash});
 
   factory Song.fromJson(Map<String, dynamic> parsedJson) {
     return Song(
@@ -136,6 +137,7 @@ class Song {
           : (parsedJson['duration'] * 1000).round(),
       newRecording: DateTime.tryParse(parsedJson['newRecording'] ?? ""),
       hasRecording: (parsedJson['recorded'] == "no") ? false : true,
+      md5hash: parsedJson['recorded'],
     );
   }
 }

@@ -280,8 +280,9 @@ class AlbumView extends GetView<AlbumController> {
                                       appc.jplayer.setShuffleModeEnabled(true);
                                       appc.jplayer.setLoopMode(LoopMode.off);
 
-                                      Song randomSong =
-                                          songs[Random().nextInt(songs.length)];
+                                      int randomSongNr =
+                                          Random().nextInt(songs.length);
+                                      Song randomSong = songs[randomSongNr];
                                       String titleStartSong =
                                           "${randomSong.songNumber}. ${randomSong.title}";
                                       appc.placePlaylist(songs, titleStartSong);
