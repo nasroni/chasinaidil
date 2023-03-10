@@ -15,10 +15,16 @@ class AlbumController extends GetxController {
 
   final RxList<Song> songs = List<Song>.empty().obs;
 
-  bool get isEverythingDownloaded =>
-      songs.indexWhere((Song song) => !song.isDownloaded) == -1;
-  bool get isNothingDownloaded =>
-      songs.indexWhere((Song song) => song.isDownloaded) == -1;
+  bool get isEverythingDownloaded {
+    List<Song> songList = songs.toList(growable: true);
+    songList.removeWhere((Song song) => song.hasRecording == false);
+    return songList.indexWhere((Song song) => !song.isDownloaded) == -1;
+  }
+
+  bool get isNothingDownloaded {
+    return songs.indexWhere((Song song) => song.isDownloaded) == -1;
+  }
+
   RxBool isFirstDownload = false.obs;
 
   final RxBool isTitleEditing = false.obs;

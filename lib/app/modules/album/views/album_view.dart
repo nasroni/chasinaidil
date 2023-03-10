@@ -515,6 +515,9 @@ class AlbumView extends GetView<AlbumController> {
                                               Icons.download_done,
                                               color: Colors.green,
                                             ),
+                                          if (!song.hasRecording)
+                                            const Icon(
+                                                Icons.music_off_outlined),
                                           if (song.isDownloaded)
                                             const SizedBox(
                                               width: 5,

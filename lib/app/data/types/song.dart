@@ -17,7 +17,8 @@ class Song {
   final int? duration;
   String textWChords;
   final DateTime? newRecording;
-  final bool hasKaraoke = false;
+  final bool hasKaraoke;
+  final bool hasRecording;
 
   String get songNumber => songNumberInt.toString();
   final int songNumberInt;
@@ -95,6 +96,8 @@ class Song {
     this.duration,
     this.textWChords = "",
     this.newRecording,
+    this.hasKaraoke = false,
+    this.hasRecording = true,
   });
 
   factory Song.fromJson(Map<String, dynamic> parsedJson) {
@@ -108,6 +111,7 @@ class Song {
           ? null
           : (parsedJson['duration'] * 1000).round(),
       newRecording: DateTime.tryParse(parsedJson['newRecording'] ?? ""),
+      hasRecording: parsedJson['recorded'] ?? "true" ? true : false,
     );
   }
 }
