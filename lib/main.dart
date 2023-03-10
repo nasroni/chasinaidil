@@ -22,10 +22,10 @@ Future<void> main() async {
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
   await JustAudioBackground.init(
-    androidNotificationChannelId: 'one.nasroni.chasinaidil.channel.audio',
-    androidNotificationChannelName: 'Khazinaidil player',
+      androidNotificationChannelId: 'com.ryanheise.bg_demo.channel.audio',
+    androidNotificationChannelName: 'Audio playback',
     androidNotificationOngoing: true,
-  );
+      );
 
   runApp(
     GetMaterialApp(
