@@ -2,7 +2,6 @@ import 'dart:developer' as d;
 import 'dart:math';
 
 import 'package:al_downloader/al_downloader.dart';
-import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:chasinaidil/app/flutter_rewrite/navbar.dart';
 import 'package:chasinaidil/app/modules/app_controller.dart';
@@ -14,6 +13,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:just_audio/just_audio.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 
 import '../controllers/album_controller.dart';
@@ -52,10 +52,12 @@ class AlbumView extends GetView<AlbumController> {
             trailing: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                // audio player openn button
                 StreamBuilder(
-                  stream: appc.player.playerState,
+                  stream: appc.jplayer.playerStateStream,
                   builder: (_, __) {
-                    if (appc.player.current.hasValue) {
+                    if (appc.jplayer.currentIndex != null) {
+                      // TODO check if correctly detecting
                       return CupertinoButton(
                         onPressed: () => Get.dialog(
                             const PlayerDialog(
@@ -274,8 +276,10 @@ class AlbumView extends GetView<AlbumController> {
                                             .getAllDownloadedSongsFromAlbum(
                                                 controller.album, false);
                                       }
-                                      appc.player.shuffle = true;
-                                      appc.player.setLoopMode(LoopMode.none);
+
+                                      appc.jplayer.setShuffleModeEnabled(true);
+                                      appc.jplayer.setLoopMode(LoopMode.off);
+
                                       Song randomSong =
                                           songs[Random().nextInt(songs.length)];
                                       String titleStartSong =
@@ -681,7 +685,7 @@ class PlayButton extends StatelessWidget {
           songs = await appc.getAllDownloadedSongsFromAlbum(
               controller.album, false);
         }
-        appc.player.shuffle = false;
+        appc.jplayer.setShuffleModeEnabled(false);
         appc.placePlaylist(songs, null);
       },
       color: context.theme.secondaryHeaderColor,

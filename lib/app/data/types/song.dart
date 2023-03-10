@@ -1,7 +1,10 @@
-import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:flutter/services.dart' show rootBundle;
+
 import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:isar/isar.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:path_provider/path_provider.dart';
 
 part 'song.g.dart';
@@ -56,6 +59,12 @@ class Song {
       "assets/chasinaidil/covers/cd_${albumId.toString().padLeft(2, "0")}_hq.jpg";
 
   @ignore
+  Future<String> get coverFileHQ async {
+    String folder = (await getApplicationDocumentsDirectory()).path;
+    return "$folder/$book/${albumId.toString().padLeft(2, "0")}_hq.jpg";
+  }
+
+  @ignore
   String get sheetPath => "assets/chasinaidil/sheet/$songNumber.pdf";
 
   @ignore
@@ -67,7 +76,7 @@ class Song {
     return "$folder/$book/$songNumber.mp3";
   }
 
-  @ignore
+  /*@ignore
   Future<Audio> get audio async => Audio.file(
         await audioPathLocal,
         metas: Metas(
@@ -77,7 +86,22 @@ class Song {
           image: MetasImage.asset(coverAssetHQ),
           id: songNumber,
         ),
-      );
+      );*/
+  @ignore
+  Future<ProgressiveAudioSource> get audio async {
+    MediaItem mediaItem = MediaItem(
+      id: id.toString(),
+      title: "$songNumber. $title",
+      album: book,
+      artist: book,
+      artUri: Uri.file(await coverFileHQ),
+    );
+
+    return ProgressiveAudioSource(
+      Uri.file(await audioPathLocal),
+      tag: mediaItem,
+    );
+  }
 
   @Index(type: IndexType.value, caseSensitive: false)
   List<String> get titleWords {
@@ -111,7 +135,7 @@ class Song {
           ? null
           : (parsedJson['duration'] * 1000).round(),
       newRecording: DateTime.tryParse(parsedJson['newRecording'] ?? ""),
-      hasRecording: parsedJson['recorded'] ?? "true" ? true : false,
+      hasRecording: (parsedJson['recorded'] == "no") ? false : true,
     );
   }
 }

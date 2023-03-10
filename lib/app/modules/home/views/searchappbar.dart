@@ -28,10 +28,12 @@ class SearchAppBar extends StatelessWidget {
       titleTextStyle: context.textTheme.titleLarge,
       elevation: 0,
       actions: [
+        // Homescreen button for opening player
         StreamBuilder(
-          stream: appc.player.playerState,
+          stream: appc
+              .jplayer.playerStateStream, // TODO check if currently detecting
           builder: (_, __) {
-            if (appc.player.current.hasValue) {
+            if (appc.jplayer.audioSource != null) {
               return Container(
                 padding: Platform.isAndroid
                     ? const EdgeInsets.only(bottom: 30, right: 0)

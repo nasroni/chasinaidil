@@ -141,6 +141,11 @@ class IsarService {
 
     return Future.value(Isar.getInstance());
   }
+
+  Future<List<Song>> getOneSongPerAlbum() async {
+    final isar = await db;
+    return isar.songs.where().distinctByAlbumId().distinctByBookId().findAll();
+  }
 }
 
 Future externalSaveSongList(dynamic songList) async {

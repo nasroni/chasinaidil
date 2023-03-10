@@ -1,8 +1,8 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:al_downloader/al_downloader.dart';
-import 'package:assets_audio_player/assets_audio_player.dart';
 import 'package:chasinaidil/app/data/services/isar_service.dart';
 import 'package:chasinaidil/app/data/types/album.dart';
 import 'package:chasinaidil/app/data/types/playlist.dart' as my;
@@ -14,6 +14,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:just_audio_background/just_audio_background.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'home/controllers/home_controller.dart';
@@ -23,40 +25,69 @@ class AppController extends GetxController {
   void onInit() {
     ALDownloader.initialize();
     ALDownloader.configurePrint(enabled: false, frequentEnabled: false);
+    jplayer.playbackEventStream.listen((_) async {
+      int? index = jplayer.currentIndex;
+      log("indexStream: $index");
+      if (index == null) {
+        mediaItemStreamController.add(null);
+      } else {
+        var mediaItem = (currentAudios[index].tag as MediaItem);
+        if (mediaItem != currentMediaItem) {
+          mediaItemStreamController.add(mediaItem);
+          currentMediaItem = mediaItem;
+        }
+
+        /*IsarService isar = Get.find();
+
+        songStreamContr.add(await isar.getSongById(int.parse(indx)));*/
+      }
+    });
 
     super.onInit();
   }
 
+  StreamController<MediaItem?> mediaItemStreamController =
+      StreamController<MediaItem?>.broadcast();
+  Stream<MediaItem?> get mediaItemStream => mediaItemStreamController.stream;
+  MediaItem? currentMediaItem;
+
   RxBool isCurrentlyPlayingView = false.obs;
 
-  List<Audio> currentAudios = List.empty(growable: true);
+  //List<Audio> currentAudios = List.empty(growable: true);
+  List<IndexedAudioSource> currentAudios = List.empty(growable: true);
 
   placePlaylist(List<Song> songs, String? songTitle) async {
     log('songtitle: $songTitle');
     // Convert songs to Audio objects (with metas)
     currentAudios.clear();
     for (var song in songs) {
-      currentAudios.add(await song.audio);
+      var audio = await song.audio;
+      currentAudios.add(audio);
     }
     // get start index depending on titlt
     int startIndex = 0;
     if (songTitle != null) {
-      startIndex = currentAudios
-          .indexWhere((Audio audio) => audio.metas.title == songTitle);
+      startIndex = currentAudios.indexWhere((IndexedAudioSource audio) =>
+          (audio.tag as MediaItem).title == songTitle);
       if (startIndex == -1) startIndex = 0;
     }
 
     // Build playlist
-    Playlist playlist = Playlist(
-      audios: currentAudios,
-      startIndex: startIndex,
+    ConcatenatingAudioSource playlist = ConcatenatingAudioSource(
+      children: currentAudios,
     );
 
     // Start playlist
     //player.pause();
-    await player.stop();
+    //await player.stop();
 
-    player.open(
+    jplayer.setAudioSource(playlist, initialIndex: startIndex);
+    if (!jplayer.playing) {
+      jplayer.play();
+    }
+    // TODO maybe set stop start
+
+    /*player.open(
       playlist,
       audioFocusStrategy: const AudioFocusStrategy.request(
         resumeAfterInterruption: true,
@@ -66,7 +97,7 @@ class AppController extends GetxController {
       loopMode: LoopMode.none,
       playInBackground: PlayInBackground.enabled,
       showNotification: true,
-    );
+    );*/
   }
 
   Future<List<Song>> getAllDownloadedSongsFromBook(
@@ -255,7 +286,8 @@ class AppController extends GetxController {
   }
 
   //final player = AudioPlayer();
-  final player = AssetsAudioPlayer();
+  //final player = AssetsAudioPlayer();
+  final jplayer = AudioPlayer();
 
   RxBool isSeeking = false.obs;
   RxDouble seekingVal = 0.0.obs;
