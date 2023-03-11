@@ -7,7 +7,6 @@ import 'package:chasinaidil/release_config.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:path_provider/path_provider.dart';
 
 class LoadingController extends GetxController {
   RxString progressState = "Интизор шавед ...".obs;
@@ -44,7 +43,9 @@ class LoadingController extends GetxController {
       ByteData data = await rootBundle.load(song.coverAssetHQ);
       List<int> bytes =
           data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-
+      String targetPath = await song.coverFileHQ;
+      Directory(targetPath.substring(0, targetPath.lastIndexOf('/')))
+          .createSync(recursive: true);
       await File(await song.coverFileHQ).writeAsBytes(bytes);
     }
 

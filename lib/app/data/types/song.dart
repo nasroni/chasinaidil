@@ -1,5 +1,3 @@
-import 'package:flutter/services.dart' show rootBundle;
-
 import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:isar/isar.dart';
@@ -28,7 +26,11 @@ class Song {
   final int songNumberInt;
 
   int get bookId {
-    switch (book) {
+    return bookIdForString(book);
+  }
+
+  static bookIdForString(bookString) {
+    switch (bookString) {
       case "Хазинаи Дил":
         return 1;
       case "Чашма":
@@ -42,8 +44,10 @@ class Song {
       RegExp(r'\[([A-Hbmsu#0-9]){1,5}(\/[A-H][b#]?)?\]'), '');
 
   @ignore
-  DateTime? get downloaded =>
-      DateTime.tryParse(GetStorage().read(id.toString()) ?? '');
+  DateTime? get downloaded {
+    var savedDate = GetStorage().read(id.toString()) ?? '';
+    return DateTime.tryParse(savedDate);
+  }
 
   @ignore
   bool get isDownloaded {

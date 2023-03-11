@@ -10,14 +10,18 @@ import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:chasinaidil/app/modules/album/controllers/album_controller.dart';
 import 'package:chasinaidil/app/modules/album/views/album_view.dart';
 import 'package:crypto/crypto.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_archive/flutter_archive.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:isar/isar.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 
 import 'home/controllers/home_controller.dart';
 
@@ -33,9 +37,9 @@ class AppController extends GetxController {
       if (index == null ||
           currentAudios.isEmpty ||
           currentAudios.length < (index)) {
-        mediaItemStreamController.add(null);
+        //mediaItemStreamController.add(null);
       } else {
-        var mediaItem = (currentAudios[index!].tag as MediaItem);
+        var mediaItem = (currentAudios[index].tag as MediaItem);
         if (mediaItem != currentMediaItem) {
           mediaItemStreamController.add(mediaItem);
           currentMediaItem = mediaItem;
@@ -48,6 +52,114 @@ class AppController extends GetxController {
     });
 
     super.onInit();
+  }
+
+  final RxBool isSending = false.obs;
+  final RxBool isReceiving = false.obs;
+  final StreamController<int> sendingPercentageSC =
+      StreamController<int>.broadcast();
+  final StreamController<int> receivingPercentageSC =
+      StreamController<int>.broadcast();
+  Stream<int> get sendingPercentage => sendingPercentageSC.stream;
+  Stream<int> get receivingPercentage => receivingPercentageSC.stream;
+
+  void sendSongs() async {
+    if (isReceiving.value) {
+      return;
+    } else if (isSending.value) {
+      isSending.value = false;
+      return;
+    } else {
+      isSending.value = true;
+    }
+
+    // start of business logic
+    final dataDir = await getApplicationDocumentsDirectory();
+    final saveDir = await getTemporaryDirectory();
+    final zipFile = File("${saveDir.path}/exportedSongs.zip");
+    if (zipFile.existsSync()) {
+      zipFile.deleteSync();
+    }
+
+    try {
+      await ZipFile.createFromDirectory(
+          sourceDir: dataDir,
+          zipFile: zipFile,
+          recurseSubDirs: true,
+          onZipping: (filePath, dir, progress) {
+            if (dir) return ZipFileOperation.includeItem;
+            sendingPercentageSC.add(progress.round());
+            return filePath.endsWith(".mp3")
+                ? ZipFileOperation.includeItem
+                : ZipFileOperation.skipItem;
+          });
+    } catch (e) {
+      log(e.toString());
+    }
+    await Share.shareXFiles([XFile(zipFile.path)]);
+    if (zipFile.existsSync()) {
+      zipFile.deleteSync();
+    }
+    isSending.value = false;
+  }
+
+  void receiveSongs() async {
+    if (isSending.value) {
+      return;
+    } else if (isReceiving.value) {
+      isReceiving.value = false;
+      return;
+    } else {
+      isReceiving.value = true;
+    }
+
+    FilePickerResult? result = await FilePicker.platform
+        .pickFiles(type: FileType.custom, allowedExtensions: ['zip']);
+    final zipFilePath = result?.files.first.path;
+    if (zipFilePath == null) {
+      isReceiving.value = false;
+      return;
+    }
+    final zipFile = File(zipFilePath);
+    final destinationDir = await getApplicationDocumentsDirectory();
+    final IsarService isar = Get.find();
+    final List<Song> extractedSongs = List.empty(growable: true);
+
+    try {
+      await ZipFile.extractToDirectory(
+        zipFile: zipFile,
+        destinationDir: destinationDir,
+        onExtracting: (item, progress) {
+          receivingPercentageSC.add((progress * 0.8).toInt());
+          var target = File("${destinationDir.path}/${item.name}");
+          if (target.existsSync()) {
+            target.deleteSync();
+          }
+          String number = item.name
+              .substring(item.name.lastIndexOf('/') + 1, item.name.length - 4);
+          var book = item.name.substring(0, item.name.lastIndexOf('/'));
+          var songNr = (Song.bookIdForString(book) * 1000) + int.parse(number);
+          var song = isar.getSongByIdSync(songNr);
+          if (song != null) {
+            extractedSongs.add(song);
+          }
+          return ZipFileOperation.includeItem;
+        },
+      );
+    } catch (e) {
+      log('Problem ${e.toString()}');
+    }
+
+    var counter = 0;
+    for (var song in extractedSongs) {
+      await markSongDownloaded(song);
+      counter++;
+      receivingPercentageSC
+          .add((80 + (20 / extractedSongs.length) * counter).round());
+    }
+
+    isReceiving.value = false;
+    Get.back();
   }
 
   StreamController<MediaItem?> mediaItemStreamController =
@@ -89,7 +201,6 @@ class AppController extends GetxController {
     if (!jplayer.playing) {
       jplayer.play();
     }
-    // TODO maybe set stop start
 
     /*player.open(
       playlist,
@@ -274,30 +385,29 @@ class AppController extends GetxController {
     );
   }
 
-  void markSongDownloaded(Song song) async {
+  Future<void> markSongDownloaded(Song song) async {
     // save to getstorage that when song was saved
-    double progress =
+    /*double progress =
         await ALDownloader.getProgressForUrl(song.audioPathOnline);
     ALDownloaderStatus state =
-        await ALDownloader.getStatusForUrl(song.audioPathOnline);
-    String? path = await ALDownloaderFileManager.getPhysicalFilePathForUrl(
-        song.audioPathOnline);
+        await ALDownloader.getStatusForUrl(song.audioPathOnline);*/
+    /*String? path = await ALDownloaderFileManager.getPhysicalFilePathForUrl(
+        song.audioPathOnline);*/
+    String path = await song.audioPathLocal;
 
-    if (progress == 1.0 &&
-        state == ALDownloaderStatus.succeeded &&
-        path != null) {
-      var md5hash =
-          md5.convert(await File.fromUri(Uri.file(path)).readAsBytes());
-      if (md5hash.toString() == song.md5hash) {
-        GetStorage()
-            .write(song.id.toString(), DateTime.now().toIso8601String());
-        update(['updateViews']);
-        return;
-      } else {
-        log("hashing wrong of song ${song.songNumber} ${song.title}");
-      }
+    /*if (/*progress == 1.0 &&
+        state == ALDownloaderStatus.succeeded &&*/
+        path != null) {*/
+    var md5hash = md5.convert(await File.fromUri(Uri.file(path)).readAsBytes());
+    if (md5hash.toString() == song.md5hash) {
+      GetStorage().write(song.id.toString(), DateTime.now().toIso8601String());
+      update(['updateViews']);
+      return;
+    } else {
+      log("hashing wrong of song ${song.songNumber} ${song.title}");
     }
-    ALDownloader.remove(song.audioPathOnline);
+    //}
+    //ALDownloader.remove(song.audioPathOnline);
     update(['updateViews']);
   }
 

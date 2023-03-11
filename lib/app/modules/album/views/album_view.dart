@@ -1,4 +1,4 @@
-import 'dart:developer' as d;
+import 'dart:io';
 import 'dart:math';
 
 import 'package:al_downloader/al_downloader.dart';
@@ -57,7 +57,6 @@ class AlbumView extends GetView<AlbumController> {
                   stream: appc.jplayer.playerStateStream,
                   builder: (_, __) {
                     if (appc.jplayer.currentIndex != null) {
-                      // TODO check if correctly detecting
                       return CupertinoButton(
                         onPressed: () => Get.dialog(
                             const PlayerDialog(
@@ -470,6 +469,8 @@ class AlbumView extends GetView<AlbumController> {
                                         onPressed: () async {
                                           GetStorage()
                                               .remove(song.id.toString());
+                                          File(await song.audioPathLocal)
+                                              .deleteSync();
                                           try {
                                             ALDownloader.remove(
                                                 song.audioPathOnline);
@@ -592,7 +593,7 @@ class DownloadListButton extends StatelessWidget {
 
               if (controller.album.albumId == 17 &&
                   controller.album.songBook == SongBook.chasinaidil) {
-                d.log("hello");
+                //d.log("hello");
 
                 bool? shallProceed = await Get.dialog(CupertinoAlertDialog(
                   title: const Text('боргирӣ кардан'),

@@ -11,9 +11,7 @@ import 'package:chasinaidil/app/routes/app_pages.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:isar/isar.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:just_audio_background/just_audio_background.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 
 class PlayerDialog extends StatelessWidget {
@@ -31,7 +29,6 @@ class PlayerDialog extends StatelessWidget {
     AppController appc = Get.find();
     //if (appc.player.getCurrentAudioTitle == "") {
     if (appc.jplayer.currentIndex == null) {
-      // TODO check if correctly hiding not playing player
       appc.isCurrentlyPlayingView.value = true;
     } else {
       appc.isCurrentlyPlayingView.value = false;
@@ -161,26 +158,41 @@ class PlayerView extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       CupertinoButton(
-                        onPressed: () => appc.jplayer.seek(
-                          (const Duration(seconds: -10)) +
-                              appc.jplayer.position,
-                        ),
+                        onPressed: () {
+                          if (appc.jplayer.position >
+                              const Duration(seconds: 10)) {
+                            appc.jplayer.seek(appc.jplayer.position -
+                                const Duration(seconds: 10));
+                          } else {
+                            appc.jplayer.seek(const Duration(seconds: 0));
+                          }
+                        },
                         padding: EdgeInsets.zero,
                         child: Icon(
                           Icons.replay_10_rounded,
                           color: context.theme.primaryColor,
                         ),
                       ),
-                      CupertinoButton(
-                        onPressed: appc.jplayer.hasPrevious
-                            ? () => appc.jplayer.seekToPrevious()
-                            : null,
-                        padding: EdgeInsets.zero,
-                        child: Icon(
-                          CupertinoIcons.backward_fill,
-                          color: context.theme.primaryColor,
-                        ),
-                      ),
+                      StreamBuilder(
+                          stream: appc.jplayer.currentIndexStream,
+                          builder: (context, snapshot) {
+                            return CupertinoButton(
+                              onPressed: appc.jplayer.hasPrevious
+                                  ? () {
+                                      appc.jplayer.seekToPrevious();
+                                      if (!appc.jplayer.playing) {
+                                        appc.jplayer.seekToPrevious();
+                                      }
+                                    }
+                                  : null,
+                              padding: EdgeInsets.zero,
+                              child: Icon(
+                                CupertinoIcons.backward_fill,
+                                color: context.theme.primaryColor.withAlpha(
+                                    appc.jplayer.hasPrevious ? 255 : 100),
+                              ),
+                            );
+                          }),
                       StreamBuilder(
                         stream: appc.jplayer.playingStream,
                         builder: (_, AsyncSnapshot<bool> snap) {
@@ -199,20 +211,41 @@ class PlayerView extends StatelessWidget {
                           );
                         },
                       ),
+                      StreamBuilder(
+                          stream: appc.jplayer.currentIndexStream,
+                          builder: (context, snapshot) {
+                            return CupertinoButton(
+                              onPressed: appc.jplayer.hasNext
+                                  ? () {
+                                      appc.jplayer.seekToNext();
+                                      if (!appc.jplayer.playing) {
+                                        appc.jplayer.seekToNext();
+                                      }
+                                    }
+                                  : null,
+                              padding: EdgeInsets.zero,
+                              child: Icon(
+                                CupertinoIcons.forward_fill,
+                                color: context.theme.primaryColor.withAlpha(
+                                    appc.jplayer.hasNext ? 255 : 100),
+                              ),
+                            );
+                          }),
                       CupertinoButton(
-                        onPressed: appc.jplayer.hasNext
-                            ? () => appc.jplayer.seekToNext()
-                            : null,
-                        padding: EdgeInsets.zero,
-                        child: Icon(
-                          CupertinoIcons.forward_fill,
-                          color: context.theme.primaryColor,
-                        ),
-                      ),
-                      CupertinoButton(
-                        onPressed: () => appc.jplayer.seek(
-                            (const Duration(seconds: 10)) +
-                                appc.jplayer.position),
+                        onPressed: () {
+                          int comparison =
+                              (appc.jplayer.duration?.inSeconds ?? 3) -
+                                  appc.jplayer.position.inSeconds;
+                          if (comparison > 10) {
+                            appc.jplayer.seek((const Duration(seconds: 10)) +
+                                appc.jplayer.position);
+                          } else if (appc.jplayer.hasNext) {
+                            appc.jplayer.seekToNext();
+                          } else {
+                            appc.jplayer.seek(appc.jplayer.duration);
+                            appc.jplayer.stop();
+                          }
+                        },
                         padding: EdgeInsets.zero,
                         child: Icon(
                           Icons.forward_10_rounded,
@@ -246,13 +279,13 @@ class PlayerView extends StatelessWidget {
                         onPressed: () {
                           switch (appc.jplayer.loopMode) {
                             case LoopMode.off:
-                              appc.jplayer.setLoopMode(LoopMode.one);
-                              break;
-                            case LoopMode.one:
                               appc.jplayer.setLoopMode(LoopMode.all);
                               break;
-                            case LoopMode.all:
+                            case LoopMode.one:
                               appc.jplayer.setLoopMode(LoopMode.off);
+                              break;
+                            case LoopMode.all:
+                              appc.jplayer.setLoopMode(LoopMode.one);
                               break;
                           }
                         },
@@ -300,7 +333,7 @@ class PlayerView extends StatelessWidget {
                                 color: context.theme.scaffoldBackgroundColor,
                               ),
                               const Text(
-                                "  Play   ",
+                                "  cароидан",
                               )
                             ],
                           ),
@@ -344,7 +377,7 @@ class PlayerView extends StatelessWidget {
                                 color: context.theme.scaffoldBackgroundColor,
                               ),
                               const Text(
-                                "  Download   ",
+                                "  боргирӣ кардан",
                               )
                             ],
                           ),

@@ -8,9 +8,14 @@ import 'package:isar/isar.dart';
 
 class IsarService {
   late Future<Isar> db;
+  late Isar dbSync;
 
   IsarService() {
     db = openDB();
+    dbSyncReady();
+  }
+  void dbSyncReady() async {
+    dbSync = await db;
   }
 
   Future<void> savePlaylist(Playlist playlist) async {
@@ -51,6 +56,12 @@ class IsarService {
   Future<Song?> getSongById(int id) async {
     final isar = await db;
     return await isar.songs.where().idEqualTo(id).findFirst();
+  }
+
+  Song? getSongByIdSync(int id) {
+    final isar = dbSync;
+    var songs = isar.songs.where().idEqualTo(id).findFirstSync();
+    return songs;
   }
 
   Future<Song?> getSongByTitle(String title) async {

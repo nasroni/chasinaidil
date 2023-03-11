@@ -50,7 +50,7 @@ packages:
     source: hosted
     version: "2.10.0"
   audio_service:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: audio_service
       sha256: "7e86d7ce23caad605199f7b25e548fe7b618fb0c150fa0585f47a910fe7e7a67"
@@ -281,6 +281,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.4"
+  file_picker:
+    dependency: "direct main"
+    description:
+      name: file_picker
+      sha256: d090ae03df98b0247b82e5928f44d1b959867049d18d73635e2e0bc3f49542b9
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.2.5"
   fixnum:
     dependency: transitive
     description:
@@ -302,6 +310,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
+  flutter_archive:
+    dependency: "direct main"
+    description:
+      name: flutter_archive
+      sha256: aec85d1da65e5b33a529db00a86df0b8e92bda78088a7cfaeeba5187701d0d85
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.0"
   flutter_cache_manager:
     dependency: transitive
     description:
@@ -347,6 +363,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_plugin_android_lifecycle:
+    dependency: transitive
+    description:
+      name: flutter_plugin_android_lifecycle
+      sha256: c224ac897bed083dabf11f238dd11a239809b446740be0c2044608c50029ffdf
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.9"
   flutter_randomcolor:
     dependency: "direct main"
     description:
