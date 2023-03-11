@@ -76,7 +76,7 @@ class AppController extends GetxController {
     // start of business logic
     final dataDir = await getApplicationDocumentsDirectory();
     final saveDir = await getTemporaryDirectory();
-    final zipFile = File("${saveDir.path}/exportedSongs.zip");
+    final zipFile = File("${saveDir.path}/songAudios.zip");
     if (zipFile.existsSync()) {
       zipFile.deleteSync();
     }
