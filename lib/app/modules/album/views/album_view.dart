@@ -346,6 +346,8 @@ class AlbumView extends GetView<AlbumController> {
                                                           .value = false;
                                                       appc.idCurrentlyDLMultiple
                                                           .value = "";
+                                                      appc.currentlyDownloading
+                                                          .clear();
                                                       appc.update(
                                                           ['updateViews']);
                                                     },
@@ -507,7 +509,7 @@ class AlbumView extends GetView<AlbumController> {
                                             CrossAxisAlignment.center,
                                         children: [
                                           SizedBox(
-                                            width: 39,
+                                            width: 34,
                                             child: Text(
                                               song.songNumber,
                                               //style: const TextStyle(
@@ -516,10 +518,17 @@ class AlbumView extends GetView<AlbumController> {
                                                   .theme.textTheme.bodySmall,
                                             ),
                                           ),
-                                          if (song.isDownloaded)
-                                            const Icon(
-                                              Icons.download_done,
-                                              color: Colors.green,
+                                          if (!song.isDownloaded)
+                                            Icon(
+                                              Icons.download,
+                                              color: context.theme.primaryColor
+                                                  .withAlpha(130),
+                                            ),
+                                          if (false)
+                                            const Icon(Icons.downloading),
+                                          if (!song.isDownloaded)
+                                            const SizedBox(
+                                              width: 5,
                                             ),
                                           if (!song.hasRecording)
                                             const Icon(

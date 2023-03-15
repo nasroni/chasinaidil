@@ -35,7 +35,7 @@ class AppTheme {
         fontSize: 18,
       ),
       bodySmall: const TextStyle(
-        color: Colors.black45,
+        color: Colors.black87,
         fontSize: 15,
       ),
       displayLarge: _displayLarge,
@@ -100,7 +100,7 @@ class AppTheme {
         color: Colors.grey.shade100,
       ),
       bodySmall: lightThemeData.textTheme.bodySmall?.copyWith(
-        color: Colors.grey.shade600,
+        color: Colors.grey.shade400,
       ),
       displayLarge: lightThemeData.textTheme.displayLarge?.copyWith(
         color: Colors.grey.shade100,

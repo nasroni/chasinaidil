@@ -254,6 +254,8 @@ class AppController extends GetxController {
   final RxBool isDownloadingSingle = false.obs;
   final RxDouble downloadPercentageSingle = 100.0.obs;
 
+  final List<int> currentlyDownloading = List.empty(growable: true);
+
   // download a single song, for use in audio menu
   Future<void> downloadSong(Song song) async {
     // reset download progress notifiers
@@ -294,8 +296,7 @@ class AppController extends GetxController {
           // reset download progress, as was before starting, so it can be started again
           isDownloadingSingle.value = false;
           downloadPercentageSingle.value = 100;
-          log('moin');
-          // here don't update anything
+          update(['updateViews']);
         },
         progressHandler: (progress) {
           // update progress percentage
