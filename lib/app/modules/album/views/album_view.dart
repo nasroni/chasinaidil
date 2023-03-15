@@ -518,14 +518,37 @@ class AlbumView extends GetView<AlbumController> {
                                                   .theme.textTheme.bodySmall,
                                             ),
                                           ),
-                                          if (!song.isDownloaded)
+                                          if (!song.isDownloaded &&
+                                              appc.currentlyDownloading
+                                                  .isNotEmpty &&
+                                              !appc.currentlyDownloading
+                                                  .contains(song.id))
                                             Icon(
                                               Icons.download,
                                               color: context.theme.primaryColor
-                                                  .withAlpha(130),
+                                                  .withAlpha(60),
                                             ),
-                                          if (false)
-                                            const Icon(Icons.downloading),
+                                          if (!song.isDownloaded &&
+                                              appc.currentlyDownloading.isEmpty)
+                                            CupertinoButton(
+                                              onPressed: () =>
+                                                  appc.downloadSong(song),
+                                              padding: EdgeInsets.zero,
+                                              minSize: 0,
+                                              child: Icon(
+                                                Icons.download,
+                                                color: context
+                                                    .theme.primaryColor
+                                                    .withAlpha(150),
+                                              ),
+                                            ),
+                                          if (appc.currentlyDownloading
+                                              .contains(song.id))
+                                            Icon(
+                                              Icons.downloading,
+                                              color: context.theme.primaryColor
+                                                  .withAlpha(180),
+                                            ),
                                           if (!song.isDownloaded)
                                             const SizedBox(
                                               width: 5,

@@ -17,7 +17,6 @@ import 'package:flutter_archive/flutter_archive.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:isar/isar.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:path_provider/path_provider.dart';
@@ -155,7 +154,7 @@ class AppController extends GetxController {
       await markSongDownloaded(song);
       counter++;
       receivingPercentageSC
-          .add((80 + (20 / extractedSongs.length) * counter).round());
+          .add((60 + (40 / extractedSongs.length) * counter).round());
     }
 
     isReceiving.value = false;
@@ -261,6 +260,10 @@ class AppController extends GetxController {
     // reset download progress notifiers
     isDownloadingSingle.value = true;
     downloadPercentageSingle.value = 0;
+    if (currentlyDownloading.contains(song.id)) {
+      return;
+    }
+    currentlyDownloading.add(song.id);
     update(['updateViews']);
 
     // get inapp folder
@@ -271,9 +274,9 @@ class AppController extends GetxController {
     bookDir.createSync();
 
     // remove old download if it has
-    ALDownloader.cancelAll();
-
+    ALDownloader.cancel(song.audioPathOnline);
     ALDownloader.remove(song.audioPathOnline);
+
     // Start download
     ALDownloader.download(
       song.audioPathOnline,
@@ -296,6 +299,7 @@ class AppController extends GetxController {
           // reset download progress, as was before starting, so it can be started again
           isDownloadingSingle.value = false;
           downloadPercentageSingle.value = 100;
+          currentlyDownloading.remove(song.id);
           update(['updateViews']);
         },
         progressHandler: (progress) {
@@ -322,12 +326,15 @@ class AppController extends GetxController {
       Directory bookDir = Directory('${appDocDir.path}/${song.book}');
       bookDir.createSync();
 
+      currentlyDownloading.add(song.id);
+
       // Create a VO with url, path and filename
       return ALDownloaderBatcherInputVO(song.audioPathOnline)
         ..directoryPath = bookDir.path
         ..fileName = "${song.songNumber}.mp3"
         ..redownloadIfNeeded = true;
     }).toList();
+    update(['updateViews']);
 
     ALDownloaderBatcher.remove(
       vos.map((ALDownloaderBatcherInputVO e) => e.url).toList(),
@@ -387,6 +394,7 @@ class AppController extends GetxController {
   }
 
   Future<void> markSongDownloaded(Song song) async {
+    currentlyDownloading.remove(song.id);
     // save to getstorage that when song was saved
     /*double progress =
         await ALDownloader.getProgressForUrl(song.audioPathOnline);
