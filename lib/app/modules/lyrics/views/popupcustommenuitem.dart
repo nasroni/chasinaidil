@@ -69,7 +69,7 @@ class PopupCustomMenuItem extends StatelessWidget {
     });
   }
 
-  ButtonStyle buttonMyCustomStyle(int position, BuildContext context) {
+  static ButtonStyle buttonMyCustomStyle(int position, BuildContext context) {
     //const MaterialStateProperty<Size?>? size = null;
 
     return ButtonStyle(

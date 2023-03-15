@@ -517,6 +517,8 @@ class AlbumView extends GetView<AlbumController> {
                                   InkWell(
                                     onTap: () => Get.toNamed(Routes.LYRICS,
                                         arguments: song),
+                                    onLongPress: () => Get.find<AppController>()
+                                        .playlistDialog(song),
                                     //color: Colors.white,
 
                                     //: kMinInteractiveDimensionCupertino,
@@ -542,18 +544,8 @@ class AlbumView extends GetView<AlbumController> {
                                             ),
                                           ),
                                           if (!song.isDownloaded &&
-                                              appc.currentlyDownloading
-                                                  .isNotEmpty &&
                                               !appc.currentlyDownloading
-                                                  .contains(song.id))
-                                            Icon(
-                                              Icons.download,
-                                              color: context.theme.primaryColor
-                                                  .withAlpha(60),
-                                            ),
-                                          if (!song.isDownloaded &&
-                                              appc.currentlyDownloading
-                                                  .isEmpty &&
+                                                  .contains(song.id) &&
                                               song.hasRecording)
                                             CupertinoButton(
                                               onPressed: () =>
@@ -569,10 +561,24 @@ class AlbumView extends GetView<AlbumController> {
                                             ),
                                           if (appc.currentlyDownloading
                                               .contains(song.id))
-                                            Icon(
-                                              Icons.downloading,
-                                              color: context.theme.primaryColor
-                                                  .withAlpha(150),
+                                            CupertinoButton(
+                                              onPressed: () {
+                                                ALDownloader.cancel(
+                                                    song.audioPathOnline);
+                                                appc.isDownloadingSingle.value =
+                                                    false;
+                                                appc.currentlyDownloading
+                                                    .remove(song.id);
+                                                appc.update(['updateViews']);
+                                              },
+                                              padding: EdgeInsets.zero,
+                                              minSize: 0,
+                                              child: Icon(
+                                                Icons.downloading,
+                                                color: context
+                                                    .theme.primaryColor
+                                                    .withAlpha(150),
+                                              ),
                                             ),
                                           if (song.isDownloaded)
                                             CupertinoButton(

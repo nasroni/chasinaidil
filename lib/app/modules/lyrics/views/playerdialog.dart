@@ -338,12 +338,15 @@ class PlayerView extends StatelessWidget {
                             ],
                           ),
                         );
-                      } else if (appc.isDownloadingSingle.value) {
+                      } else if (appc.isDownloadingSingle.value &&
+                          appc.currentlyDownloading.contains(viewingSong!.id)) {
                         return CupertinoButton(
                           padding: EdgeInsets.zero,
                           onPressed: () {
-                            ALDownloader.cancelAll();
+                            ALDownloader.cancel(viewingSong!.audioPathOnline);
                             appc.isDownloadingSingle.value = false;
+                            appc.currentlyDownloading.remove(viewingSong!.id);
+
                             appc.update(['updateViews']);
                           },
                           child: Obx(() => SizedBox(
