@@ -106,6 +106,9 @@ class AppController extends GetxController {
             /*return filePath.endsWith(".mp3")
                 ? ZipFileOperation.includeItem
                 : ZipFileOperation.skipItem;*/
+            for (var path in songPaths) {
+              if (path.endsWith(filePath)) return ZipFileOperation.includeItem;
+            }
             return songPaths.contains(filePath)
                 ? ZipFileOperation.includeItem
                 : ZipFileOperation.skipItem;
@@ -487,7 +490,9 @@ class AppController extends GetxController {
   static Future<void> newPlaylist(Song song) async {
     var album = Album.newPlaylist();
     Get.put(AlbumController.withAlbum(album), tag: 1.toString());
-    my.Playlist? playlist = await Get.to(const AlbumView(nested: 1));
+    my.Playlist? playlist = await Get.to(() => const AlbumView(
+          nested: 1,
+        ));
     playlist?.addSong(song);
   }
 

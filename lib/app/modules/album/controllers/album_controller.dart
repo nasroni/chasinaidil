@@ -55,7 +55,7 @@ class AlbumController extends GetxController {
   void setNewName(String value, {bool keepEditing = false}) {
     String trimmed = value.trim();
     if (trimmed.isEmpty) {
-      update(['nameEdit']);
+      Get.find<AppController>().update(['nameEdit']);
       isTitleEditing.value = keepEditing;
       return;
     }
@@ -64,7 +64,9 @@ class AlbumController extends GetxController {
 
     if (album.playlist != null) isar.savePlaylist(album.playlist!);
 
-    if (album.albumId == 999999999999999999) Get.back(result: album.playlist);
+    if (album.albumId == 999999999999999999 && !keepEditing) {
+      Get.back(result: album.playlist);
+    }
   }
 
   void setNewColor() {

@@ -21,15 +21,20 @@ import '../controllers/album_controller.dart';
 import 'exchangedialog.dart';
 
 class AlbumView extends GetView<AlbumController> {
-  const AlbumView({Key? key, this.nested = 0}) : super(key: key);
+  const AlbumView({
+    Key? key,
+    this.nested = 0,
+  }) : super(key: key);
 
   final int nested;
+  //final AlbumController? otherController;
 
   @override
   AlbumController get controller {
     if (nested == 0) {
       return super.controller;
     } else {
+      //return otherController!;
       return Get.find<AlbumController>(tag: nested.toString());
     }
   }
@@ -204,43 +209,41 @@ class AlbumView extends GetView<AlbumController> {
                   const SizedBox(
                     height: 20,
                   ),
-                  Obx(() {
-                    if (controller.isTitleEditing.value) {
-                      return SizedBox(
-                        width: context.width,
-                        child: GetBuilder<AlbumController>(
-                            id: 'nameEdit',
-                            builder: (_) {
-                              return CupertinoTextField.borderless(
-                                placeholder: controller.album.playlist?.name,
-                                autofocus: true,
-                                textAlign: TextAlign.center,
-                                onChanged: (val) => controller.setNewName(val,
-                                    keepEditing: true),
-                                onSubmitted: (val) =>
-                                    controller.setNewName(val),
-                                style: context.theme.textTheme.displayLarge,
-                              );
-                            }),
-                      );
-                    } else if (controller.album.songBook ==
-                        SongBook.playlists) {
-                      return GestureDetector(
-                        onTap: () {
-                          controller.isTitleEditing.value = true;
-                        },
-                        child: Text(
-                          controller.album.playlist?.name ?? "",
+                  GetBuilder<AppController>(
+                    id: 'nameEdit',
+                    builder: (_) {
+                      if (controller.isTitleEditing.value) {
+                        return SizedBox(
+                          width: context.width,
+                          child: CupertinoTextField.borderless(
+                            placeholder: controller.album.playlist?.name,
+                            autofocus: true,
+                            textAlign: TextAlign.center,
+                            onChanged: (val) =>
+                                controller.setNewName(val, keepEditing: true),
+                            onSubmitted: (val) => controller.setNewName(val),
+                            style: context.theme.textTheme.displayLarge,
+                          ),
+                        );
+                      } else if (controller.album.songBook ==
+                          SongBook.playlists) {
+                        return GestureDetector(
+                          onTap: () {
+                            controller.isTitleEditing.value = true;
+                          },
+                          child: Text(
+                            controller.album.playlist?.name ?? "",
+                            style: context.theme.textTheme.displayLarge,
+                          ),
+                        );
+                      } else {
+                        return Text(
+                          controller.album.title,
                           style: context.theme.textTheme.displayLarge,
-                        ),
-                      );
-                    } else {
-                      return Text(
-                        controller.album.title,
-                        style: context.theme.textTheme.displayLarge,
-                      );
-                    }
-                  }),
+                        );
+                      }
+                    },
+                  ),
                   Text(
                     HomeController.giveBookTitle(controller.album.songBook),
                     style: context.theme.textTheme.displayMedium,

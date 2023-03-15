@@ -56,7 +56,6 @@ class Playlist {
       isar.savePlaylist(this);
     }
     Get.back();
-    Get.back();
   }
 
   void removeSong(Song song) {
