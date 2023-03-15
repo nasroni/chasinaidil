@@ -62,7 +62,7 @@ class AppController extends GetxController {
   Stream<int> get sendingPercentage => sendingPercentageSC.stream;
   Stream<int> get receivingPercentage => receivingPercentageSC.stream;
 
-  void sendSongs() async {
+  void sendSongs(Album album) async {
     if (isReceiving.value) {
       return;
     } else if (isSending.value) {
@@ -72,10 +72,25 @@ class AppController extends GetxController {
       isSending.value = true;
     }
 
+    IsarService isarService = Get.find();
+    List<Song> songs = await isarService.getSongsFromAlbum(album);
+    List<String> songPaths = List.empty(growable: true);
+    if (album.playlist == null) {
+      for (var song in songs) {
+        songPaths.add(await song.audioPathLocal);
+      }
+    } else {
+      songs = await isarService.getSongsByIds(album.playlist!.songIds);
+      for (var song in songs) {
+        songPaths.add(await song.audioPathLocal);
+      }
+    }
+
     // start of business logic
     final dataDir = await getApplicationDocumentsDirectory();
     final saveDir = await getTemporaryDirectory();
-    final zipFile = File("${saveDir.path}/songAudios.zip");
+    final zipFile = File(
+        "${saveDir.path}/audios_${(album.playlist == null) ? album.albumId : album.playlist?.name}-${HomeController.giveBookTitle(album.songBook)}.zip");
     if (zipFile.existsSync()) {
       zipFile.deleteSync();
     }
@@ -88,7 +103,10 @@ class AppController extends GetxController {
           onZipping: (filePath, dir, progress) {
             if (dir) return ZipFileOperation.includeItem;
             sendingPercentageSC.add(progress.round());
-            return filePath.endsWith(".mp3")
+            /*return filePath.endsWith(".mp3")
+                ? ZipFileOperation.includeItem
+                : ZipFileOperation.skipItem;*/
+            return songPaths.contains(filePath)
                 ? ZipFileOperation.includeItem
                 : ZipFileOperation.skipItem;
           });

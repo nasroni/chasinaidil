@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:al_downloader/al_downloader.dart';
+import 'package:chasinaidil/app/data/types/album.dart';
 import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:chasinaidil/app/flutter_rewrite/navbar.dart';
 import 'package:chasinaidil/app/modules/app_controller.dart';
@@ -17,6 +18,7 @@ import 'package:just_audio/just_audio.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 
 import '../controllers/album_controller.dart';
+import 'exchangedialog.dart';
 
 class AlbumView extends GetView<AlbumController> {
   const AlbumView({Key? key, this.nested = 0}) : super(key: key);
@@ -52,6 +54,19 @@ class AlbumView extends GetView<AlbumController> {
             trailing: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                CupertinoButton(
+                  onPressed: () => Get.dialog(ExchangeDialog(
+                    album: controller.album,
+                  )),
+                  padding: EdgeInsets.zero,
+                  minSize: 0,
+                  child: Icon(
+                    CupertinoIcons.arrow_right_arrow_left,
+                    color: CupertinoColors.activeBlue.withAlpha(140),
+
+                    // color: context.theme.primaryColor.withAlpha(150),
+                  ),
+                ),
                 // audio player openn button
                 StreamBuilder(
                   stream: appc.jplayer.playerStateStream,
@@ -77,6 +92,7 @@ class AlbumView extends GetView<AlbumController> {
                     return Container();
                   },
                 ),
+
                 if (controller.album.songBook == SongBook.playlists &&
                     controller.album.albumId != 999999999999999999)
                   CupertinoButton(
@@ -192,13 +208,20 @@ class AlbumView extends GetView<AlbumController> {
                     if (controller.isTitleEditing.value) {
                       return SizedBox(
                         width: context.width,
-                        child: CupertinoTextField.borderless(
-                          placeholder: controller.album.playlist?.name,
-                          autofocus: true,
-                          textAlign: TextAlign.center,
-                          onSubmitted: (val) => controller.setNewName(val),
-                          style: context.theme.textTheme.displayLarge,
-                        ),
+                        child: GetBuilder<AlbumController>(
+                            id: 'nameEdit',
+                            builder: (_) {
+                              return CupertinoTextField.borderless(
+                                placeholder: controller.album.playlist?.name,
+                                autofocus: true,
+                                textAlign: TextAlign.center,
+                                onChanged: (val) => controller.setNewName(val,
+                                    keepEditing: true),
+                                onSubmitted: (val) =>
+                                    controller.setNewName(val),
+                                style: context.theme.textTheme.displayLarge,
+                              );
+                            }),
                       );
                     } else if (controller.album.songBook ==
                         SongBook.playlists) {
@@ -529,7 +552,9 @@ class AlbumView extends GetView<AlbumController> {
                                                   .withAlpha(60),
                                             ),
                                           if (!song.isDownloaded &&
-                                              appc.currentlyDownloading.isEmpty)
+                                              appc.currentlyDownloading
+                                                  .isEmpty &&
+                                              song.hasRecording)
                                             CupertinoButton(
                                               onPressed: () =>
                                                   appc.downloadSong(song),
@@ -547,7 +572,40 @@ class AlbumView extends GetView<AlbumController> {
                                             Icon(
                                               Icons.downloading,
                                               color: context.theme.primaryColor
-                                                  .withAlpha(180),
+                                                  .withAlpha(150),
+                                            ),
+                                          if (song.isDownloaded)
+                                            CupertinoButton(
+                                              onPressed: () async {
+                                                var songs;
+
+                                                if (controller.album.songBook !=
+                                                    SongBook.playlists) {
+                                                  songs = await appc
+                                                      .getAllDownloadedSongsFromAlbum(
+                                                          controller.album,
+                                                          false);
+                                                } else {
+                                                  songs = await appc
+                                                      .getAllDownloadedSongsFromPlaylist(
+                                                          controller
+                                                              .album.playlist!,
+                                                          false);
+                                                }
+
+                                                appc.placePlaylist(songs,
+                                                    "${song.songNumber}. ${song.title}");
+                                                appc.isCurrentlyPlayingView
+                                                    .value = false;
+                                              },
+                                              padding: EdgeInsets.zero,
+                                              minSize: 0,
+                                              child: Icon(
+                                                CupertinoIcons.play_arrow_solid,
+                                                color: context
+                                                    .theme.primaryColor
+                                                    .withAlpha(150),
+                                              ),
                                             ),
                                           if (!song.isDownloaded)
                                             const SizedBox(

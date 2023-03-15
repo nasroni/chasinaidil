@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:chasinaidil/app/modules/app_controller.dart';
-import 'package:chasinaidil/app/modules/home/views/exchangedialog.dart';
+import 'package:chasinaidil/app/modules/album/views/exchangedialog.dart';
 import 'package:chasinaidil/app/modules/lyrics/views/playerdialog.dart';
 import 'package:chasinaidil/prefs.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,21 +29,6 @@ class SearchAppBar extends StatelessWidget {
       titleTextStyle: context.textTheme.titleLarge,
       elevation: 0,
       actions: [
-        Container(
-          padding: Platform.isAndroid
-              ? const EdgeInsets.only(bottom: 30, right: 0)
-              : const EdgeInsets.only(bottom: 70, right: 0),
-          child: CupertinoButton(
-            onPressed: () => Get.dialog(const ExchangeDialog()),
-            padding: EdgeInsets.zero,
-            minSize: 0,
-            child: Icon(
-              CupertinoIcons.arrow_right_arrow_left,
-              color: context.theme.primaryColor,
-            ),
-          ),
-        ),
-
         // Homescreen button for opening player
         StreamBuilder(
           stream: appc.jplayer.playerStateStream,

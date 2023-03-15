@@ -1,3 +1,6 @@
+import 'package:chasinaidil/app/data/services/isar_service.dart';
+import 'package:chasinaidil/app/data/types/album.dart';
+import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +10,11 @@ import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 class ExchangeDialog extends StatelessWidget {
   const ExchangeDialog({
     super.key,
+    required this.album,
     //required this.viewController,
   });
+
+  final Album album;
 
   //final LyricsController viewController;
 
@@ -35,7 +41,9 @@ class ExchangeDialog extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
-      content: const ExchangeView(),
+      content: ExchangeView(
+        album: album,
+      ),
     );
   }
 }
@@ -43,7 +51,10 @@ class ExchangeDialog extends StatelessWidget {
 class ExchangeView extends StatelessWidget {
   const ExchangeView({
     super.key,
+    required this.album,
   });
+
+  final Album album;
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +65,9 @@ class ExchangeView extends StatelessWidget {
           () {
             if (!appc.isSending.value) {
               return CupertinoButton(
-                onPressed: () => appc.sendSongs(),
+                onPressed: () {
+                  appc.sendSongs(album);
+                },
                 color: context.theme.secondaryHeaderColor,
                 padding: const EdgeInsets.all(11),
                 child: Row(
@@ -75,22 +88,18 @@ class ExchangeView extends StatelessWidget {
               stream: appc.sendingPercentage,
               builder: (_, snapshot) {
                 double progress = snapshot.data?.toDouble() ?? 0.0;
-                return CupertinoButton(
-                  onPressed: () => appc.sendSongs(),
-                  padding: EdgeInsets.zero,
-                  child: SizedBox(
-                    height: 44,
-                    child: LiquidLinearProgressIndicator(
-                      backgroundColor: context.theme.scaffoldBackgroundColor,
-                      borderRadius: 4,
-                      value: progress / 100,
-                      valueColor: AlwaysStoppedAnimation(
-                        context.theme.secondaryHeaderColor,
-                      ),
-                      center: Text(
-                        "${progress.round()} %",
-                        style: context.theme.textTheme.bodyLarge,
-                      ),
+                return SizedBox(
+                  height: 44,
+                  child: LiquidLinearProgressIndicator(
+                    backgroundColor: context.theme.scaffoldBackgroundColor,
+                    borderRadius: 4,
+                    value: progress / 100,
+                    valueColor: AlwaysStoppedAnimation(
+                      context.theme.secondaryHeaderColor,
+                    ),
+                    center: Text(
+                      "${progress.round()} %",
+                      style: context.theme.textTheme.bodyLarge,
                     ),
                   ),
                 );

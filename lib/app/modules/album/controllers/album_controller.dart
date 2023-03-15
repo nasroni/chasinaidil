@@ -52,9 +52,15 @@ class AlbumController extends GetxController {
     Get.find<AppController>().update(['updateViews']);
   }
 
-  void setNewName(String value) {
-    album.playlist?.setName(value);
-    isTitleEditing.value = false;
+  void setNewName(String value, {bool keepEditing = false}) {
+    String trimmed = value.trim();
+    if (trimmed.isEmpty) {
+      update(['nameEdit']);
+      isTitleEditing.value = keepEditing;
+      return;
+    }
+    album.playlist?.setName(trimmed);
+    isTitleEditing.value = keepEditing;
 
     if (album.playlist != null) isar.savePlaylist(album.playlist!);
 
