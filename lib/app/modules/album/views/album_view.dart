@@ -220,6 +220,11 @@ class AlbumView extends GetView<AlbumController> {
                           width: context.width,
                           child: CupertinoTextField.borderless(
                             placeholder: controller.album.playlist?.name,
+                            placeholderStyle:
+                                context.theme.textTheme.displayLarge?.copyWith(
+                                    color: context.theme.primaryColor
+                                        .withAlpha(50)),
+                            padding: EdgeInsets.zero,
                             autofocus: true,
                             textAlign: TextAlign.center,
                             onChanged: (val) =>
@@ -229,10 +234,12 @@ class AlbumView extends GetView<AlbumController> {
                           ),
                         );
                       } else if (controller.album.songBook ==
-                          SongBook.playlists) {
+                              SongBook.playlists &&
+                          controller.album.albumId != 700000) {
                         return GestureDetector(
-                          onTap: () {
+                          onTapDown: (_) {
                             controller.isTitleEditing.value = true;
+                            appc.update(['nameEdit']);
                           },
                           child: Text(
                             controller.album.playlist?.name ?? "",
@@ -482,6 +489,7 @@ class AlbumView extends GetView<AlbumController> {
                                         onPressed: () {
                                           controller.album.playlist
                                               ?.removeSong(song);
+                                          controller.reloadPlaylist();
                                           Get.back(result: true);
                                         },
                                         child: const Text('Бале'),

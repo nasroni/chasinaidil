@@ -88,6 +88,9 @@ class ChordsView extends StatelessWidget {
       var trimmedLine = line.trim();
       if (trimmedLine[trimmedLine.length - 2] == ":") {
         trimmedLine = trimmedLine.replaceAll(RegExp(r' \:\|'), ':|');
+        if (controller.isLyricsMode) {
+          trimmedLine = trimmedLine.replaceAll(RegExp(r'\:\|'), ' :|');
+        }
       }
       List<String> words = trimmedLine.split(' ');
       String lastWord = words[words.length - 1];
@@ -99,9 +102,9 @@ class ChordsView extends StatelessWidget {
         // notch and design
         padding: context.isLandscape
             ? EdgeInsets.symmetric(
-                vertical: 10 * currentZoom * 0.8, horizontal: 50)
+                vertical: 10 * currentZoom * 0.7, horizontal: 50)
             : EdgeInsets.fromLTRB(
-                20, 5 * currentZoom * 0.8, paddingRight, 5 * currentZoom * 0.8),
+                20, 5 * currentZoom * 0.7, paddingRight, 5 * currentZoom * 0.7),
         // backgroundcolor
         //color: toggleBW ? const Color(0xfff0f0f0) : Colors.white,
         color: context.theme.scaffoldBackgroundColor,
@@ -148,8 +151,9 @@ class WordWiseLyrics extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var text = words.join(' ');
     return Text(
-      words.join(' '),
+      text,
       textAlign: TextAlign.center,
       style: lyricsStyle,
     );
