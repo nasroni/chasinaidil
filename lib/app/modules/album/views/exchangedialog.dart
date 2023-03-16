@@ -1,20 +1,26 @@
+import 'dart:math';
+
 import 'package:chasinaidil/app/data/services/isar_service.dart';
 import 'package:chasinaidil/app/data/types/album.dart';
 import 'package:chasinaidil/app/data/types/song.dart';
+import 'package:chasinaidil/app/modules/album/controllers/exchangedialog_controller.dart';
 import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
 
 class ExchangeDialog extends StatelessWidget {
-  const ExchangeDialog({
+  ExchangeDialog({
     super.key,
     required this.album,
     //required this.viewController,
   });
 
   final Album album;
+  final ExchangeDialogController exchangeDialogController =
+      Get.put(ExchangeDialogController());
 
   //final LyricsController viewController;
 
@@ -49,12 +55,13 @@ class ExchangeDialog extends StatelessWidget {
 }
 
 class ExchangeView extends StatelessWidget {
-  const ExchangeView({
+  ExchangeView({
     super.key,
     required this.album,
   });
 
   final Album album;
+  final ExchangeDialogController exchangeDialogController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -159,6 +166,62 @@ class ExchangeView extends StatelessWidget {
             );
           },
         ),
+        const SizedBox(
+          height: 13,
+        ),
+        CupertinoButton(
+          onPressed: () => exchangeDialogController.isExplainOpen.value =
+              !exchangeDialogController.isExplainOpen.value,
+          padding: EdgeInsets.zero,
+          child: Row(
+            children: [
+              Obx(
+                () => Icon(
+                  CupertinoIcons.chevron_right,
+                  color: context.theme.primaryColor,
+                  size: 15,
+                )
+                    .animate(
+                      target:
+                          exchangeDialogController.isExplainOpen.value ? 1 : 0,
+                    )
+                    .custom(
+                      begin: 0,
+                      end: pi / 2,
+                      duration: const Duration(milliseconds: 200),
+                      curve: Curves.ease,
+                      builder: (context, value, child) {
+                        return Transform.rotate(
+                          angle: value,
+                          child: child,
+                        );
+                      },
+                    ),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Text(
+                'Ин чист?',
+                style: TextStyle(
+                  color: context.theme.primaryColor,
+                  //fontSize: 22,
+                  fontWeight: FontWeight.w700,
+                ),
+              )
+            ],
+          ),
+        ),
+        Obx(() {
+          if (exchangeDialogController.isExplainOpen.value) {
+            return const Padding(
+              padding: EdgeInsets.only(top: 8.0),
+              child: Text(
+                  'Шумо метавонед (ҳам бе интернет) аудиои сурудҳоро равон ё қабул кунед. Барои ин шумо тугмаи "равон кардан"-ро зер кунед, дар онҷо метавонед сурудҳоро ҳамчун "файл" ба дигар телефон гузаронед (мисол бо ShareMe ё Bluetooth).\nДар телефони дигар онро бо воситаи тугмаи "қабул кардан" кушоед.\n\nМутаассифона ҳар албомро алоҳида равон карда лозим аст. Шумо фақат сурудҳоеро равон карда метавонед, ки худатон боргирӣ кардааед.'),
+            );
+          }
+          return Container();
+        }),
       ],
     );
   }

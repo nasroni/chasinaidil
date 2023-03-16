@@ -1,5 +1,5 @@
 name: chasinaidil
-version: 3.1.0+25
+version: 3.2.0+26
 publish_to: none
 description: A new Flutter project.
 environment: 
@@ -51,9 +51,9 @@ flutter:
    - assets/chasinaidil/text/
    - assets/chasinaidil/covers/
    - assets/chasinaidil/sheet/
-   #- assets/tshashma/songs.json
-   - assets/tshashma/text/
-   - assets/tshashma/covers/
+   #- assets/chashma/songs.json
+   - assets/chashma/text/
+   - assets/chashma/covers/
    - assets/icon/
    - assets/graphics/
 
