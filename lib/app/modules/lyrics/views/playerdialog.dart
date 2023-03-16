@@ -146,16 +146,20 @@ class PlayerView extends StatelessWidget {
                 ),
                 if (!appc.isCurrentlyPlayingView.value)
                   StreamBuilder(
-                    stream: appc.jplayer.positionStream,
-                    builder: (context, value) {
-                      return PositionSeekWidget(
-                        currentPosition: value.data ?? const Duration(),
-                        duration:
-                            appc.jplayer.duration ?? const Duration(seconds: 1),
-                        seekTo: (val) => appc.jplayer.seek(val),
-                      );
-                    },
-                  ),
+                      stream: appc.jplayer.durationStream,
+                      builder: (_, durationstream) {
+                        return StreamBuilder(
+                          stream: appc.jplayer.positionStream,
+                          builder: (_, value) {
+                            return PositionSeekWidget(
+                              currentPosition: value.data ?? const Duration(),
+                              duration: durationstream.data ??
+                                  const Duration(minutes: 61),
+                              seekTo: (val) => appc.jplayer.seek(val),
+                            );
+                          },
+                        );
+                      }),
                 if (!appc.isCurrentlyPlayingView.value)
                   const SizedBox(
                     height: 15,
@@ -290,14 +294,19 @@ class PlayerView extends StatelessWidget {
                           stream: appc.jplayer.currentIndexStream,
                           builder: (context, snapshot) {
                             IsarService isar = Get.find();
-                            Song? playingSong = isar.getSongByIdSync(
-                                int.parse(appc.currentMediaItem!.id));
+                            var songId =
+                                int.tryParse(appc.currentMediaItem?.id ?? '');
+                            Song? playingSong;
+                            if (songId != null) {
+                              playingSong = isar.getSongByIdSync(songId);
+                            }
                             return CupertinoButton(
                               onPressed: () async {
+                                if (playingSong == null) return;
                                 var playlists = await isar.getAllPlaylists();
                                 var favoriteList = playlists
                                     .firstWhere((element) => element.id == 0);
-                                if (playingSong!.isFavorite) {
+                                if (playingSong.isFavorite) {
                                   await favoriteList.removeSong(playingSong);
                                 } else {
                                   await favoriteList.addSong(playingSong,

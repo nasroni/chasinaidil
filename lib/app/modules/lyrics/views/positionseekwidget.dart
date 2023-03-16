@@ -105,6 +105,7 @@ class PositionSeekWidgetState extends State<PositionSeekWidget> {
 }
 
 String durationToString(Duration duration) {
+  if (duration == const Duration(minutes: 61)) return '';
   String twoDigits(int n) {
     if (n >= 10) return '$n';
     return '0$n';

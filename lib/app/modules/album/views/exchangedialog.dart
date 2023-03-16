@@ -61,52 +61,53 @@ class ExchangeView extends StatelessWidget {
     final AppController appc = Get.find();
     return Column(
       children: [
-        Obx(
-          () {
-            if (!appc.isSending.value) {
-              return CupertinoButton(
-                onPressed: () {
-                  appc.sendSongs(album);
-                },
-                color: context.theme.secondaryHeaderColor,
-                padding: const EdgeInsets.all(11),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
-                    Icon(
-                      CupertinoIcons.share_up,
-                      //color: context.theme.scaffoldBackgroundColor,
-                    ),
-                    Text(
-                      "  равон кардан",
-                    )
-                  ],
-                ),
-              );
-            }
-            return StreamBuilder(
-              stream: appc.sendingPercentage,
-              builder: (_, snapshot) {
-                double progress = snapshot.data?.toDouble() ?? 0.0;
-                return SizedBox(
-                  height: 44,
-                  child: LiquidLinearProgressIndicator(
-                    backgroundColor: context.theme.scaffoldBackgroundColor,
-                    borderRadius: 4,
-                    value: progress / 100,
-                    valueColor: AlwaysStoppedAnimation(
-                      context.theme.secondaryHeaderColor,
-                    ),
-                    center: Text(
-                      "${progress.round()} %",
-                      style: context.theme.textTheme.bodyLarge,
-                    ),
+        if (album.albumId != 17)
+          Obx(
+            () {
+              if (!appc.isSending.value) {
+                return CupertinoButton(
+                  onPressed: () {
+                    appc.sendSongs(album);
+                  },
+                  color: context.theme.secondaryHeaderColor,
+                  padding: const EdgeInsets.all(11),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Icon(
+                        CupertinoIcons.share_up,
+                        //color: context.theme.scaffoldBackgroundColor,
+                      ),
+                      Text(
+                        "  равон кардан",
+                      )
+                    ],
                   ),
                 );
-              },
-            );
-          },
-        ),
+              }
+              return StreamBuilder(
+                stream: appc.sendingPercentage,
+                builder: (_, snapshot) {
+                  double progress = snapshot.data?.toDouble() ?? 0.0;
+                  return SizedBox(
+                    height: 44,
+                    child: LiquidLinearProgressIndicator(
+                      backgroundColor: context.theme.scaffoldBackgroundColor,
+                      borderRadius: 4,
+                      value: progress / 100,
+                      valueColor: AlwaysStoppedAnimation(
+                        context.theme.secondaryHeaderColor,
+                      ),
+                      center: Text(
+                        "${progress.round()} %",
+                        style: context.theme.textTheme.bodyLarge,
+                      ),
+                    ),
+                  );
+                },
+              );
+            },
+          ),
         const SizedBox(
           height: 20,
         ),

@@ -247,10 +247,15 @@ class AlbumView extends GetView<AlbumController> {
                       }
                     },
                   ),
-                  Text(
-                    HomeController.giveBookTitle(controller.album.songBook),
-                    style: context.theme.textTheme.displayMedium,
-                  ),
+                  if (controller.album.songBook != SongBook.playlists)
+                    Text(
+                      HomeController.giveBookTitle(controller.album.songBook),
+                      style: context.theme.textTheme.displayMedium,
+                    ),
+                  if (controller.album.songBook == SongBook.playlists)
+                    const SizedBox(
+                      height: 20,
+                    ),
                   const SizedBox(
                     height: 20,
                   ),

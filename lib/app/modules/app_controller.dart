@@ -588,7 +588,11 @@ class PlaylistSelectButton extends StatelessWidget {
                 Positioned.fill(
                   child: Center(
                     child: Icon(
-                      isNewPlaylist ? Icons.add : Icons.playlist_add_check,
+                      isNewPlaylist
+                          ? Icons.add
+                          : playlist.id == 0
+                              ? Icons.favorite_border_outlined
+                              : Icons.playlist_add_check,
                       //color: HexColor(colorFore),
                       color: isNewPlaylist
                           ? HexColor("#de7e00")
