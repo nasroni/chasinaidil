@@ -37,12 +37,16 @@ class SearchBar extends StatelessWidget {
               style: TextStyle(color: context.theme.primaryColor),
               autocorrect: false,
               placeholder: 'Ҷустуҷӯ',
+              placeholderStyle: TextStyle(
+                color: context.theme.primaryColor.withAlpha(130),
+              ),
               onTap: () {
                 _homeController.openSearch();
               },
               onChanged: (value) => _homeController.searchValue.value = value,
               controller: _homeController.searchEditingController,
               keyboardType: TextInputType.name,
+              backgroundColor: context.theme.dividerColor,
               /*onSubmitted: (value) {
                 _homeController.closeSearch();
                 FocusScope.of(context).requestFocus();

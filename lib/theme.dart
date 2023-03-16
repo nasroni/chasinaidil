@@ -66,7 +66,7 @@ class AppTheme {
     dialogBackgroundColor: Colors.grey.shade900,
     secondaryHeaderColor: Colors.blueGrey.shade800,
     brightness: Brightness.dark,
-    scaffoldBackgroundColor: Colors.black87,
+    scaffoldBackgroundColor: const Color.fromRGBO(20, 20, 20, 1),
     shadowColor: Colors.black.withBlue(15).withRed(15).withGreen(15),
     unselectedWidgetColor: Colors.black.withBlue(30).withRed(30).withGreen(30),
     primaryColor: Colors.grey.shade100,
