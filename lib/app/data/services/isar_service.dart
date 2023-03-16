@@ -29,6 +29,12 @@ class IsarService {
     return isar.playlists.where().findAll();
   }
 
+  Playlist getFavoriteList() {
+    final isar = dbSync;
+    var playlist = isar.playlists.where().idEqualTo(0).findFirstSync();
+    return playlist!;
+  }
+
   Future<void> deletePlaylist(Playlist playlist) async {
     final isar = await db;
     isar.writeTxnSync<void>(() => isar.playlists.deleteSync(playlist.id));

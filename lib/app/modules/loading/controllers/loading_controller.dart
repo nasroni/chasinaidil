@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:chasinaidil/app/data/services/isar_service.dart';
+import 'package:chasinaidil/app/data/types/playlist.dart';
 import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:chasinaidil/app/modules/home/controllers/home_controller.dart';
 import 'package:chasinaidil/prefs.dart';
@@ -15,6 +17,16 @@ class LoadingController extends GetxController {
     //final stowa = Stopwatch()..start();
     // chasinaidil import
     //progressState.value = "loading started";
+
+    final IsarService isar = Get.find();
+    var playlists = await isar.getAllPlaylists();
+    var favorite =
+        playlists.firstWhereOrNull((element) => element.id == 0) ?? Playlist()
+          ..id = 0;
+    favorite.name = 'Дӯстдошта';
+    favorite.setColor('FF0000');
+
+    isar.savePlaylist(favorite);
 
     final songList = await HomeController.importService.list("Хазинаи Дил");
 

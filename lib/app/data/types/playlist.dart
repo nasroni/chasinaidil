@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:chasinaidil/app/data/services/isar_service.dart';
 import 'package:chasinaidil/app/data/types/song.dart';
+import 'package:chasinaidil/app/modules/album/controllers/album_controller.dart';
 import 'package:flutter_randomcolor/flutter_randomcolor.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -39,6 +40,10 @@ class Playlist {
     );
   }
 
+  void setColor(String hex) {
+    _color = hex;
+  }
+
   void setName(String val) {
     if (val.isNotEmpty) {
       name = val;
@@ -50,17 +55,19 @@ class Playlist {
   @ignore
   final IsarService isar = Get.find();
 
-  void addSong(Song song) {
+  Future<void> addSong(Song song, {bool shallClose = true}) async {
     if (!songIds.contains(song.id)) {
       songIds = [...songIds, song.id];
-      isar.savePlaylist(this);
+      await isar.savePlaylist(this);
     }
-    Get.back();
+    if (shallClose) {
+      Get.back();
+    }
   }
 
-  void removeSong(Song song) {
+  Future<void> removeSong(Song song) async {
     songIds = [...songIds]..remove(song.id);
-    isar.savePlaylist(this);
+    await isar.savePlaylist(this);
   }
 
   Future<List<Song>> giveSongList() async {

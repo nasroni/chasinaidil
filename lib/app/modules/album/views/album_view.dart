@@ -99,7 +99,8 @@ class AlbumView extends GetView<AlbumController> {
                 ),
 
                 if (controller.album.songBook == SongBook.playlists &&
-                    controller.album.albumId != 999999999999999999)
+                    controller.album.albumId != 999999999999999999 &&
+                    controller.album.albumId != 700000)
                   CupertinoButton(
                     onPressed: () => Get.dialog(
                       CupertinoAlertDialog(
@@ -182,7 +183,9 @@ class AlbumView extends GetView<AlbumController> {
                                         controller.album.albumId ==
                                                 999999999999999999
                                             ? Icons.add
-                                            : Icons.playlist_add_check,
+                                            : controller.album.albumId == 700000
+                                                ? Icons.favorite_border_outlined
+                                                : Icons.playlist_add_check,
                                         //color: HexColor(colorFore),
                                         color: controller
                                             .album.playlist?.colorFore,

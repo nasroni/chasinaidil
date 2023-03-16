@@ -1,8 +1,10 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:al_downloader/al_downloader.dart';
 import 'package:chasinaidil/app/data/services/isar_service.dart';
 import 'package:chasinaidil/app/data/types/song.dart';
+import 'package:chasinaidil/app/modules/album/controllers/album_controller.dart';
 import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:chasinaidil/app/modules/home/controllers/home_controller.dart';
 import 'package:chasinaidil/app/modules/lyrics/controllers/lyrics_controller.dart';
@@ -18,11 +20,13 @@ class PlayerDialog extends StatelessWidget {
   const PlayerDialog({
     super.key,
     this.viewingSong,
+    this.isOnHomeScreen = false,
     //required this.viewController,
   });
 
   //final LyricsController viewController;
   final Song? viewingSong;
+  final bool isOnHomeScreen;
 
   @override
   Widget build(BuildContext context) {
@@ -57,6 +61,7 @@ class PlayerDialog extends StatelessWidget {
       content: PlayerView(
         appc: appc,
         viewingSong: viewingSong,
+        isOnHomescreen: isOnHomeScreen,
       ),
     );
   }
@@ -67,10 +72,12 @@ class PlayerView extends StatelessWidget {
     super.key,
     required this.appc,
     required this.viewingSong,
+    required this.isOnHomescreen,
   });
 
   final AppController appc;
   final Song? viewingSong;
+  final bool isOnHomescreen;
   //final LyricsController viewController = Get.find();
 
   @override
@@ -255,6 +262,10 @@ class PlayerView extends StatelessWidget {
                     ],
                   ),
                 if (!appc.isCurrentlyPlayingView.value)
+                  const SizedBox(
+                    height: 6,
+                  ),
+                if (!appc.isCurrentlyPlayingView.value)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -275,6 +286,47 @@ class PlayerView extends StatelessWidget {
                           },
                         ),
                       ),
+                      StreamBuilder(
+                          stream: appc.jplayer.currentIndexStream,
+                          builder: (context, snapshot) {
+                            IsarService isar = Get.find();
+                            Song? playingSong = isar.getSongByIdSync(
+                                int.parse(appc.currentMediaItem!.id));
+                            return CupertinoButton(
+                              onPressed: () async {
+                                var playlists = await isar.getAllPlaylists();
+                                var favoriteList = playlists
+                                    .firstWhere((element) => element.id == 0);
+                                if (playingSong!.isFavorite) {
+                                  await favoriteList.removeSong(playingSong);
+                                } else {
+                                  await favoriteList.addSong(playingSong,
+                                      shallClose: false);
+                                  log(favoriteList.songIds.toString());
+                                }
+                                if (!isOnHomescreen) {
+                                  await Get.find<AlbumController>()
+                                      .reloadPlaylist();
+                                }
+                                appc.update(['favoriteInDialog']);
+                                appc.update(['updateViews']);
+                              },
+                              padding: EdgeInsets.zero,
+                              child: GetBuilder<AppController>(
+                                id: 'favoriteInDialog',
+                                builder: (_) => playingSong?.isFavorite ?? false
+                                    ? Icon(
+                                        Icons.favorite,
+                                        color: context.theme.primaryColor,
+                                      )
+                                    : Icon(
+                                        Icons.favorite_border_outlined,
+                                        color: context.theme.cardColor
+                                            .withAlpha(90),
+                                      ),
+                              ),
+                            );
+                          }),
                       CupertinoButton(
                         onPressed: () {
                           switch (appc.jplayer.loopMode) {

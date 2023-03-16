@@ -42,6 +42,7 @@ class SearchAppBar extends StatelessWidget {
                   onPressed: () => Get.dialog(
                       const PlayerDialog(
                         viewingSong: null,
+                        isOnHomeScreen: true,
                       ),
                       barrierColor: Colors.transparent,
                       barrierDismissible: true),

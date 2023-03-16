@@ -51,7 +51,9 @@ class AlbumButton extends StatelessWidget {
                               child: Icon(
                                 album.albumId == 999999999999999999
                                     ? Icons.add
-                                    : Icons.playlist_add_check,
+                                    : album.albumId == 700000
+                                        ? Icons.favorite_border_outlined
+                                        : Icons.playlist_add_check,
                                 //color: HexColor(colorFore),
                                 color: album.playlist?.colorFore,
                                 size: 30,

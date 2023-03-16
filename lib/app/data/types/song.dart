@@ -1,4 +1,6 @@
+import 'package:chasinaidil/app/data/services/isar_service.dart';
 import 'package:chasinaidil/app/modules/app_controller.dart';
+import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:isar/isar.dart';
 import 'package:just_audio/just_audio.dart';
@@ -38,6 +40,12 @@ class Song {
       default:
         return 9;
     }
+  }
+
+  bool get isFavorite {
+    IsarService isar = Get.find();
+    var favorite = isar.getFavoriteList();
+    return favorite.songIds.contains(id);
   }
 
   String get lyrics => textWChords.replaceAll(

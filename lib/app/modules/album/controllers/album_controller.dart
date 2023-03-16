@@ -25,6 +25,17 @@ class AlbumController extends GetxController {
     return songs.indexWhere((Song song) => song.isDownloaded) == -1;
   }
 
+  Future<void> reloadPlaylist() async {
+    if (album.playlist != null) {
+      var playlists = await isar.getAllPlaylists();
+      var newPlaylist =
+          playlists.firstWhere((element) => element.id == album.playlist!.id);
+      album.playlist = newPlaylist;
+      var newSongs = await album.playlist!.giveSongList();
+      songs.assignAll(newSongs);
+    }
+  }
+
   RxBool isFirstDownload = false.obs;
 
   final RxBool isTitleEditing = false.obs;
