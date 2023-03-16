@@ -600,38 +600,78 @@ class AlbumView extends GetView<AlbumController> {
                                               ),
                                             ),
                                           if (song.isDownloaded)
-                                            CupertinoButton(
-                                              onPressed: () async {
-                                                var songs;
+                                            StreamBuilder(
+                                                stream: appc.jplayer
+                                                    .playbackEventStream,
+                                                builder: (_, __) {
+                                                  if (appc.jplayer.playing &&
+                                                      (appc.currentMediaItem
+                                                                  ?.id ??
+                                                              0) ==
+                                                          song.id.toString()) {
+                                                    return CupertinoButton(
+                                                      onPressed: () =>
+                                                          appc.jplayer.pause(),
+                                                      padding: EdgeInsets.zero,
+                                                      minSize: 0,
+                                                      child: Icon(
+                                                        CupertinoIcons
+                                                            .pause_fill,
+                                                        color: context
+                                                            .theme.primaryColor
+                                                            .withAlpha(150),
+                                                      ),
+                                                    );
+                                                  } else {
+                                                    return CupertinoButton(
+                                                      onPressed: () async {
+                                                        var songs;
+                                                        if (controller.album
+                                                                .albumId ==
+                                                            17) {
+                                                          songs = await appc
+                                                              .getAllDownloadedSongsFromBook(
+                                                                  controller
+                                                                      .album
+                                                                      .songBook,
+                                                                  false);
+                                                        } else if (controller
+                                                                .album
+                                                                .songBook !=
+                                                            SongBook
+                                                                .playlists) {
+                                                          songs = await appc
+                                                              .getAllDownloadedSongsFromAlbum(
+                                                                  controller
+                                                                      .album,
+                                                                  false);
+                                                        } else {
+                                                          songs = await appc
+                                                              .getAllDownloadedSongsFromPlaylist(
+                                                                  controller
+                                                                      .album
+                                                                      .playlist!,
+                                                                  false);
+                                                        }
 
-                                                if (controller.album.songBook !=
-                                                    SongBook.playlists) {
-                                                  songs = await appc
-                                                      .getAllDownloadedSongsFromAlbum(
-                                                          controller.album,
-                                                          false);
-                                                } else {
-                                                  songs = await appc
-                                                      .getAllDownloadedSongsFromPlaylist(
-                                                          controller
-                                                              .album.playlist!,
-                                                          false);
-                                                }
-
-                                                appc.placePlaylist(songs,
-                                                    "${song.songNumber}. ${song.title}");
-                                                appc.isCurrentlyPlayingView
-                                                    .value = false;
-                                              },
-                                              padding: EdgeInsets.zero,
-                                              minSize: 0,
-                                              child: Icon(
-                                                CupertinoIcons.play_arrow_solid,
-                                                color: context
-                                                    .theme.primaryColor
-                                                    .withAlpha(150),
-                                              ),
-                                            ),
+                                                        appc.placePlaylist(
+                                                            songs,
+                                                            "${song.songNumber}. ${song.title}");
+                                                        appc.isCurrentlyPlayingView
+                                                            .value = false;
+                                                      },
+                                                      padding: EdgeInsets.zero,
+                                                      minSize: 0,
+                                                      child: Icon(
+                                                        CupertinoIcons
+                                                            .play_arrow_solid,
+                                                        color: context
+                                                            .theme.primaryColor
+                                                            .withAlpha(150),
+                                                      ),
+                                                    );
+                                                  }
+                                                }),
                                           if (!song.isDownloaded)
                                             const SizedBox(
                                               width: 5,
