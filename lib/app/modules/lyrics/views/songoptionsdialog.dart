@@ -46,7 +46,7 @@ class SongOptionsDialog extends StatelessWidget {
                     blurRadius: 70,
                     spreadRadius: -25,
                     color: context.isDarkMode
-                        ? Colors.grey.shade600
+                        ? Colors.grey.shade800
                         : context.theme.primaryColor,
                   )
                 ],
