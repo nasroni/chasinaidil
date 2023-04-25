@@ -4,6 +4,7 @@ import 'package:chasinaidil/prefs.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:wakelock/wakelock.dart';
 
 import '../../../data/types/song.dart';
 
@@ -13,7 +14,14 @@ class LyricsController extends GetxController {
   @override
   void dispose() {
     SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    Wakelock.disable();
     super.dispose();
+  }
+
+  @override
+  void onInit() {
+    Wakelock.enable();
+    super.onInit();
   }
 
   Song song = Get.arguments;
