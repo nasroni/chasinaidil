@@ -7,8 +7,8 @@ import 'package:get/get.dart';
 
 import '../controllers/home_controller.dart';
 
-class SearchBar extends StatelessWidget {
-  SearchBar({
+class MySearchBar extends StatelessWidget {
+  MySearchBar({
     Key? key,
   }) : super(key: key);
 

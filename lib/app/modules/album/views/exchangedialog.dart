@@ -1,15 +1,13 @@
 import 'dart:math';
 
-import 'package:chasinaidil/app/data/services/isar_service.dart';
 import 'package:chasinaidil/app/data/types/album.dart';
-import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:chasinaidil/app/modules/album/controllers/exchangedialog_controller.dart';
 import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
-import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
+import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
 
 class ExchangeDialog extends StatelessWidget {
   ExchangeDialog({
@@ -125,9 +123,9 @@ class ExchangeView extends StatelessWidget {
                 onPressed: () => appc.receiveSongs(),
                 color: context.theme.secondaryHeaderColor,
                 padding: const EdgeInsets.all(11),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     Icon(
                       CupertinoIcons.arrow_down_square,
                       //color: context.theme.scaffoldBackgroundColor,

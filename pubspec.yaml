@@ -25,7 +25,7 @@ dependencies:
   #assets_audio_player: ^3.0.6
   al_downloader: ^1.7.2
   path_provider: ^2.0.13
-  liquid_progress_indicator: ^0.4.0
+  liquid_progress_indicator_v2: ^0.5.0
   just_audio: ^0.9.31
   just_audio_background: ^0.0.1-beta.9
   crypto: ^3.0.2
@@ -41,7 +41,7 @@ dev_dependencies:
     sdk: flutter
   isar_generator: ^3.0.5
   package_rename: ^1.0.0+1
-  flutter_launcher_icons: ^0.12.0
+  flutter_launcher_icons: ^0.13.1
 
 
 flutter: 

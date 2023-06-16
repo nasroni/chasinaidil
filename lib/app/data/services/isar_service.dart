@@ -1,14 +1,19 @@
+import 'dart:io';
+
 import 'package:chasinaidil/app/data/types/album.dart';
 import 'package:chasinaidil/app/data/types/playlist.dart';
 import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
 
 class IsarService {
   late Future<Isar> db;
   late Isar dbSync;
+  late Directory dir;
 
   IsarService() {
     db = openDB();
@@ -47,7 +52,7 @@ class IsarService {
   }
 
   Future saveSongList(List<Song> songList) async {
-    /*final isar = await db;
+    final isar = await db;
 
     //final isar = await Isar.open([SongSchema], name: 'default');
 
@@ -55,8 +60,11 @@ class IsarService {
       for (var song in songList) {
         isar.songs.putSync(song);
       }
-    });*/
-    await compute(externalSaveSongList, songList);
+    });
+    /*Map map = {};
+    map['dir'] = dir;
+    map['songList'] = songList;
+    await compute(externalSaveSongList, map);*/
   }
 
   Future<Song?> getSongById(int id) async {
@@ -150,9 +158,12 @@ class IsarService {
 
   Future<Isar> openDB() async {
     if (Isar.instanceNames.isEmpty) {
+      dir = await getApplicationDocumentsDirectory();
+
       return await Isar.open(
         [SongSchema, PlaylistSchema],
         inspector: true,
+        directory: dir.path,
       );
     }
 
@@ -165,8 +176,14 @@ class IsarService {
   }
 }
 
-Future externalSaveSongList(dynamic songList) async {
-  final isar = await Isar.open([SongSchema, PlaylistSchema], name: 'default');
+Future externalSaveSongList(Map map) async {
+  Directory dir = map['dir'];
+  List<Song> songList = map['songList'];
+  final isar = await Isar.open(
+    [SongSchema, PlaylistSchema],
+    name: 'default',
+    directory: dir.path,
+  );
 
   isar.writeTxnSync(() async {
     for (var song in songList) {

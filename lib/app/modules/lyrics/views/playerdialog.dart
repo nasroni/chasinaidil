@@ -14,7 +14,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
+import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
 
 class PlayerDialog extends StatelessWidget {
   const PlayerDialog({

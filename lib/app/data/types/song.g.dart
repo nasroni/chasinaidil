@@ -7,7 +7,7 @@ part of 'song.dart';
 // **************************************************************************
 
 // coverage:ignore-file
-// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters
+// ignore_for_file: duplicate_ignore, non_constant_identifier_names, constant_identifier_names, invalid_use_of_protected_member, unnecessary_cast, prefer_const_constructors, lines_longer_than_80_chars, require_trailing_commas, inference_failure_on_function_invocation, unnecessary_parenthesis, unnecessary_raw_strings, unnecessary_null_checks, join_return_with_assignment, prefer_final_locals, avoid_js_rounded_ints, avoid_positional_boolean_parameters, always_specify_types
 
 extension GetSongCollection on Isar {
   IsarCollection<Song> get songs => this.collection();
@@ -47,53 +47,58 @@ const SongSchema = CollectionSchema(
       name: r'hasRecording',
       type: IsarType.bool,
     ),
-    r'lyrics': PropertySchema(
+    r'isFavorite': PropertySchema(
       id: 6,
+      name: r'isFavorite',
+      type: IsarType.bool,
+    ),
+    r'lyrics': PropertySchema(
+      id: 7,
       name: r'lyrics',
       type: IsarType.string,
     ),
     r'lyricsWords': PropertySchema(
-      id: 7,
+      id: 8,
       name: r'lyricsWords',
       type: IsarType.stringList,
     ),
     r'md5hash': PropertySchema(
-      id: 8,
+      id: 9,
       name: r'md5hash',
       type: IsarType.string,
     ),
     r'newRecording': PropertySchema(
-      id: 9,
+      id: 10,
       name: r'newRecording',
       type: IsarType.dateTime,
     ),
     r'psalm': PropertySchema(
-      id: 10,
+      id: 11,
       name: r'psalm',
       type: IsarType.string,
     ),
     r'songNumber': PropertySchema(
-      id: 11,
+      id: 12,
       name: r'songNumber',
       type: IsarType.string,
     ),
     r'songNumberInt': PropertySchema(
-      id: 12,
+      id: 13,
       name: r'songNumberInt',
       type: IsarType.long,
     ),
     r'textWChords': PropertySchema(
-      id: 13,
+      id: 14,
       name: r'textWChords',
       type: IsarType.string,
     ),
     r'title': PropertySchema(
-      id: 14,
+      id: 15,
       name: r'title',
       type: IsarType.string,
     ),
     r'titleWords': PropertySchema(
-      id: 15,
+      id: 16,
       name: r'titleWords',
       type: IsarType.stringList,
     )
@@ -136,7 +141,7 @@ const SongSchema = CollectionSchema(
   getId: _songGetId,
   getLinks: _songGetLinks,
   attach: _songAttach,
-  version: '3.0.5',
+  version: '3.1.0+1',
 );
 
 int _songEstimateSize(
@@ -191,16 +196,17 @@ void _songSerialize(
   writer.writeLong(offsets[3], object.duration);
   writer.writeBool(offsets[4], object.hasKaraoke);
   writer.writeBool(offsets[5], object.hasRecording);
-  writer.writeString(offsets[6], object.lyrics);
-  writer.writeStringList(offsets[7], object.lyricsWords);
-  writer.writeString(offsets[8], object.md5hash);
-  writer.writeDateTime(offsets[9], object.newRecording);
-  writer.writeString(offsets[10], object.psalm);
-  writer.writeString(offsets[11], object.songNumber);
-  writer.writeLong(offsets[12], object.songNumberInt);
-  writer.writeString(offsets[13], object.textWChords);
-  writer.writeString(offsets[14], object.title);
-  writer.writeStringList(offsets[15], object.titleWords);
+  writer.writeBool(offsets[6], object.isFavorite);
+  writer.writeString(offsets[7], object.lyrics);
+  writer.writeStringList(offsets[8], object.lyricsWords);
+  writer.writeString(offsets[9], object.md5hash);
+  writer.writeDateTime(offsets[10], object.newRecording);
+  writer.writeString(offsets[11], object.psalm);
+  writer.writeString(offsets[12], object.songNumber);
+  writer.writeLong(offsets[13], object.songNumberInt);
+  writer.writeString(offsets[14], object.textWChords);
+  writer.writeString(offsets[15], object.title);
+  writer.writeStringList(offsets[16], object.titleWords);
 }
 
 Song _songDeserialize(
@@ -215,12 +221,12 @@ Song _songDeserialize(
     duration: reader.readLongOrNull(offsets[3]),
     hasKaraoke: reader.readBoolOrNull(offsets[4]) ?? false,
     hasRecording: reader.readBoolOrNull(offsets[5]) ?? true,
-    md5hash: reader.readStringOrNull(offsets[8]),
-    newRecording: reader.readDateTimeOrNull(offsets[9]),
-    psalm: reader.readStringOrNull(offsets[10]),
-    songNumberInt: reader.readLong(offsets[12]),
-    textWChords: reader.readStringOrNull(offsets[13]) ?? "",
-    title: reader.readString(offsets[14]),
+    md5hash: reader.readStringOrNull(offsets[9]),
+    newRecording: reader.readDateTimeOrNull(offsets[10]),
+    psalm: reader.readStringOrNull(offsets[11]),
+    songNumberInt: reader.readLong(offsets[13]),
+    textWChords: reader.readStringOrNull(offsets[14]) ?? "",
+    title: reader.readString(offsets[15]),
   );
   return object;
 }
@@ -245,24 +251,26 @@ P _songDeserializeProp<P>(
     case 5:
       return (reader.readBoolOrNull(offset) ?? true) as P;
     case 6:
-      return (reader.readString(offset)) as P;
+      return (reader.readBool(offset)) as P;
     case 7:
-      return (reader.readStringList(offset) ?? []) as P;
+      return (reader.readString(offset)) as P;
     case 8:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readStringList(offset) ?? []) as P;
     case 9:
-      return (reader.readDateTimeOrNull(offset)) as P;
-    case 10:
       return (reader.readStringOrNull(offset)) as P;
+    case 10:
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 11:
-      return (reader.readString(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 12:
-      return (reader.readLong(offset)) as P;
-    case 13:
-      return (reader.readStringOrNull(offset) ?? "") as P;
-    case 14:
       return (reader.readString(offset)) as P;
+    case 13:
+      return (reader.readLong(offset)) as P;
+    case 14:
+      return (reader.readStringOrNull(offset) ?? "") as P;
     case 15:
+      return (reader.readString(offset)) as P;
+    case 16:
       return (reader.readStringList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -1027,6 +1035,16 @@ extension SongQueryFilter on QueryBuilder<Song, Song, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> isFavoriteEqualTo(
+      bool value) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'isFavorite',
+        value: value,
       ));
     });
   }
@@ -2465,6 +2483,18 @@ extension SongQuerySortBy on QueryBuilder<Song, Song, QSortBy> {
     });
   }
 
+  QueryBuilder<Song, Song, QAfterSortBy> sortByIsFavorite() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isFavorite', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterSortBy> sortByIsFavoriteDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isFavorite', Sort.desc);
+    });
+  }
+
   QueryBuilder<Song, Song, QAfterSortBy> sortByLyrics() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lyrics', Sort.asc);
@@ -2647,6 +2677,18 @@ extension SongQuerySortThenBy on QueryBuilder<Song, Song, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Song, Song, QAfterSortBy> thenByIsFavorite() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isFavorite', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterSortBy> thenByIsFavoriteDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'isFavorite', Sort.desc);
+    });
+  }
+
   QueryBuilder<Song, Song, QAfterSortBy> thenByLyrics() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'lyrics', Sort.asc);
@@ -2782,6 +2824,12 @@ extension SongQueryWhereDistinct on QueryBuilder<Song, Song, QDistinct> {
     });
   }
 
+  QueryBuilder<Song, Song, QDistinct> distinctByIsFavorite() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'isFavorite');
+    });
+  }
+
   QueryBuilder<Song, Song, QDistinct> distinctByLyrics(
       {bool caseSensitive = true}) {
     return QueryBuilder.apply(this, (query) {
@@ -2889,6 +2937,12 @@ extension SongQueryProperty on QueryBuilder<Song, Song, QQueryProperty> {
   QueryBuilder<Song, bool, QQueryOperations> hasRecordingProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'hasRecording');
+    });
+  }
+
+  QueryBuilder<Song, bool, QQueryOperations> isFavoriteProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'isFavorite');
     });
   }
 

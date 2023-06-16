@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:al_downloader/al_downloader.dart';
-import 'package:chasinaidil/app/data/types/album.dart';
 import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:chasinaidil/app/flutter_rewrite/navbar.dart';
 import 'package:chasinaidil/app/modules/app_controller.dart';
@@ -15,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:liquid_progress_indicator/liquid_progress_indicator.dart';
+import 'package:liquid_progress_indicator_v2/liquid_progress_indicator.dart';
 
 import '../controllers/album_controller.dart';
 import 'exchangedialog.dart';
@@ -364,8 +363,7 @@ class AlbumView extends GetView<AlbumController> {
                                                     const Text('Қатъ кардан'),
                                                 content: const Text(
                                                     'Ҳақиқатан боргириро қатъ кардан мехоҳӣ?'),
-                                                actions: <
-                                                    CupertinoDialogAction>[
+                                                actions: <CupertinoDialogAction>[
                                                   CupertinoDialogAction(
                                                     /// This parameter indicates this action is the default,
                                                     /// and turns the action's text to bold text.

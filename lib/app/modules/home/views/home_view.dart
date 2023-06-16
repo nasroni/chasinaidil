@@ -1,12 +1,12 @@
 import 'package:chasinaidil/app/modules/app_controller.dart';
 import 'package:chasinaidil/app/modules/home/views/albumlist.dart';
+import 'package:chasinaidil/app/modules/home/views/searchbar.dart';
 import 'package:chasinaidil/app/modules/home/views/searchresults.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
 import '../controllers/home_controller.dart';
-import './searchbar.dart';
 import './searchappbar.dart';
 import 'booktitle.dart';
 
@@ -36,7 +36,7 @@ class HomeView extends GetView<HomeController> {
                     size: controller.isSearchActive.value ? 0 : 100,
                   ),
                 ),
-                SearchBar(),
+                MySearchBar(),
                 Expanded(
                   child: controller.isSearchActive.value
                       ? SearchResultView()
