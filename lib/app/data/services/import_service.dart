@@ -7,7 +7,7 @@ import '../types/song.dart';
 class ImportService {
   ImportService() {
     _jsonCacheChasinaidil = readSongDataFileChasinaidil();
-    _jsonCacheChashma = readSongDataFileChashma();
+    _jsonCachetshashma = readSongDataFiletshashma();
     // _jsonCacheDigaron = readSongDataFileDigaron(); // TODO before
   }
 
@@ -15,8 +15,8 @@ class ImportService {
     return await rootBundle.loadString('assets/chasinaidil/songs.json');
   }
 
-  static Future<String> readSongDataFileChashma() async {
-    return await rootBundle.loadString('assets/chashma/songs.json');
+  static Future<String> readSongDataFiletshashma() async {
+    return await rootBundle.loadString('assets/tshashma/songs.json');
   }
 
   static Future<String> readSongDataFileDigaron() async {
@@ -24,7 +24,7 @@ class ImportService {
   }
 
   static late Future<String> _jsonCacheChasinaidil;
-  static late Future<String> _jsonCacheChashma;
+  static late Future<String> _jsonCachetshashma;
   static late Future<String> _jsonCacheDigaron;
 
   Future<List<Song>> list(String bookName, String bookNameEn) async {
@@ -32,8 +32,8 @@ class ImportService {
 
     if (bookNameEn == "chasinaidil") {
       jsonString = await _jsonCacheChasinaidil;
-    } else if (bookNameEn == "chashma") {
-      jsonString = await _jsonCacheChashma;
+    } else if (bookNameEn == "tshashma") {
+      jsonString = await _jsonCachetshashma;
     } else {
       jsonString = await _jsonCacheDigaron;
     }

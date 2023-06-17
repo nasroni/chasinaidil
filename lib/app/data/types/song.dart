@@ -36,7 +36,7 @@ class Song {
       case 1:
         return "chasinaidil";
       case 2:
-        return "chashma";
+        return "tshashma";
       default:
         return "digaron";
     }

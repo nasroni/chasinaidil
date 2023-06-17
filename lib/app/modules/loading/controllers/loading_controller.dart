@@ -33,9 +33,9 @@ class LoadingController extends GetxController {
 
     // CHASINAI DIL IMPORT
     await importBook("Хазинаи Дил", "chasinaidil");
-    await importBook("Чашма", "chashma");
+    await importBook("Чашма", "tshashma");
 
-    // CHASHMA IMPORT
+    // tshashma IMPORT
 
     // copy album images to disk
     List<Song> songs = await HomeController.isar.getOneSongPerAlbum();
