@@ -28,26 +28,14 @@ class LoadingController extends GetxController {
 
     isar.savePlaylist(favorite);
 
-    final songList = await HomeController.importService.list("Хазинаи Дил");
-
-    //progressState.value = "Importing songtexts";
-
-    final songListWithText = (await Future.wait(
-      songList.map(
-        (e) async {
-          final text = await rootBundle
-              .loadString('assets/chasinaidil/text/${e.songNumber}.txt');
-          e.textWChords = text;
-          return e;
-        },
-      ),
-    ))
-        .toList();
-
-    progressState.value = "Захира, илтимос то 3 дақиқа интизор шавед";
-
+    // Prepare song import
     await HomeController.isar.cleanSongTable();
-    await HomeController.isar.saveSongList(songListWithText);
+
+    // CHASINAI DIL IMPORT
+    await importBook("Хазинаи Дил", "chasinaidil");
+    await importBook("Чашма", "chashma");
+
+    // CHASHMA IMPORT
 
     // copy album images to disk
     List<Song> songs = await HomeController.isar.getOneSongPerAlbum();
@@ -66,5 +54,31 @@ class LoadingController extends GetxController {
     GetStorage().write(Prefs.numDBversion, ReleaseConfig.dbversion);
 
     //log("duration ${stowa.elapsed}");
+  }
+
+  Future<void> importBook(bookString, bookStringEn) async {
+    final songList =
+        await HomeController.importService.list(bookString, bookStringEn);
+
+    final songListWithText = (await Future.wait(
+      songList.map(
+        (e) async {
+          final fileUrl = 'assets/$bookStringEn/text/${e.songNumber}.txt';
+          if (File(fileUrl).existsSync()) {
+            final text = await rootBundle.loadString(fileUrl);
+            e.textWChords = text;
+          } else {
+            e.textWChords = "";
+          }
+
+          return e;
+        },
+      ),
+    ))
+        .toList();
+
+    progressState.value =
+        "Захира, илтимос то 3 дақиқа интизор шавед\n$bookString";
+    await HomeController.isar.saveSongList(songListWithText);
   }
 }
