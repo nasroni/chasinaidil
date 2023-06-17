@@ -54,7 +54,7 @@ class HomeView extends GetView<HomeController> {
                                   songBook: SongBook.chasinaidil,
                                   changeNotifier: controller.isChasinaiDilOpen,
                                 ),
-                                /*BookTitle(
+                                BookTitle(
                                   changeEventNotifier:
                                       controller.isTshashmaOpen,
                                   songBook: SongBook.tshashma,
@@ -62,7 +62,7 @@ class HomeView extends GetView<HomeController> {
                                 AlbumList(
                                   songBook: SongBook.tshashma,
                                   changeNotifier: controller.isTshashmaOpen,
-                                ),*/
+                                ),
                                 /*BookTitle(
                                   changeEventNotifier: controller.isOthersOpen,
                                   songBook: SongBook.others,

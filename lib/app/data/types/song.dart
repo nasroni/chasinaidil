@@ -31,6 +31,17 @@ class Song {
     return bookIdForString(book);
   }
 
+  String get bookTitleEn {
+    switch (bookId) {
+      case 1:
+        return "chasinaidil";
+      case 2:
+        return "tshashma";
+      default:
+        return "digaron";
+    }
+  }
+
   static bookIdForString(bookString) {
     switch (bookString) {
       case "Хазинаи Дил":
@@ -66,10 +77,10 @@ class Song {
 
   @ignore
   String get coverAsset =>
-      "assets/chasinaidil/covers/cd_${albumId.toString().padLeft(2, "0")}.jpg";
+      "assets/$book/covers/cd_${albumId.toString().padLeft(2, "0")}.jpg";
   @ignore
   String get coverAssetHQ =>
-      "assets/chasinaidil/covers/cd_${albumId.toString().padLeft(2, "0")}_hq.jpg";
+      "assets/$book/covers/cd_${albumId.toString().padLeft(2, "0")}_hq.jpg";
 
   @ignore
   Future<String> get coverFileHQ async {
