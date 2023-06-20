@@ -35,8 +35,8 @@ class Album {
       case SongBook.chasinaidil:
         folderPath = 'chasinaidil';
         break;
-      case SongBook.tshashma:
-        folderPath = 'tshashma';
+      case SongBook.chashma:
+        folderPath = 'chashma';
         break;
       default:
         folderPath = '';
@@ -49,7 +49,7 @@ class Album {
     switch (songBook) {
       case SongBook.chasinaidil:
         return [
-          Album('Забур', 0, genPath(0, songBook), songBook),
+          Album('Забур', 17, genPath(17, songBook), songBook),
           Album('Исо омадааст', 1, genPath(1, songBook), songBook),
           Album('Чашмаи ҳаёт', 2, genPath(2, songBook), songBook),
           Album('Дар шаби охир', 3, genPath(3, songBook), songBook),
@@ -67,7 +67,7 @@ class Album {
           Album('Худоё, бубахшо', 15, genPath(15, songBook), songBook),
           Album('Пирӯзӣ бар марг', 16, genPath(16, songBook), songBook),
         ];
-      case SongBook.tshashma:
+      case SongBook.chashma:
         return [
           Album('Чашма 1', 1, genPath(1, songBook), songBook),
           Album('Чашма 2', 2, genPath(2, songBook), songBook),

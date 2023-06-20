@@ -298,12 +298,11 @@ class AlbumView extends GetView<AlbumController> {
                                     color: context.theme.secondaryHeaderColor,
                                     onPressed: () async {
                                       List<Song> songs;
-                                      if (controller.album.albumId == 17 &&
-                                          controller.album.songBook ==
-                                              SongBook.chasinaidil) {
+                                      if (controller.album.albumId == 0) {
                                         songs = await appc
                                             .getAllDownloadedSongsFromBook(
-                                                SongBook.chasinaidil, false);
+                                                controller.album.songBook,
+                                                false);
                                       } else if (controller.album.songBook ==
                                           SongBook.playlists) {
                                         songs = await appc
@@ -327,10 +326,10 @@ class AlbumView extends GetView<AlbumController> {
                                       appc.placePlaylist(songs, titleStartSong);
                                     },
                                     padding: const EdgeInsets.all(11),
-                                    child: Row(
+                                    child: const Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
-                                      children: const [
+                                      children: [
                                         Icon(
                                           CupertinoIcons.shuffle,
                                           size: 20,
@@ -451,8 +450,8 @@ class AlbumView extends GetView<AlbumController> {
                               key: Key(song.id.toString()),
                               background: Container(
                                 color: Colors.red,
-                                child: Row(
-                                  children: const [
+                                child: const Row(
+                                  children: [
                                     Spacer(),
                                     Icon(
                                       Icons.delete,
@@ -626,7 +625,7 @@ class AlbumView extends GetView<AlbumController> {
                                                         var songs;
                                                         if (controller.album
                                                                 .albumId ==
-                                                            17) {
+                                                            0) {
                                                           songs = await appc
                                                               .getAllDownloadedSongsFromBook(
                                                                   controller
@@ -744,8 +743,7 @@ class DownloadListButton extends StatelessWidget {
           : () async {
               List<Song> songsToDownload;
 
-              if (controller.album.albumId == 17 &&
-                  controller.album.songBook == SongBook.chasinaidil) {
+              if (controller.album.albumId == 00) {
                 //d.log("hello");
 
                 bool? shallProceed = await Get.dialog(CupertinoAlertDialog(
@@ -781,7 +779,7 @@ class DownloadListButton extends StatelessWidget {
                 }
 
                 songsToDownload = await appc.getAllDownloadedSongsFromBook(
-                    SongBook.chasinaidil, true);
+                    controller.album.songBook, true);
               } else if (controller.album.songBook == SongBook.playlists) {
                 songsToDownload = await appc.getAllDownloadedSongsFromPlaylist(
                     controller.album.playlist!, true);
@@ -829,10 +827,9 @@ class PlayButton extends StatelessWidget {
     return CupertinoButton(
       onPressed: () async {
         List<Song> songs;
-        if (controller.album.albumId == 17 &&
-            controller.album.songBook == SongBook.chasinaidil) {
+        if (controller.album.albumId == 0) {
           songs = await appc.getAllDownloadedSongsFromBook(
-              SongBook.chasinaidil, false);
+              controller.album.songBook, false);
         } else if (controller.album.songBook == SongBook.playlists) {
           songs = await appc.getAllDownloadedSongsFromPlaylist(
               controller.album.playlist!, false);
@@ -845,9 +842,9 @@ class PlayButton extends StatelessWidget {
       },
       color: context.theme.secondaryHeaderColor,
       padding: const EdgeInsets.all(11),
-      child: Row(
+      child: const Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: const [
+        children: [
           Icon(
             CupertinoIcons.play_arrow_solid,
             size: 20,

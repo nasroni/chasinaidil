@@ -62,9 +62,9 @@ class BookTitle extends StatelessWidget {
                   Routes.ALBUM,
                   arguments: Album(
                     'Умумӣ',
-                    17,
-                    Album.genPath(17, SongBook.chasinaidil),
-                    SongBook.chasinaidil,
+                    0,
+                    Album.genPath(0, songBook),
+                    songBook,
                   ),
                 ),
                 padding: EdgeInsets.zero,

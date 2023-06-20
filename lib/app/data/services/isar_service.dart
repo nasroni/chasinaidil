@@ -4,6 +4,7 @@ import 'package:chasinaidil/app/data/types/album.dart';
 import 'package:chasinaidil/app/data/types/playlist.dart';
 import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:chasinaidil/app/modules/app_controller.dart';
+import 'package:chasinaidil/app/modules/home/controllers/home_controller.dart';
 import 'package:get/get.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -94,9 +95,12 @@ class IsarService {
     return await isar.songs.where().findAll();
   }
 
-  Future<List<Song>> getAllSongsFromSongBook(String songbook) async {
+  Future<List<Song>> getAllSongsFromSongBook(SongBook songbook) async {
     final isar = await db;
-    return await isar.songs.filter().bookEqualTo(songbook).findAll();
+    return await isar.songs
+        .filter()
+        .bookIdEqualTo(songbook.index + 1)
+        .findAll();
   }
 
   Future<List<Song>> getSongsFromAlbum(Album album) async {
@@ -106,7 +110,11 @@ class IsarService {
       return await isar.songs.filter().psalmIsNotEmpty().findAll();
     } else {
       var albumId = album.albumId;
-      return await isar.songs.filter().albumIdEqualTo(albumId).findAll();
+      return await isar.songs
+          .filter()
+          .albumIdEqualTo(albumId)
+          .bookIdEqualTo(album.songBook.index + 1)
+          .findAll();
     }
   }
 

@@ -7,7 +7,7 @@ import 'package:get_storage/get_storage.dart';
 
 import '../../../data/types/song.dart';
 
-enum SongBook { chasinaidil, tshashma, others, playlists }
+enum SongBook { chasinaidil, chashma, others, playlists }
 
 class HomeController extends GetxController {
   final RxInt count = 0.obs;
@@ -24,7 +24,7 @@ class HomeController extends GetxController {
   final RxBool isShowingLastSearched = true.obs;
 
   final RxBool isChasinaiDilOpen = true.obs;
-  final RxBool isTshashmaOpen = false.obs;
+  final RxBool isChashmaOpen = false.obs;
   final RxBool isOthersOpen = false.obs;
   final RxBool isPlaylistsOpen = true.obs;
 
@@ -56,8 +56,8 @@ class HomeController extends GetxController {
   void restoreOpenState() {
     isChasinaiDilOpen.value =
         GetStorage().read(Prefs.isChasinaiDilOpen) ?? isChasinaiDilOpen.value;
-    isTshashmaOpen.value =
-        GetStorage().read(Prefs.isTshashmaOpen) ?? isTshashmaOpen.value;
+    isChashmaOpen.value =
+        GetStorage().read(Prefs.isChashmaOpen) ?? isChashmaOpen.value;
     isOthersOpen.value =
         GetStorage().read(Prefs.isOthersOpen) ?? isOthersOpen.value;
     isPlaylistsOpen.value =
@@ -70,9 +70,9 @@ class HomeController extends GetxController {
         isChasinaiDilOpen.value = !isChasinaiDilOpen.value;
         GetStorage().write(Prefs.isChasinaiDilOpen, isChasinaiDilOpen.value);
         break;
-      case SongBook.tshashma:
-        isTshashmaOpen.value = !isTshashmaOpen.value;
-        GetStorage().write(Prefs.isTshashmaOpen, isTshashmaOpen.value);
+      case SongBook.chashma:
+        isChashmaOpen.value = !isChashmaOpen.value;
+        GetStorage().write(Prefs.isChashmaOpen, isChashmaOpen.value);
         break;
       case SongBook.others:
         isOthersOpen.value = !isOthersOpen.value;
@@ -88,7 +88,7 @@ class HomeController extends GetxController {
     switch (whichBook) {
       case SongBook.chasinaidil:
         return 'Хазинаи Дил';
-      case SongBook.tshashma:
+      case SongBook.chashma:
         return 'Чашма';
       case SongBook.others:
         return 'Дигар сурудҳо';
@@ -102,7 +102,7 @@ class HomeController extends GetxController {
       case 'Хазинаи Дил':
         return SongBook.chasinaidil;
       case 'Чашма':
-        return SongBook.tshashma;
+        return SongBook.chashma;
       case 'Дигар сурудҳо':
         return SongBook.others;
       case 'Плейлистҳо':

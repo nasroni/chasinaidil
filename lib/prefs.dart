@@ -7,7 +7,7 @@ class Prefs {
   static const mode = 'viewmode';
 
   static const isChasinaiDilOpen = 'isChasinaiDilOpen';
-  static const isTshashmaOpen = 'isTshashmaOpen';
+  static const isChashmaOpen = 'isChashmaOpen';
   static const isOthersOpen = 'isOthersOpen';
   static const isPlaylistsOpen = 'isPlaylistsOpen';
 }

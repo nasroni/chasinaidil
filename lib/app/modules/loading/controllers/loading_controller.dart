@@ -33,9 +33,9 @@ class LoadingController extends GetxController {
 
     // CHASINAI DIL IMPORT
     await importBook("Хазинаи Дил", "chasinaidil");
-    await importBook("Чашма", "tshashma");
+    await importBook("Чашма", "chashma");
 
-    // tshashma IMPORT
+    // chashma IMPORT
 
     // copy album images to disk
     List<Song> songs = await HomeController.isar.getOneSongPerAlbum();
@@ -64,10 +64,10 @@ class LoadingController extends GetxController {
       songList.map(
         (e) async {
           final fileUrl = 'assets/$bookStringEn/text/${e.songNumber}.txt';
-          if (File(fileUrl).existsSync()) {
+          try {
             final text = await rootBundle.loadString(fileUrl);
             e.textWChords = text;
-          } else {
+          } catch (_) {
             e.textWChords = "";
           }
 

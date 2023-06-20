@@ -16,6 +16,7 @@ class Song {
   final String title;
   final int? albumId;
   String book;
+  String bookCyr;
   final String? psalm;
   final int? duration;
   String textWChords;
@@ -36,7 +37,7 @@ class Song {
       case 1:
         return "chasinaidil";
       case 2:
-        return "tshashma";
+        return "chashma";
       default:
         return "digaron";
     }
@@ -44,13 +45,21 @@ class Song {
 
   static bookIdForString(bookString) {
     switch (bookString) {
+      case "chasinaidil":
+        return 1;
+      case "chashma":
+        return 2;
+      default:
+        return 9;
+    }
+    /*switch (bookString) {
       case "Хазинаи Дил":
         return 1;
       case "Чашма":
         return 2;
       default:
         return 9;
-    }
+    }*/
   }
 
   bool get isFavorite {
@@ -116,8 +125,8 @@ class Song {
     MediaItem mediaItem = MediaItem(
       id: id.toString(),
       title: "$songNumber. $title",
-      album: book,
-      artist: book,
+      album: bookCyr,
+      artist: bookCyr,
       artUri: Uri.file(await coverFileHQ),
     );
 
@@ -140,6 +149,7 @@ class Song {
       required this.title,
       this.albumId,
       this.book = "Гуногун",
+      this.bookCyr = "Гуногун",
       this.psalm,
       this.duration,
       this.textWChords = "",

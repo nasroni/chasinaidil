@@ -125,7 +125,7 @@ class PlayerView extends StatelessWidget {
                 ),
                 appc.isCurrentlyPlayingView.value
                     ? Text(
-                        viewingSong!.book,
+                        viewingSong!.bookCyr,
                         textAlign: TextAlign.left,
                         style: context.theme.textTheme.displayMedium
                             ?.copyWith(fontSize: 15, color: Colors.grey),

@@ -238,8 +238,7 @@ class AppController extends GetxController {
   Future<List<Song>> getAllDownloadedSongsFromBook(
       SongBook book, bool reverse) async {
     IsarService isar = Get.find();
-    String title = HomeController.giveBookTitle(book);
-    List<Song> songs = await isar.getAllSongsFromSongBook(title);
+    List<Song> songs = await isar.getAllSongsFromSongBook(book);
     return getAllDownloadedFromSonglist(songs, reverse);
   }
 
@@ -278,6 +277,7 @@ class AppController extends GetxController {
 
   // download a single song, for use in audio menu
   Future<void> downloadSong(Song song) async {
+    log('hi');
     // reset download progress notifiers
     isDownloadingSingle.value = true;
     downloadPercentageSingle.value = 0;

@@ -27,78 +27,88 @@ const SongSchema = CollectionSchema(
       name: r'book',
       type: IsarType.string,
     ),
-    r'bookId': PropertySchema(
+    r'bookCyr': PropertySchema(
       id: 2,
+      name: r'bookCyr',
+      type: IsarType.string,
+    ),
+    r'bookId': PropertySchema(
+      id: 3,
       name: r'bookId',
       type: IsarType.long,
     ),
+    r'bookTitleEn': PropertySchema(
+      id: 4,
+      name: r'bookTitleEn',
+      type: IsarType.string,
+    ),
     r'duration': PropertySchema(
-      id: 3,
+      id: 5,
       name: r'duration',
       type: IsarType.long,
     ),
     r'hasKaraoke': PropertySchema(
-      id: 4,
+      id: 6,
       name: r'hasKaraoke',
       type: IsarType.bool,
     ),
     r'hasRecording': PropertySchema(
-      id: 5,
+      id: 7,
       name: r'hasRecording',
       type: IsarType.bool,
     ),
     r'isFavorite': PropertySchema(
-      id: 6,
+      id: 8,
       name: r'isFavorite',
       type: IsarType.bool,
     ),
     r'lyrics': PropertySchema(
-      id: 7,
+      id: 9,
       name: r'lyrics',
       type: IsarType.string,
     ),
     r'lyricsWords': PropertySchema(
-      id: 8,
+      id: 10,
       name: r'lyricsWords',
       type: IsarType.stringList,
     ),
     r'md5hash': PropertySchema(
-      id: 9,
+      id: 11,
       name: r'md5hash',
       type: IsarType.string,
     ),
     r'newRecording': PropertySchema(
-      id: 10,
+      id: 12,
       name: r'newRecording',
       type: IsarType.dateTime,
     ),
     r'psalm': PropertySchema(
-      id: 11,
+      id: 13,
       name: r'psalm',
       type: IsarType.string,
     ),
     r'songNumber': PropertySchema(
-      id: 12,
+      id: 14,
       name: r'songNumber',
       type: IsarType.string,
     ),
     r'songNumberInt': PropertySchema(
-      id: 13,
+      id: 15,
       name: r'songNumberInt',
       type: IsarType.long,
     ),
     r'textWChords': PropertySchema(
-      id: 14,
+      id: 16,
       name: r'textWChords',
       type: IsarType.string,
     ),
     r'title': PropertySchema(
-      id: 15,
+      id: 17,
       name: r'title',
       type: IsarType.string,
     ),
     r'titleWords': PropertySchema(
-      id: 16,
+      id: 18,
       name: r'titleWords',
       type: IsarType.stringList,
     )
@@ -151,6 +161,8 @@ int _songEstimateSize(
 ) {
   var bytesCount = offsets.last;
   bytesCount += 3 + object.book.length * 3;
+  bytesCount += 3 + object.bookCyr.length * 3;
+  bytesCount += 3 + object.bookTitleEn.length * 3;
   bytesCount += 3 + object.lyrics.length * 3;
   bytesCount += 3 + object.lyricsWords.length * 3;
   {
@@ -192,21 +204,23 @@ void _songSerialize(
 ) {
   writer.writeLong(offsets[0], object.albumId);
   writer.writeString(offsets[1], object.book);
-  writer.writeLong(offsets[2], object.bookId);
-  writer.writeLong(offsets[3], object.duration);
-  writer.writeBool(offsets[4], object.hasKaraoke);
-  writer.writeBool(offsets[5], object.hasRecording);
-  writer.writeBool(offsets[6], object.isFavorite);
-  writer.writeString(offsets[7], object.lyrics);
-  writer.writeStringList(offsets[8], object.lyricsWords);
-  writer.writeString(offsets[9], object.md5hash);
-  writer.writeDateTime(offsets[10], object.newRecording);
-  writer.writeString(offsets[11], object.psalm);
-  writer.writeString(offsets[12], object.songNumber);
-  writer.writeLong(offsets[13], object.songNumberInt);
-  writer.writeString(offsets[14], object.textWChords);
-  writer.writeString(offsets[15], object.title);
-  writer.writeStringList(offsets[16], object.titleWords);
+  writer.writeString(offsets[2], object.bookCyr);
+  writer.writeLong(offsets[3], object.bookId);
+  writer.writeString(offsets[4], object.bookTitleEn);
+  writer.writeLong(offsets[5], object.duration);
+  writer.writeBool(offsets[6], object.hasKaraoke);
+  writer.writeBool(offsets[7], object.hasRecording);
+  writer.writeBool(offsets[8], object.isFavorite);
+  writer.writeString(offsets[9], object.lyrics);
+  writer.writeStringList(offsets[10], object.lyricsWords);
+  writer.writeString(offsets[11], object.md5hash);
+  writer.writeDateTime(offsets[12], object.newRecording);
+  writer.writeString(offsets[13], object.psalm);
+  writer.writeString(offsets[14], object.songNumber);
+  writer.writeLong(offsets[15], object.songNumberInt);
+  writer.writeString(offsets[16], object.textWChords);
+  writer.writeString(offsets[17], object.title);
+  writer.writeStringList(offsets[18], object.titleWords);
 }
 
 Song _songDeserialize(
@@ -218,15 +232,16 @@ Song _songDeserialize(
   final object = Song(
     albumId: reader.readLongOrNull(offsets[0]),
     book: reader.readStringOrNull(offsets[1]) ?? "Гуногун",
-    duration: reader.readLongOrNull(offsets[3]),
-    hasKaraoke: reader.readBoolOrNull(offsets[4]) ?? false,
-    hasRecording: reader.readBoolOrNull(offsets[5]) ?? true,
-    md5hash: reader.readStringOrNull(offsets[9]),
-    newRecording: reader.readDateTimeOrNull(offsets[10]),
-    psalm: reader.readStringOrNull(offsets[11]),
-    songNumberInt: reader.readLong(offsets[13]),
-    textWChords: reader.readStringOrNull(offsets[14]) ?? "",
-    title: reader.readString(offsets[15]),
+    bookCyr: reader.readStringOrNull(offsets[2]) ?? "Гуногун",
+    duration: reader.readLongOrNull(offsets[5]),
+    hasKaraoke: reader.readBoolOrNull(offsets[6]) ?? false,
+    hasRecording: reader.readBoolOrNull(offsets[7]) ?? true,
+    md5hash: reader.readStringOrNull(offsets[11]),
+    newRecording: reader.readDateTimeOrNull(offsets[12]),
+    psalm: reader.readStringOrNull(offsets[13]),
+    songNumberInt: reader.readLong(offsets[15]),
+    textWChords: reader.readStringOrNull(offsets[16]) ?? "",
+    title: reader.readString(offsets[17]),
   );
   return object;
 }
@@ -243,34 +258,38 @@ P _songDeserializeProp<P>(
     case 1:
       return (reader.readStringOrNull(offset) ?? "Гуногун") as P;
     case 2:
-      return (reader.readLong(offset)) as P;
+      return (reader.readStringOrNull(offset) ?? "Гуногун") as P;
     case 3:
-      return (reader.readLongOrNull(offset)) as P;
+      return (reader.readLong(offset)) as P;
     case 4:
-      return (reader.readBoolOrNull(offset) ?? false) as P;
-    case 5:
-      return (reader.readBoolOrNull(offset) ?? true) as P;
-    case 6:
-      return (reader.readBool(offset)) as P;
-    case 7:
       return (reader.readString(offset)) as P;
+    case 5:
+      return (reader.readLongOrNull(offset)) as P;
+    case 6:
+      return (reader.readBoolOrNull(offset) ?? false) as P;
+    case 7:
+      return (reader.readBoolOrNull(offset) ?? true) as P;
     case 8:
-      return (reader.readStringList(offset) ?? []) as P;
+      return (reader.readBool(offset)) as P;
     case 9:
-      return (reader.readStringOrNull(offset)) as P;
+      return (reader.readString(offset)) as P;
     case 10:
-      return (reader.readDateTimeOrNull(offset)) as P;
+      return (reader.readStringList(offset) ?? []) as P;
     case 11:
       return (reader.readStringOrNull(offset)) as P;
     case 12:
-      return (reader.readString(offset)) as P;
+      return (reader.readDateTimeOrNull(offset)) as P;
     case 13:
-      return (reader.readLong(offset)) as P;
+      return (reader.readStringOrNull(offset)) as P;
     case 14:
-      return (reader.readStringOrNull(offset) ?? "") as P;
-    case 15:
       return (reader.readString(offset)) as P;
+    case 15:
+      return (reader.readLong(offset)) as P;
     case 16:
+      return (reader.readStringOrNull(offset) ?? "") as P;
+    case 17:
+      return (reader.readString(offset)) as P;
+    case 18:
       return (reader.readStringList(offset) ?? []) as P;
     default:
       throw IsarError('Unknown property with id $propertyId');
@@ -847,6 +866,134 @@ extension SongQueryFilter on QueryBuilder<Song, Song, QFilterCondition> {
     });
   }
 
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookCyrEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'bookCyr',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookCyrGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'bookCyr',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookCyrLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'bookCyr',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookCyrBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'bookCyr',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookCyrStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'bookCyr',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookCyrEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'bookCyr',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookCyrContains(String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'bookCyr',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookCyrMatches(String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'bookCyr',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookCyrIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'bookCyr',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookCyrIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'bookCyr',
+        value: '',
+      ));
+    });
+  }
+
   QueryBuilder<Song, Song, QAfterFilterCondition> bookIdEqualTo(int value) {
     return QueryBuilder.apply(this, (query) {
       return query.addFilterCondition(FilterCondition.equalTo(
@@ -895,6 +1042,136 @@ extension SongQueryFilter on QueryBuilder<Song, Song, QFilterCondition> {
         includeLower: includeLower,
         upper: upper,
         includeUpper: includeUpper,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookTitleEnEqualTo(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'bookTitleEn',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookTitleEnGreaterThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        include: include,
+        property: r'bookTitleEn',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookTitleEnLessThan(
+    String value, {
+    bool include = false,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.lessThan(
+        include: include,
+        property: r'bookTitleEn',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookTitleEnBetween(
+    String lower,
+    String upper, {
+    bool includeLower = true,
+    bool includeUpper = true,
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.between(
+        property: r'bookTitleEn',
+        lower: lower,
+        includeLower: includeLower,
+        upper: upper,
+        includeUpper: includeUpper,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookTitleEnStartsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.startsWith(
+        property: r'bookTitleEn',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookTitleEnEndsWith(
+    String value, {
+    bool caseSensitive = true,
+  }) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.endsWith(
+        property: r'bookTitleEn',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookTitleEnContains(
+      String value,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.contains(
+        property: r'bookTitleEn',
+        value: value,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookTitleEnMatches(
+      String pattern,
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.matches(
+        property: r'bookTitleEn',
+        wildcard: pattern,
+        caseSensitive: caseSensitive,
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookTitleEnIsEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.equalTo(
+        property: r'bookTitleEn',
+        value: '',
+      ));
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterFilterCondition> bookTitleEnIsNotEmpty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addFilterCondition(FilterCondition.greaterThan(
+        property: r'bookTitleEn',
+        value: '',
       ));
     });
   }
@@ -2435,6 +2712,18 @@ extension SongQuerySortBy on QueryBuilder<Song, Song, QSortBy> {
     });
   }
 
+  QueryBuilder<Song, Song, QAfterSortBy> sortByBookCyr() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bookCyr', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterSortBy> sortByBookCyrDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bookCyr', Sort.desc);
+    });
+  }
+
   QueryBuilder<Song, Song, QAfterSortBy> sortByBookId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'bookId', Sort.asc);
@@ -2444,6 +2733,18 @@ extension SongQuerySortBy on QueryBuilder<Song, Song, QSortBy> {
   QueryBuilder<Song, Song, QAfterSortBy> sortByBookIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'bookId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterSortBy> sortByBookTitleEn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bookTitleEn', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterSortBy> sortByBookTitleEnDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bookTitleEn', Sort.desc);
     });
   }
 
@@ -2617,6 +2918,18 @@ extension SongQuerySortThenBy on QueryBuilder<Song, Song, QSortThenBy> {
     });
   }
 
+  QueryBuilder<Song, Song, QAfterSortBy> thenByBookCyr() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bookCyr', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterSortBy> thenByBookCyrDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bookCyr', Sort.desc);
+    });
+  }
+
   QueryBuilder<Song, Song, QAfterSortBy> thenByBookId() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'bookId', Sort.asc);
@@ -2626,6 +2939,18 @@ extension SongQuerySortThenBy on QueryBuilder<Song, Song, QSortThenBy> {
   QueryBuilder<Song, Song, QAfterSortBy> thenByBookIdDesc() {
     return QueryBuilder.apply(this, (query) {
       return query.addSortBy(r'bookId', Sort.desc);
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterSortBy> thenByBookTitleEn() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bookTitleEn', Sort.asc);
+    });
+  }
+
+  QueryBuilder<Song, Song, QAfterSortBy> thenByBookTitleEnDesc() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addSortBy(r'bookTitleEn', Sort.desc);
     });
   }
 
@@ -2800,9 +3125,23 @@ extension SongQueryWhereDistinct on QueryBuilder<Song, Song, QDistinct> {
     });
   }
 
+  QueryBuilder<Song, Song, QDistinct> distinctByBookCyr(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'bookCyr', caseSensitive: caseSensitive);
+    });
+  }
+
   QueryBuilder<Song, Song, QDistinct> distinctByBookId() {
     return QueryBuilder.apply(this, (query) {
       return query.addDistinctBy(r'bookId');
+    });
+  }
+
+  QueryBuilder<Song, Song, QDistinct> distinctByBookTitleEn(
+      {bool caseSensitive = true}) {
+    return QueryBuilder.apply(this, (query) {
+      return query.addDistinctBy(r'bookTitleEn', caseSensitive: caseSensitive);
     });
   }
 
@@ -2916,9 +3255,21 @@ extension SongQueryProperty on QueryBuilder<Song, Song, QQueryProperty> {
     });
   }
 
+  QueryBuilder<Song, String, QQueryOperations> bookCyrProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'bookCyr');
+    });
+  }
+
   QueryBuilder<Song, int, QQueryOperations> bookIdProperty() {
     return QueryBuilder.apply(this, (query) {
       return query.addPropertyName(r'bookId');
+    });
+  }
+
+  QueryBuilder<Song, String, QQueryOperations> bookTitleEnProperty() {
+    return QueryBuilder.apply(this, (query) {
+      return query.addPropertyName(r'bookTitleEn');
     });
   }
 

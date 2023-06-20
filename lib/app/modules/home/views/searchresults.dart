@@ -320,7 +320,7 @@ class SearchResultView extends StatelessWidget {
                               Row(
                                 children: [
                                   Text(
-                                    currentResult.book,
+                                    currentResult.bookCyr,
                                     style: TextStyle(
                                         fontSize: 16,
                                         color: context.theme.cardColor),

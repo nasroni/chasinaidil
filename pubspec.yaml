@@ -52,9 +52,9 @@ flutter:
    - assets/chasinaidil/text/
    - assets/chasinaidil/covers/
    - assets/chasinaidil/sheet/
-   - assets/tshashma/songs.json
-   - assets/tshashma/text/
-   - assets/tshashma/covers/
+   - assets/chashma/songs.json
+   - assets/chashma/text/
+   - assets/chashma/covers/
    - assets/icon/
    - assets/graphics/
 

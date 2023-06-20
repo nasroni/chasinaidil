@@ -52,9 +52,10 @@ class AlbumController extends GetxController {
     if (album.playlist != null) {
       songsFromDB = await album.playlist!.giveSongList();
     } else {
-      if (album.albumId == 17 && album.songBook == SongBook.chasinaidil) {
+      if (album.albumId == 0) {
         songsFromDB = await isar.getAllSongsFromSongBook(
-            HomeController.giveBookTitle(album.songBook));
+          album.songBook,
+        );
       } else {
         songsFromDB = await isar.getSongsFromAlbum(album);
       }
