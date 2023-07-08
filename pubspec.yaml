@@ -55,6 +55,7 @@ flutter:
    - assets/chashma/songs.json
    - assets/chashma/text/
    - assets/chashma/covers/
+   - assets/chashma/sheet/
    - assets/icon/
    - assets/graphics/
 

@@ -98,11 +98,17 @@ class Song {
   }
 
   @ignore
-  String get sheetPath => "assets/chasinaidil/sheet/$songNumber.pdf";
+  String get sheetPath => "assets/$book/sheet/$songNumber.pdf";
 
   @ignore
-  String get audioPathOnline =>
-      "https://chasinaidil.nasroni.one/mp3/all/$songNumber.mp3";
+  String get audioPathOnline {
+    if (book == "chasinaidil") {
+      return "https://chasinaidil.nasroni.one/mp3/all/$songNumber.mp3";
+    } else {
+      return "https://chasinaidil.nasroni.one/mp3/$book/$songNumber.mp3";
+    }
+  }
+
   @ignore
   Future<String> get audioPathLocal async {
     String folder = (await getApplicationDocumentsDirectory()).path;
