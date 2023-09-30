@@ -737,19 +737,19 @@
   },
   {
     "id": "93",
-    "duration": 252.01739229024943,
-    "title": "Эй Чӯпони некӯ",
-    "album": "14",
-    "psalm": "false",
-    "recorded": "5484b7fa211a0aa23582c10fc936673f"
-  },
-  {
-    "id": "94",
     "duration": 325.4214739229025,
     "title": "Эй Чашмаи меҳр, эй Падар!",
     "album": "11",
     "psalm": "false",
     "recorded": "97670bee0afdaad00f4ec8bc5ff92068"
+  },
+  {
+    "id": "94",
+    "duration": 252.01739229024943,
+    "title": "Эй Чӯпони некӯ",
+    "album": "14",
+    "psalm": "false",
+    "recorded": "5484b7fa211a0aa23582c10fc936673f"
   },
   {
     "id": "95",
