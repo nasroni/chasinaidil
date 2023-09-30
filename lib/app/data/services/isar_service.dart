@@ -55,7 +55,7 @@ class IsarService {
 
     //final isar = await Isar.open([SongSchema], name: 'default');
 
-    isar.writeTxnSync(() async {
+    await isar.writeTxnSync(() async {
       for (var song in songList) {
         isar.songs.putSync(song);
       }

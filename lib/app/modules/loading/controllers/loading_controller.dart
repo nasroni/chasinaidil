@@ -33,7 +33,7 @@ class LoadingController extends GetxController {
 
     // CHASINAI DIL IMPORT
     await importBook("Хазинаи Дил", "chasinaidil");
-    await importBook("Чашма", "chashma");
+    //await importBook("Чашма", "chashma");
 
     // chashma IMPORT
 
