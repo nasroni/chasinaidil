@@ -2,7 +2,6 @@ import 'package:chasinaidil/app/data/services/isar_service.dart';
 import 'package:chasinaidil/app/data/types/album.dart';
 import 'package:chasinaidil/app/data/types/song.dart';
 import 'package:chasinaidil/app/modules/app_controller.dart';
-import 'package:chasinaidil/app/modules/home/controllers/home_controller.dart';
 import 'package:get/get.dart';
 
 class AlbumController extends GetxController {

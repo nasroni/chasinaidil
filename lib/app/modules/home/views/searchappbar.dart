@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:chasinaidil/app/modules/app_controller.dart';
-import 'package:chasinaidil/app/modules/album/views/exchangedialog.dart';
 import 'package:chasinaidil/app/modules/lyrics/views/playerdialog.dart';
 import 'package:chasinaidil/prefs.dart';
 import 'package:flutter/cupertino.dart';

@@ -28,7 +28,7 @@ class AppController extends GetxController {
   @override
   void onInit() {
     ALDownloader.initialize();
-    ALDownloader.configurePrint(enabled: false, frequentEnabled: false);
+    //ALDownloader.configurePrint(enabled: false, frequentEnabled: false);
 
     jplayer.playbackEventStream.listen((_) async {
       int? index = jplayer.currentIndex;
