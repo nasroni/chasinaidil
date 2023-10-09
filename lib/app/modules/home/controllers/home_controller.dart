@@ -107,6 +107,10 @@ class HomeController extends GetxController {
         return SongBook.others;
       case 'Плейлистҳо':
         return SongBook.playlists;
+      case 'chasinaidil':
+        return SongBook.chasinaidil;
+      case 'chashma':
+        return SongBook.chashma;
       default:
         return SongBook.others;
     }
