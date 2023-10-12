@@ -9,6 +9,7 @@ import 'package:chasinaidil/release_config.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:path_provider/path_provider.dart';
 
 class LoadingController extends GetxController {
   RxString progressState = "Интизор шавед ...".obs;
@@ -47,6 +48,33 @@ class LoadingController extends GetxController {
       Directory(targetPath.substring(0, targetPath.lastIndexOf('/')))
           .createSync(recursive: true);
       await File(await song.coverFileHQ).writeAsBytes(bytes);
+    }
+
+    // MOVE SONGS
+    String folder = (await getApplicationDocumentsDirectory()).path;
+    String bookFolderOld = "$folder/Хазинаи Дил";
+    String bookFolderNew = "$folder/chasinaidil";
+    if (Directory(bookFolderOld).existsSync()) {
+      /*if (Directory(bookFolderNew).existsSync()) {
+        Directory(bookFolderNew).deleteSync();
+      }
+      Directory(bookFolderOld).renameSync(bookFolderNew);
+      List<String> keys = GetStorage().getKeys();
+      for (var element in keys) {
+        if (DateTime.tryParse(GetStorage().read(element)) != null) {
+          int songNr = int.parse(element) % 1000;
+          if (!File("$bookFolderNew/${songNr.toString()}.mp3").existsSync()) {
+            GetStorage().remove(element);
+          }
+        }
+      }*/
+      Directory(bookFolderOld).deleteSync(recursive: true);
+      if (Directory(bookFolderNew).existsSync()) {
+        Directory(bookFolderNew).deleteSync(recursive: true);
+        Directory(bookFolderNew).createSync(recursive: true);
+      }
+
+      GetStorage().erase();
     }
 
     progressState.value = "Тамом";
