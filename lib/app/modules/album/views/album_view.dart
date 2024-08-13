@@ -50,6 +50,15 @@ class AlbumView extends GetView<AlbumController> {
         slivers: [
           MyCupertinoSliverNavigationBar(
             backgroundColor: context.theme.shadowColor,
+            leading: CupertinoButton(
+              padding: const EdgeInsets.only(left: 10),
+              child: Icon(
+                CupertinoIcons.back,
+                color: context.theme.primaryColor,
+                size: 24,
+              ),
+              onPressed: () => Get.back(),
+            ),
             padding: const EdgeInsetsDirectional.only(end: 20),
             middle: Text(
               controller.album.title,
@@ -66,8 +75,8 @@ class AlbumView extends GetView<AlbumController> {
                   minSize: 0,
                   child: Icon(
                     CupertinoIcons.arrow_right_arrow_left,
-                    color: CupertinoColors.activeBlue.withAlpha(140),
-
+                    color: context.theme.primaryColor,
+                    size: 24,
                     // color: context.theme.primaryColor.withAlpha(150),
                   ),
                 ),
@@ -86,9 +95,9 @@ class AlbumView extends GetView<AlbumController> {
                         padding: EdgeInsets.zero,
                         minSize: kMinInteractiveDimensionCupertino,
                         alignment: Alignment.centerRight,
-                        child: const Icon(
+                        child: Icon(
                           CupertinoIcons.playpause,
-                          //color: context.theme.primaryColor,
+                          color: context.theme.primaryColor,
                           size: 24,
                         ),
                       );
