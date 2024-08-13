@@ -307,7 +307,7 @@ class AppController extends GetxController {
     );
 
     // gather progress data
-    ALDownloader.addDownloaderHandlerInterface(
+    ALDownloader.addHandlerInterface(
       ALDownloaderHandlerInterface(
         succeededHandler: () async {
           // reset download progress, as was before starting, so another song can be downloaded too
@@ -364,7 +364,7 @@ class AppController extends GetxController {
     // start download
     ALDownloaderBatcher.downloadUrlsWithVOs(
       vos,
-      downloaderHandlerInterface: ALDownloaderHandlerInterface(
+      handlerInterface: ALDownloaderHandlerInterface(
         succeededHandler: () async {
           // reset download progress, as was before starting, so another song can be downloaded too
           isDownloadingMultiple.value = false;
